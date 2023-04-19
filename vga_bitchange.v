@@ -1,4 +1,4 @@
-*timescale 1ns / 1ps
+`timescale 1ns / 1ps
 
 // Anisha Palaparthi and Chely Fernandez
 
@@ -8,7 +8,15 @@ module vga_bitchange(
 	//5 different positions for the zombies
 	input [9:0] hCount, vCount,
 	output reg [11:0] rgb,
-	output reg [15:0] zombies_killed
+	output reg [15:0] zombies_killed,
+	output q_I, 
+	output q_L1, 
+	output q_NL2, 
+	output q_L2, 
+	output q_NL3, 
+	output q_L3, 
+	output q_DoneL, 
+	output q_DoneW
     );
 
 	//Color definitions
@@ -16,6 +24,9 @@ module vga_bitchange(
 	parameter GREY = 12'b0000_1011_0100;
 	parameter LIGHT_GREY = 12'b0011_0011_0010;
 	parameter GREEN = 12'b0000_1111_0000;
+	parameter YELLOW = 12'b1111_1111_0000;
+	parameter ORANGE = 12'b1111_1100_0000;
+	
 
 	//End of screen
 	parameter END_OF_LAWN = 10'd000;
@@ -36,12 +47,12 @@ module vga_bitchange(
 	reg[9:0] zombie4X;
 	reg[49:0] zombieSpeed;// Regisiter to hold zombie speed
 	//Store the current state
-	output q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW;
+//	output q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW;
 	reg [7:0] state;
 	assign {q_I, q_L1, q_NL2, q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW} = state;
-
+	
 	//Local parameters for state
-	I = 8'b0000_0001, L1 = 8'b0000_0010, NL2 = 8'b0000_0100, L2 = 8'b0000_1000, NL3 = 8'b0001_0000, L3 = 8'b0010_0000, DoneL = 8'b0100_0000, DoneW = 8'b1000_0000;
+	parameter I = 8'b0000_0001, L1 = 8'b0000_0010, NL2 = 8'b0000_0100, L2 = 8'b0000_1000, NL3 = 8'b0001_0000, L3 = 8'b0010_0000, DoneL = 8'b0100_0000, DoneW = 8'b1000_0000;
 
 
 	initial begin
@@ -52,13 +63,19 @@ module vga_bitchange(
 	//TODO: define the zombie colors here
 	//Define the color scheme
 	always@ (*)
-	if (~bright)
-		rgb = BLACK;
-	else if (greyZone == 1)
-		rgb = GREY;
-	else
-		rgb = GREEN; // background color
-
+    if (~bright)
+        rgb = BLACK;
+    else if (sunflowerFace == 1)
+        rgb = BLACK;
+    else if (sunflowerInner == 1)
+        rgb = ORANGE;
+    else if (sunflowerOuter == 1)
+        rgb = YELLOW;
+    else if (greyZone == 1)
+        rgb = GREY;
+    else
+        rgb = GREEN; // background color
+ 
 	//At every clock, move the zombies to the right by increasnig the zombie "speed"
 	always@ (posedge clk)
 		begin
@@ -87,7 +104,7 @@ module vga_bitchange(
 		end
 	
 	//Range from 000 to 160 (vertically)
-	assign greyZone = ((vCount <= 10'd159) ? 1 : 0;
+	assign greyZone = (vCount <= 10'd159) ? 1 : 0;
 
 	//Range from 160 to 287
 	assign zombie0 = ((vCount >= 10'd160) && (vCount <= 10'd287)) ? 1 : 0;
@@ -103,26 +120,34 @@ module vga_bitchange(
 
 	//Range from 672 to 779
 	assign zombie0 = ((vCount >= 10'd672) && (vCount <= 10'd779)) ? 1 : 0;
+	 
+	//sunflower visualization (to be made relative to the top left corner location, need to add stem + movement)
+	assign sunflowerOuter = 
+	                   ( 
+	                   ((vCount >= 10'd361) && (vCount <= 10'd374) && (hCount >= 10'd249) && (hCount <= 10'd326) )
+	                   || ((vCount >= 10'd342) && (vCount <= 10'd360) && (hCount >= 10'd243) && (hCount <= 10'd332) )
+	               
+	                   || ((vCount >= 10'd324) && (vCount <= 10'd342) && (hCount >= 10'd237) && (hCount <= 10'd338) )
+	                   || ((vCount >= 10'd307) && (vCount <= 10'd324) && (hCount >= 10'd231) && (hCount <= 10'd344) )
+	                   || ((vCount >= 10'd289) && (vCount <= 10'd306) && (hCount >= 10'd225) && (hCount <= 10'd350) )
+	               
+	                   || ((vCount >= 10'd271) && (vCount <= 10'd288) && (hCount >= 10'd231) && (hCount <= 10'd344) )
+	                   || ((vCount >= 10'd253) && (vCount <= 10'd270) && (hCount >= 10'd237) && (hCount <= 10'd338) )
+	                   
+	                   || ((vCount >= 10'd235) && (vCount <= 10'd252) && (hCount >= 10'd243) && (hCount <= 10'd332) )
+	                   || ((vCount >= 10'd220) && (vCount <= 10'd234) && (hCount >= 10'd249) && (hCount <= 10'd326) )
+                       ) ? 1 : 0;
+	                       	                   
+	assign sunflowerInner = ( (vCount < 10'd350) && (vCount > 10'd250) && (hCount > 10'd250) && (hCount < 10'd325) ) ? 1 : 0;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    assign sunflowerFace = ( 
+                             ((vCount < 10'd285) && (vCount > 10'd270) && (hCount > 10'd270) && (hCount < 10'd280))
+                           ||((vCount < 10'd285) && (vCount > 10'd270) && (hCount > 10'd295) && (hCount < 10'd305))
+                           
+                           ||((vCount < 10'd322) && (vCount > 10'd310) && (hCount > 10'd265) && (hCount < 10'd275))
+                           ||((vCount < 10'd332) && (vCount > 10'd318) && (hCount > 10'd270) && (hCount < 10'd285))
+                           ||((vCount < 10'd340) && (vCount > 10'd328) && (hCount > 10'd280) && (hCount < 10'd295))
+                           ||((vCount < 10'd332) && (vCount > 10'd318) && (hCount > 10'd290) && (hCount < 10'd305))
+                           ||((vCount < 10'd322) && (vCount > 10'd308) && (hCount > 10'd300) && (hCount < 10'd310))
+                           ) ? 1 : 0;
+endmodule
