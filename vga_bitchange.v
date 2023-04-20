@@ -8,7 +8,7 @@ module vga_bitchange(
 	//5 different positions for the zombies
 	input [9:0] hCount, vCount,
 	//Input for different buttons
-	input upButton, downButton, leftButton, rightButton, selectButton;
+	input upButton, downButton, leftButton, rightButton, selectButton,
 	output reg [11:0] rgb,
 	output reg [15:0] zombies_killed,
 	output q_I, 
@@ -45,11 +45,11 @@ module vga_bitchange(
 	wire zombie3;
 	wire zombie4;
 	//Wires to hold if zombie has been "killed"
-	wire zombie0Killed;
-	wire zombie1Killed;
-	wire zombie2Killed;
-	wire zombie3Killed;
-	wire zombie4Killed;
+	reg zombie0Killed;
+	reg zombie1Killed;
+	reg zombie2Killed;
+	reg zombie3Killed;
+	reg zombie4Killed;
 	//Registers to hold times that zombie has been hit by a pea
 	reg[3:0] zombie0Hits;
 	reg[3:0] zombie1Hits;
@@ -106,11 +106,11 @@ module vga_bitchange(
 
 	initial begin
 		//Initialize the X position on the zombies to be the right side of the lawn
-		zombie0X = 10'd'799;
-		zombie1X = 10'd'799;
-		zombie2X = 10'd'799;
-		zombie3X = 10'd'799;
-		zombie4X = 10'd'799;
+		zombie0X = 10'd799;
+		zombie1X = 10'd799;
+		zombie2X = 10'd799;
+		zombie3X = 10'd799;
+		zombie4X = 10'd799;
 		//Initialize the zombies to be alive
 		zombie0Killed = 1'b0;
 		zombie1Killed = 1'b0;
@@ -247,8 +247,8 @@ module vga_bitchange(
 	//Create 5 by 5 grid in the lawn
 	assign GRID = ((vCount >= 10'd160) && (vCount <= 10'd4779)
 		&& ((hCount >= 10'd0) && (hCount <= 10'd160)
-		|| (hCount >= 10'd'320) && (hCount <= 10'd479)
-		|| (hCount >= 10'd'640) && (hCount <= 10'd799))
+		|| (hCount >= 10'd320) && (hCount <= 10'd479)
+		|| (hCount >= 10'd640) && (hCount <= 10'd799))
 		) ? 1 : 0;
 
 	//Define the selected plant box

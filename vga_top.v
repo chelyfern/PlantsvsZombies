@@ -48,7 +48,7 @@ module vga_top(
 	wire [11:0] rgb;
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
 	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .hCount(hc), .vCount(vc), .rgb(rgb), .zombies_killed(zombiesKilled),
-		.upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), .centerButton(BtnC));
+		.upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), .selectButton(BtnC));
 	
 	counter cnt(.clk(ClkPort), .displayNumber(zombiesKilled), .anode(anode), .ssdOut(ssdOut));
 	
