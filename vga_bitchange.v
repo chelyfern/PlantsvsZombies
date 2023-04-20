@@ -74,11 +74,6 @@ module vga_bitchange(
         rgb = YELLOW;
 	else if (zombie0 == 1 || zombie1 == 1 || zombie2 == 1 || zombie3 == 1 || zombie4 == 1)
 		rgb = ZOMBIE_SKIN;
-	else if (greyZone == 1)
-		rgb = GREY;
-	else
-		rgb = GREEN; // background color
-
     else if (greyZone == 1)
         rgb = GREY;
     else
