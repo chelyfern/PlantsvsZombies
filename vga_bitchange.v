@@ -29,6 +29,7 @@ module vga_bitchange(
 	parameter DARK_GREEN = 12'b0000_0011_0000;
 	parameter YELLOW = 12'b1111_1111_0000;
 	parameter ORANGE = 12'b1111_1100_0000;
+	parameter RED = 12'b1111_0000_0000;
 	parameter ZOMBIE_SKIN = 12'b1010_1010_1011;
 	
 
@@ -88,6 +89,12 @@ module vga_bitchange(
 	wire peaShot22X;
 	wire peaShot23X;
 	wire peaShot24X;
+	//Wire to hold current selected plant box
+	wire selectedPlantBox;
+	wire isSelectingPlantBox;
+	//Wire to hold current selected lawn position
+	wire selectedLawnPosition;
+	
 	//Store the current state
 //	output q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW;
 	reg [7:0] state;
@@ -132,6 +139,10 @@ module vga_bitchange(
         rgb = GREY;
 	else if (GRID == 1)
 		rgb = DARK_GREEN;
+	else if (selectedPlantBox == 1)
+		rgb = RED;
+	else if (selectedLawnPosition == 1)
+		rgb = RED;
     else
         rgb = GREEN; // background color
  
@@ -224,6 +235,10 @@ module vga_bitchange(
 			end
 		end
 
+	//Always at the posedge of the clock, check if the user has selected a lawn position
+	always@ (posedge clk)
+		if(selectButton == 1 && isSelectingPlantBox == 0)
+			
 	
 	
 	//Range from 000 to 160 (vertically)
@@ -236,13 +251,15 @@ module vga_bitchange(
 		|| (hCount >= 10'd'640) && (hCount <= 10'd799))
 		) ? 1 : 0;
 
+	//Define the selected plant box
+
 	//Range from 160 to 287
 	assign zombie0 = ((vCount >= 10'd165) && (vCount <= 10'd282)
 		&& (hCount >= zombie0X) && (hCount <= zombie0X + 10'd100)
 		) ? 1 : 0;
 
 	//Range from 288 to 415
-	assign zombie1 = ((vCount >= 10'd273) && (vCount <= 10'd410)
+	assign zombie1 = ((vCount >= 10'd293) && (vCount <= 10'd410)
 		&& (hCount >= zombie1X) && (hCount <= zombie1X + 10'd100)
 		) ? 1 : 0;
 
