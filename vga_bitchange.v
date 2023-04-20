@@ -291,5 +291,4 @@ module vga_bitchange(
                            ||((vCount < 10'd322) && (vCount > 10'd308) && (hCount > 10'd300) && (hCount < 10'd310))
                            ) ? 1 : 0;
 
-	function peaHitsZombie()
 endmodule
