@@ -178,10 +178,13 @@ module vga_bitchange(
                              ||((vCount <= 10'd430) && (vCount >= 10'd425) && (hCount >= 10'd272) && (hCount <= 10'd288))
                              ||((vCount <= 10'd425) && (vCount >= 10'd420) && (hCount >= 10'd271) && (hCount <= 10'd287))
                              
-//                             ||((vCount <= 10'd440) && (vCount >= 10'd435) && (hCount >= 10'd274) && (hCount <= 10'd290))
-//                             ||((vCount <= 10'd435) && (vCount >= 10'd430) && (hCount >= 10'd273) && (hCount <= 10'd289))
-//                             ||((vCount <= 10'd430) && (vCount >= 10'd425) && (hCount >= 10'd272) && (hCount <= 10'd288))
-//                             ||((vCount <= 10'd425) && (vCount >= 10'd420) && (hCount >= 10'd271) && (hCount <= 10'd287))
+                             ||((vCount <= 10'd470) && (vCount >= 10'd465) && (hCount >= 10'd225) && (hCount <= 10'd272))
+                             ||((vCount <= 10'd465) && (vCount >= 10'd460) && (hCount >= 10'd223) && (hCount <= 10'd295))
+                             ||((vCount <= 10'd460) && (vCount >= 10'd455) && (hCount >= 10'd278) && (hCount <= 10'd294))
+                             ||((vCount <= 10'd455) && (vCount >= 10'd450) && (hCount >= 10'd277) && (hCount <= 10'd293))
+                             ||((vCount <= 10'd450) && (vCount >= 10'd445) && (hCount >= 10'd276) && (hCount <= 10'd292))
+                             ||((vCount <= 10'd445) && (vCount >= 10'd440) && (hCount >= 10'd275) && (hCount <= 10'd291))
+                             
                           
                              
                            ) ? 1 : 0;
