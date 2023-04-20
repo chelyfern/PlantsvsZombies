@@ -26,7 +26,7 @@ module vga_bitchange(
 	parameter GREY = 12'b0000_1011_0100;
 	parameter LIGHT_GREY = 12'b0011_0011_0010;
 	parameter GREEN = 12'b0000_1111_0000;
-	parameter DARK_GREEN = 12'b0000_0011_0000;
+	parameter DARK_GREEN = 12'b001110010010;
 	parameter YELLOW = 12'b1111_1111_0000;
 	parameter ORANGE = 12'b1111_1100_0000;
 	parameter RED = 12'b1111_0000_0000;
@@ -63,35 +63,37 @@ module vga_bitchange(
 	reg[9:0] zombie3X;
 	reg[9:0] zombie4X;
 	reg[49:0] zombieSpeed;// Regisiter to hold zombie speed
-	//Wires to hold if any of the pea shots are enabled. There are 25 pea shots
-	wire peaShot0X;
-	wire peaShot1X;
-	wire peaShot2X;
-	wire peaShot3X;
-	wire peaShot4X;
-	wire peaShot5X;
-	wire peaShot6X;
-	wire peaShot7X;
-	wire peaShot8X;
-	wire peaShot9X;
-	wire peaShot10X;
-	wire peaShot11X;
-	wire peaShot12X;
-	wire peaShot13X;
-	wire peaShot14X;
-	wire peaShot15X;
-	wire peaShot16X;
-	wire peaShot17X;
-	wire peaShot18X;
-	wire peaShot19X;
-	wire peaShot20X;
-	wire peaShot21X;
-	wire peaShot22X;
-	wire peaShot23X;
-	wire peaShot24X;
+	//Registers to hold pea shot's X position. There are 25 pea shots
+	reg[9:0] peaShot0X;
+	reg[9:0] peaShot1X;
+	reg[9:0] peaShot2X;
+	reg[9:0] peaShot3X;
+	reg[9:0] peaShot4X;
+	reg[9:0] peaShot5X;
+	reg[9:0] peaShot6X;
+	reg[9:0] peaShot7X;
+	reg[9:0] peaShot8X;
+	reg[9:0] peaShot9X;
+	reg[9:0] peaShot10X;
+	reg[9:0] peaShot11X;
+	reg[9:0] peaShot12X;
+	reg[9:0] peaShot13X;
+	reg[9:0] peaShot14X;
+	reg[9:0] peaShot15X;
+	reg[9:0] peaShot16X;
+	reg[9:0] peaShot17X;
+	reg[9:0] peaShot18X;
+	reg[9:0] peaShot19X;
+	reg[9:0] peaShot20X;
+	reg[9:0] peaShot21X;
+	reg[9:0] peaShot22X;
+	reg[9:0] peaShot23X;
+	reg[9:0] peaShot24X;
 	//Wire to hold current selected plant box
 	wire selectedPlantBox;
 	wire isSelectingPlantBox;
+	reg[9:0] selectedPlantBoxX;
+	reg[2:0] userPlantSelection; //001 for Pea Shooter, 010 for Sunflower, 100 for Wallnut
 	//Wire to hold current selected lawn position
 	wire selectedLawnPosition;
 	
@@ -117,6 +119,8 @@ module vga_bitchange(
 		zombie2Killed = 1'b0;
 		zombie3Killed = 1'b0;
 		zombie4Killed = 1'b0;
+		//Initiliaze the X coordinate of the selected plant box
+		selectedPlantBoxX = 10'd0;
 		//TODO: initiliaze the state?
 		zombies_killed = 15'd0;
 		reset = 1'b0;
@@ -238,20 +242,63 @@ module vga_bitchange(
 	//Always at the posedge of the clock, check if the user has selected a lawn position
 	always@ (posedge clk)
 		if(selectButton == 1 && isSelectingPlantBox == 0)
-			
+			begin
+				isSelectingPlantBox = 1;
+				//Assign the X coordinate of the selected plant box
+				selectedPlantBoxX = 10'd0;
+			end
+		else if(isSelectingPlantBox == 1 && leftButton == 1)
+			begin
+				selectedPlantBoxX = selectedPlantBoxX - 10'd160;
+			end
+		else if(isSelectingPlantBox == 1 && rightButton == 1)
+			begin
+				selectedPlantBoxX = selectedPlantBoxX + 10'd160;
+			end
+		else if(selectButton == 1 && isSelectingPlantBox == 1) //User has selected a plant
+			begin
+				//If user selects leftmost plant box, assign the selection to pea shooter
+				if(selectedPlantBoxX == 10'd0)
+					begin
+						userPlantSelection = 2'd001;
+					end
+				//If user selects middle plant box, assign the selection to sunflower
+				else if(selectedPlantBoxX == 10'd160)
+					begin
+						userPlantSelection = 2'd010;
+					end
+				//If user selects rightmost plant box, assign the selection to wallnut
+				else if(selectedPlantBoxX == 10'd320)
+					begin
+						userPlantSelection = 2'd100;
+					end
+			end
+
 	
 	
 	//Range from 000 to 160 (vertically)
 	assign greyZone = (vCount <= 10'd159) ? 1 : 0;
 
 	//Create 5 by 5 grid in the lawn
-	assign GRID = ((vCount >= 10'd160) && (vCount <= 10'd4779)
-		&& ((hCount >= 10'd0) && (hCount <= 10'd160)
-		|| (hCount >= 10'd320) && (hCount <= 10'd479)
-		|| (hCount >= 10'd640) && (hCount <= 10'd799))
-		) ? 1 : 0;
+	assign GRID = (((vCount >= 10'd160) && (vCount <= 10'287)
+	|| (vCount >= 10'd416) && (vCount <= 10'd543)
+	|| (vCount >= 10'd672) && (vCount <= 10'd799))
+	&& ((hCount >= 10'd160) && (hCount <= 10'd319)
+	|| (hCount >= 10'd480) && (hCount <= 10'd639)
+	|| (hCount >= 10'd800) && (hCount <= 10'd959))
+	) ? 1 : 0;
 
 	//Define the selected plant box
+	assign selectedPlantBox = (
+		((vCount <= 10'd005) 
+		|| (vCount >= 10'd155) && (vCount <= 10'd159)
+		&& (hCount >= selectedPlantBoxX) && (hCount <= selectedPlantBoxX + 10'd160))
+		||
+		((vCount <= 10'd160) 
+		&& ((hCount >= selectedPlantBoxX) && (hCount <= selectedPlantBoxX + 10'd005)
+		|| (hCount >= selectedPlantBoxX + 10'd155) && (hCount <= selectedPlantBoxX + 10'd159))
+		)) ? 1 : 0;
+	
 
 	//Range from 160 to 287
 	assign zombie0 = ((vCount >= 10'd165) && (vCount <= 10'd282)
