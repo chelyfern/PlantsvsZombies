@@ -26,6 +26,7 @@ module vga_bitchange(
 	parameter GREEN = 12'b0000_1111_0000;
 	parameter YELLOW = 12'b1111_1111_0000;
 	parameter ORANGE = 12'b1111_1100_0000;
+	parameter STEM_GREEN = 12'b0000_1011_0100;
 	
 
 	//End of screen
@@ -71,6 +72,8 @@ module vga_bitchange(
         rgb = ORANGE;
     else if (sunflowerOuter == 1)
         rgb = YELLOW;
+    else if (sunflowerStem == 1)
+        rgb = STEM_GREEN;
     else if (greyZone == 1)
         rgb = GREY;
     else
@@ -146,8 +149,40 @@ module vga_bitchange(
                            
                            ||((vCount < 10'd322) && (vCount > 10'd310) && (hCount > 10'd265) && (hCount < 10'd275))
                            ||((vCount < 10'd332) && (vCount > 10'd318) && (hCount > 10'd270) && (hCount < 10'd285))
-                           ||((vCount < 10'd340) && (vCount > 10'd328) && (hCount > 10'd280) && (hCount < 10'd295))
+//                           ||((vCount < 10'd340) && (vCount > 10'd328) && (hCount > 10'd280) && (hCount < 10'd295))
+                           ||((vCount < 10'd332) && (vCount > 10'd318) && (hCount > 10'd280) && (hCount < 10'd295))
                            ||((vCount < 10'd332) && (vCount > 10'd318) && (hCount > 10'd290) && (hCount < 10'd305))
                            ||((vCount < 10'd322) && (vCount > 10'd308) && (hCount > 10'd300) && (hCount < 10'd310))
+                           ) ? 1 : 0;
+                     
+     assign sunflowerStem = (//374-425, 425-475
+                               ((vCount <= 10'd380) && (vCount >= 10'd374) && (hCount >= 10'd280) && (hCount <= 10'd296))
+                             ||((vCount <= 10'd385) && (vCount >= 10'd380) && (hCount >= 10'd279) && (hCount <= 10'd295))
+                             ||((vCount <= 10'd390) && (vCount >= 10'd385) && (hCount >= 10'd278) && (hCount <= 10'd294))
+                             ||((vCount <= 10'd395) && (vCount >= 10'd390) && (hCount >= 10'd277) && (hCount <= 10'd293))
+                             ||((vCount <= 10'd400) && (vCount >= 10'd395) && (hCount >= 10'd276) && (hCount <= 10'd292))
+                             ||((vCount <= 10'd405) && (vCount >= 10'd400) && (hCount >= 10'd275) && (hCount <= 10'd291))
+                             ||((vCount <= 10'd410) && (vCount >= 10'd405) && (hCount >= 10'd274) && (hCount <= 10'd290))
+                             ||((vCount <= 10'd415) && (vCount >= 10'd410) && (hCount >= 10'd273) && (hCount <= 10'd289))
+                             ||((vCount <= 10'd420) && (vCount >= 10'd415) && (hCount >= 10'd272) && (hCount <= 10'd288))
+                             ||((vCount <= 10'd425) && (vCount >= 10'd420) && (hCount >= 10'd271) && (hCount <= 10'd287))
+                     
+                             ||((vCount <= 10'd470) && (vCount >= 10'd465) && (hCount >= 10'd280) && (hCount <= 10'd296))
+                             ||((vCount <= 10'd465) && (vCount >= 10'd460) && (hCount >= 10'd279) && (hCount <= 10'd295))
+                             ||((vCount <= 10'd460) && (vCount >= 10'd455) && (hCount >= 10'd278) && (hCount <= 10'd294))
+                             ||((vCount <= 10'd455) && (vCount >= 10'd450) && (hCount >= 10'd277) && (hCount <= 10'd293))
+                             ||((vCount <= 10'd450) && (vCount >= 10'd445) && (hCount >= 10'd276) && (hCount <= 10'd292))
+                             ||((vCount <= 10'd445) && (vCount >= 10'd440) && (hCount >= 10'd275) && (hCount <= 10'd291))
+                             ||((vCount <= 10'd440) && (vCount >= 10'd435) && (hCount >= 10'd274) && (hCount <= 10'd290))
+                             ||((vCount <= 10'd435) && (vCount >= 10'd430) && (hCount >= 10'd273) && (hCount <= 10'd289))
+                             ||((vCount <= 10'd430) && (vCount >= 10'd425) && (hCount >= 10'd272) && (hCount <= 10'd288))
+                             ||((vCount <= 10'd425) && (vCount >= 10'd420) && (hCount >= 10'd271) && (hCount <= 10'd287))
+                             
+//                             ||((vCount <= 10'd440) && (vCount >= 10'd435) && (hCount >= 10'd274) && (hCount <= 10'd290))
+//                             ||((vCount <= 10'd435) && (vCount >= 10'd430) && (hCount >= 10'd273) && (hCount <= 10'd289))
+//                             ||((vCount <= 10'd430) && (vCount >= 10'd425) && (hCount >= 10'd272) && (hCount <= 10'd288))
+//                             ||((vCount <= 10'd425) && (vCount >= 10'd420) && (hCount >= 10'd271) && (hCount <= 10'd287))
+                          
+                             
                            ) ? 1 : 0;
 endmodule
