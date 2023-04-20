@@ -23,9 +23,10 @@ module vga_bitchange(
 	parameter BLACK = 12'b0000_0000_0000;
 	parameter GREY = 12'b0000_1011_0100;
 	parameter LIGHT_GREY = 12'b0011_0011_0010;
-	parameter GREEN = 12'b0000_1111_0000;
+	parameter GREEN = 12'b1010_1010_1011;
 	parameter YELLOW = 12'b1111_1111_0000;
 	parameter ORANGE = 12'b1111_1100_0000;
+	parameter ZOMBIE_SKIN = 12'b0000_1111_0000;
 	
 
 	//End of screen
@@ -71,6 +72,13 @@ module vga_bitchange(
         rgb = ORANGE;
     else if (sunflowerOuter == 1)
         rgb = YELLOW;
+	else if (zombie0 == 1 || zombie1 == 1 || zombie2 == 1 || zombie3 == 1 || zombie4 == 1)
+		rgb = ZOMBIE_SKIN;
+	else if (greyZone == 1)
+		rgb = GREY;
+	else
+		rgb = GREEN; // background color
+
     else if (greyZone == 1)
         rgb = GREY;
     else
@@ -107,19 +115,29 @@ module vga_bitchange(
 	assign greyZone = (vCount <= 10'd159) ? 1 : 0;
 
 	//Range from 160 to 287
-	assign zombie0 = ((vCount >= 10'd160) && (vCount <= 10'd287)) ? 1 : 0;
+	assign zombie0 = ((vCount >= 10'd160) && (vCount <= 10'd287)
+		&& (hCount >= zombie0X) && (hCount <= zombie0X + 10'd100)
+		) ? 1 : 0;
 
 	//Range from 288 to 415
-	assign zombie0 = ((vCount >= 10'd288) && (vCount <= 10'd415)) ? 1 : 0;
+	assign zombie1 = ((vCount >= 10'd288) && (vCount <= 10'd415)
+		&& (hCount >= zombie1X) && (hCount <= zombie1X + 10'd100)
+		) ? 1 : 0;
 
 	//Range from 416 to 543
-	assign zombie0 = ((vCount >= 10'd416) && (vCount <= 10'd543)) ? 1 : 0;
+	assign zombie2 = ((vCount >= 10'd416) && (vCount <= 10'd543)
+		&& (hCount >= zombie2X) && (hCount <= zombie2X + 10'd100)
+		) ? 1 : 0;
 
 	//Range from 544 to 671
-	assign zombie0 = ((vCount >= 10'd544) && (vCount <= 10'd671)) ? 1 : 0;
+	assign zombie3 = ((vCount >= 10'd544) && (vCount <= 10'd671)
+		&& (hCount >= zombie3X) && (hCount <= zombie3X + 10'd100)
+		) ? 1 : 0;
 
 	//Range from 672 to 779
-	assign zombie0 = ((vCount >= 10'd672) && (vCount <= 10'd779)) ? 1 : 0;
+	assign zombie4 = ((vCount >= 10'd672) && (vCount <= 10'd779)
+		&& (hCount >= zombie4X) && (hCount <= zombie4X + 10'd100)
+		) ? 1 : 0;
 	 
 	//sunflower visualization (to be made relative to the top left corner location, need to add stem + movement)
 	assign sunflowerOuter = 
