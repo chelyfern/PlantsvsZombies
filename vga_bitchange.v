@@ -27,6 +27,8 @@ module vga_bitchange(
 	parameter YELLOW = 12'b1111_1111_0000;
 	parameter ORANGE = 12'b1111_1100_0000;
 	parameter STEM_GREEN = 12'b0000_1011_0100;
+	parameter BROWN = 12'd0110_0011_0000;
+	parameter WHITE = 12'd1111_1111_1111;
 	
 
 	//End of screen
@@ -63,6 +65,11 @@ module vga_bitchange(
     reg[9:0] sfHeadVPos;
     reg[49:0] sfBounceSpeed;
     reg sfHeadFlag;
+    
+    
+    reg[9:0] wVPos;
+    reg[9:0] wHPos;
+    reg blink;
 
 	initial begin
 		zombies_killed = 15'd0;
@@ -72,6 +79,10 @@ module vga_bitchange(
 		sfHeadHPos = sfHPos;
 		sfHeadVPos = sfVPos;
 		sfHeadFlag = 1'd0;
+		
+		wVPos = 10'd218;
+		wHPos = 10'd400;
+//		blink = 1'd1;
 	end
 
 	//TODO: define the zombie colors here
@@ -79,6 +90,12 @@ module vga_bitchange(
 	always@ (*)
     if (~bright)
         rgb = BLACK;
+    else if (walnutBlack == 1)
+        rgb = BLACK;
+    else if (walnutWhite == 1)
+        rgb = WHITE;
+    else if (walnut == 1)
+        rgb = BROWN;
     else if (sunflowerFace == 1)
         rgb = BLACK;
     else if (sunflowerInner == 1)
@@ -126,9 +143,13 @@ module vga_bitchange(
 	   begin
 	       sfBounceSpeed = 50'd0;
 	       if (sfHeadHPos <= (sfHPos - 10'd30))
+	       begin
 	           sfHeadFlag = 1'd0;
+	       end
 	       if (sfHeadHPos >= (sfHPos + 10'd30))
+	       begin
 	           sfHeadFlag = 1'd1;
+	       end
 	           
 	       if (sfHeadFlag == 1'd0)
 	           sfHeadHPos = sfHeadHPos + 1'd1;
@@ -136,13 +157,25 @@ module vga_bitchange(
 	           sfHeadHPos = sfHeadHPos - 1'd1;
 	       	           
 	       if ((sfHeadFlag == 1'd0) && (sfHeadHPos <= sfHPos))
+	       begin
+	           blink = 1'd1;
 	           sfHeadVPos = sfHeadVPos - 1'd1;
+	       end
 	       if ((sfHeadFlag == 1'd0) && (sfHeadHPos > sfHPos))
+	       begin
+	           blink = 1'd0;
 	           sfHeadVPos = sfHeadVPos + 1'd1;
+	       end
 	       if ((sfHeadFlag == 1'd1) && (sfHeadHPos >= sfHPos))
+	       begin
+	           blink = 1'd0;
 	           sfHeadVPos = sfHeadVPos - 1'd1;
+	       end
 	       if ((sfHeadFlag == 1'd1) && (sfHeadHPos < sfHPos))
+	       begin
+	           blink = 1'd0;
 	           sfHeadVPos = sfHeadVPos + 1'd1;
+	       end
 	   end
 	end
 	
@@ -165,6 +198,74 @@ module vga_bitchange(
 	assign zombie0 = ((vCount >= 10'd672) && (vCount <= 10'd779)) ? 1 : 0;
 	
 	
+	assign walnut = 
+	               (
+	               ((vCount >= wVPos) && (vCount <= wVPos + 10'd5) && (hCount >= wHPos + 10'd27) && (hCount <= wHPos + 10'd48))
+	               ||((vCount >= wVPos + 10'd3) && (vCount <= wVPos + 10'd8) && (hCount >= wHPos + 10'd23) && (hCount <= wHPos + 10'd52))
+	               
+	               ||((vCount >= wVPos + 10'd6) && (vCount <= wVPos + 10'd11) && (hCount >= wHPos + 10'd19) && (hCount <= wHPos + 10'd56))
+	               ||((vCount >= wVPos + 10'd9) && (vCount <= wVPos + 10'd14) && (hCount >= wHPos + 10'd17) && (hCount <= wHPos + 10'd58))
+	               ||((vCount >= wVPos + 10'd12) && (vCount <= wVPos + 10'd17) && (hCount >= wHPos + 10'd15) && (hCount <= wHPos + 10'd60))
+	               ||((vCount >= wVPos + 10'd15) && (vCount <= wVPos + 10'd20) && (hCount >= wHPos + 10'd13) && (hCount <= wHPos + 10'd62))
+	               ||((vCount >= wVPos + 10'd18) && (vCount <= wVPos + 10'd23) && (hCount >= wHPos + 10'd11) && (hCount <= wHPos + 10'd64))
+	               ||((vCount >= wVPos + 10'd21) && (vCount <= wVPos + 10'd26) && (hCount >= wHPos + 10'd9) && (hCount <= wHPos + 10'd66))
+
+	               ||((vCount >= wVPos + 10'd24) && (vCount <= wVPos + 10'd29) && (hCount >= wHPos + 10'd8) && (hCount <= wHPos + 10'd67))
+	               ||((vCount >= wVPos + 10'd27) && (vCount <= wVPos + 10'd32) && (hCount >= wHPos + 10'd7) && (hCount <= wHPos + 10'd68))
+	               ||((vCount >= wVPos + 10'd30) && (vCount <= wVPos + 10'd35) && (hCount >= wHPos + 10'd6) && (hCount <= wHPos + 10'd69))
+	               ||((vCount >= wVPos + 10'd33) && (vCount <= wVPos + 10'd38) && (hCount >= wHPos + 10'd5) && (hCount <= wHPos + 10'd70))
+	               ||((vCount >= wVPos + 10'd36) && (vCount <= wVPos + 10'd41) && (hCount >= wHPos + 10'd4) && (hCount <= wHPos + 10'd71))
+	               ||((vCount >= wVPos + 10'd39) && (vCount <= wVPos + 10'd44) && (hCount >= wHPos + 10'd3) && (hCount <= wHPos + 10'd72))
+	               ||((vCount >= wVPos + 10'd42) && (vCount <= wVPos + 10'd47) && (hCount >= wHPos + 10'd2) && (hCount <= wHPos + 10'd73))
+	               ||((vCount >= wVPos + 10'd45) && (vCount <= wVPos + 10'd50) && (hCount >= wHPos + 10'd1) && (hCount <= wHPos + 10'd74))
+	               ||((vCount >= wVPos + 10'd48) && (vCount <= wVPos + 10'd53) && (hCount >= wHPos) && (hCount <= wHPos + 10'd75))
+	               
+	               
+	               ||((vCount >= wVPos + 10'd51) && (vCount <= wVPos + 10'd56) && (hCount >= wHPos) && (hCount <= wHPos + 10'd75))
+	               ||((vCount >= wVPos + 10'd54) && (vCount <= wVPos + 10'd59) && (hCount >= wHPos) && (hCount <= wHPos + 10'd75))
+	               ||((vCount >= wVPos + 10'd57) && (vCount <= wVPos + 10'd62) && (hCount >= wHPos) && (hCount <= wHPos + 10'd75))
+	               ||((vCount >= wVPos + 10'd60) && (vCount <= wVPos + 10'd65) && (hCount >= wHPos) && (hCount <= wHPos + 10'd75))
+	               ||((vCount >= wVPos + 10'd63) && (vCount <= wVPos + 10'd68) && (hCount >= wHPos) && (hCount <= wHPos + 10'd75))
+	               ||((vCount >= wVPos + 10'd66) && (vCount <= wVPos + 10'd71) && (hCount >= wHPos) && (hCount <= wHPos + 10'd75))	  
+	                         
+	               ||((vCount >= wVPos + 10'd69) && (vCount <= wVPos + 10'd74) && (hCount >= wHPos + 10'd1) && (hCount <= wHPos + 10'd74))
+	               ||((vCount >= wVPos + 10'd72) && (vCount <= wVPos + 10'd77) && (hCount >= wHPos + 10'd2) && (hCount <= wHPos + 10'd73))
+	               ||((vCount >= wVPos + 10'd75) && (vCount <= wVPos + 10'd80) && (hCount >= wHPos + 10'd3) && (hCount <= wHPos + 10'd72))
+	               ||((vCount >= wVPos + 10'd78) && (vCount <= wVPos + 10'd83) && (hCount >= wHPos + 10'd4) && (hCount <= wHPos + 10'd71))
+	               ||((vCount >= wVPos + 10'd81) && (vCount <= wVPos + 10'd86) && (hCount >= wHPos + 10'd5) && (hCount <= wHPos + 10'd70))
+	               ||((vCount >= wVPos + 10'd84) && (vCount <= wVPos + 10'd89) && (hCount >= wHPos + 10'd6) && (hCount <= wHPos + 10'd69))
+	               ||((vCount >= wVPos + 10'd87) && (vCount <= wVPos + 10'd92) && (hCount >= wHPos + 10'd7) && (hCount <= wHPos + 10'd68))
+	               ||((vCount >= wVPos + 10'd90) && (vCount <= wVPos + 10'd95) && (hCount >= wHPos + 10'd8) && (hCount <= wHPos + 10'd67))
+	               
+	               ||((vCount >= wVPos + 10'd93) && (vCount <= wVPos + 10'd98) && (hCount >= wHPos + 10'd9) && (hCount <= wHPos + 10'd66))
+	               ||((vCount >= wVPos + 10'd96) && (vCount <= wVPos + 10'd101) && (hCount >= wHPos + 10'd11) && (hCount <= wHPos + 10'd64))
+	               ||((vCount >= wVPos + 10'd99) && (vCount <= wVPos + 10'd104) && (hCount >= wHPos + 10'd13) && (hCount <= wHPos + 10'd62))
+	               ||((vCount >= wVPos + 10'd102) && (vCount <= wVPos + 10'd107) && (hCount >= wHPos + 10'd15) && (hCount <= wHPos + 10'd60))
+	               ||((vCount >= wVPos + 10'd105) && (vCount <= wVPos + 10'd110) && (hCount >= wHPos + 10'd17) && (hCount <= wHPos + 10'd58))
+	               ||((vCount >= wVPos + 10'd108) && (vCount <= wVPos + 10'd113) && (hCount >= wHPos + 10'd19) && (hCount <= wHPos + 10'd56))
+	               
+	               ||((vCount >= wVPos + 10'd111) && (vCount <= wVPos + 10'd116) && (hCount >= wHPos + 10'd23) && (hCount <= wHPos + 10'd52))
+	               ||((vCount >= wVPos + 10'd114) && (vCount <= wVPos + 10'd119) && (hCount >= wHPos + 10'd27) && (hCount <= wHPos + 10'd48))
+                   ) ? 1 : 0;
+    
+    assign walnutWhite =   (
+                           ( 
+	                       ((vCount >= wVPos + 10'd44) && (vCount <= wVPos + 10'd70) && (hCount >= wHPos + 10'd30) && (hCount <= wHPos + 10'd47))
+	                       ||((vCount >= wVPos + 10'd47) && (vCount <= wVPos + 10'd65) && (hCount >= wHPos + 10'd55) && (hCount <= wHPos + 10'd69))
+                           ) && (blink == 1'd0)
+                           ) ? 1 : 0;
+  
+    assign walnutBlack = 
+                           (
+                           ( 
+	                       (((vCount >= wVPos + 10'd49) && (vCount <= wVPos + 10'd65) && (hCount >= wHPos + 10'd35) && (hCount <= wHPos + 10'd45))
+	                       ||((vCount >= wVPos + 10'd51) && (vCount <= wVPos + 10'd63) && (hCount >= wHPos + 10'd59) && (hCount <= wHPos + 10'd67)))
+	                       && (blink == 1'd0)
+	                       )
+	                       || ((vCount >= wVPos + 10'd74) && (vCount <= wVPos + 10'd79) && (hCount >= wHPos + 10'd39) && (hCount <= wHPos + 10'd44))
+	                       || ((vCount >= wVPos + 10'd76) && (vCount <= wVPos + 10'd81) && (hCount >= wHPos + 10'd42) && (hCount <= wHPos + 10'd59))
+	                       || ((vCount >= wVPos + 10'd74) && (vCount <= wVPos + 10'd79) && (hCount >= wHPos + 10'd57) && (hCount <= wHPos + 10'd62))
+                           ) ? 1 : 0;
 	 
 	//sunflower visualization (to be made relative to the top left corner location, need to add stem + movement)
 	assign sunflowerOuter = 
