@@ -34,8 +34,8 @@ module vga_bitchange(
 	parameter ZOMBIE_HEAD = 12'b1010_1010_1011;
 
 	//Size definitions
-	parameter ZOMBIE_HEAD_RADIUS = 21;
-	parameter ZOMBIE_BODY_WIDTH = 12;
+	parameter ZOMBIE_HEAD_RADIUS = 10'd21;
+	parameter ZOMBIE_BODY_HEIGHT = 10'd128;
 	parameter ZOMBIE0_ROW_TOP = 10'd160;
 	parameter ZOMBIE_0_ROW_BOTTOM = 10'd287;
 	parameter ZOMBIE1_ROW_TOP = 10'd288;
@@ -110,7 +110,11 @@ module vga_bitchange(
 	reg[9:0] peaShot24X;
 	//Wire to hold current selected plant box
 	wire selectedPlantBox;
+<<<<<<< HEAD
 	reg isSelectingPlantBox = 0;
+=======
+	reg isSelectingPlantBox;
+>>>>>>> b99fa37a0f5ad88fa6de9f826a86a43b6479bc93
 	reg[9:0] selectedPlantBoxX;
 	reg[2:0] userPlantSelection; //001 for Pea Shooter, 010 for Sunflower, 100 for Wallnut
 	//Wire to hold current selected lawn position
@@ -197,12 +201,12 @@ module vga_bitchange(
         else
             zombie2Counter = zombie2Counter + 1;
 
-        if (zombie3Counter >= 4'd16) // Move zombie3 after 16 clock cycles
+        if (zombie3Counter >= 5'd16) // Move zombie3 after 16 clock cycles
             zombie3X = zombie3X - 10'd1;
         else
             zombie3Counter = zombie3Counter + 1;
 
-        if (zombie4Counter >= 4'd20) // Move zombie4 after 20 clock cycles
+        if (zombie4Counter >= 5'd20) // Move zombie4 after 20 clock cycles
             zombie4X = zombie4X - 10'd1;
         else
             zombie4Counter = zombie4Counter + 1;
@@ -305,17 +309,17 @@ module vga_bitchange(
 				//If user selects leftmost plant box, assign the selection to pea shooter
 				if(selectedPlantBoxX == 10'd0)
 					begin
-						userPlantSelection = 2'd001;
+						userPlantSelection = 2'b001;
 					end
 				//If user selects middle plant box, assign the selection to sunflower
 				else if(selectedPlantBoxX == 10'd160)
 					begin
-						userPlantSelection = 2'd010;
+						userPlantSelection = 3'b010;
 					end
 				//If user selects rightmost plant box, assign the selection to wallnut
 				else if(selectedPlantBoxX == 10'd320)
 					begin
-						userPlantSelection = 2'd100;
+						userPlantSelection = 3'b100;
 					end
 				isSelectingLawnPosition = 1;
 				selectedPlantBoxX = 10'd0;
@@ -333,8 +337,8 @@ module vga_bitchange(
 	//Range from 000 to 160 (vertically)
 	assign greyZone = (vCount <= 10'd159) ? 1 : 0;
 
-	//Create 5 by 5 grid in the lawn VEERTICAL is 524
-	assign GRID = (((vCount >= 10'd160) && (vCount <= 10'287)
+	//Create 5 by 5 grid in the lawn
+	assign GRID = (((vCount >= 10'd160) && (vCount <= 10'd287)
 	|| (vCount >= 10'd416) && (vCount <= 10'd543)
 	|| (vCount >= 10'd672) && (vCount <= 10'd799))
 	&& ((hCount >= 10'd160) && (hCount <= 10'd319)
@@ -381,26 +385,26 @@ module vga_bitchange(
 
 	//Using the zombie head radius, create the zombie head in the upper part of the row
 	//Calculate distance between current pixel and center of zombie head
-	int dist0 = sqrt((hCount - zombie0X)*(hCount - zombie0X) + (vCount - (ZOMBIE0_ROW_TOP -  32))*(vCount - (ZOMBIE0_ROW_TOP -  32)));
+	assign dist0 = ((hCount - zombie0X)*(hCount - zombie0X) + (vCount - (ZOMBIE0_ROW_TOP -  32))*(vCount - (ZOMBIE0_ROW_TOP -  32))) ** (1/2);
 
 	assign zombieHead0 = (dist0 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
 	assign zombieOutline0 = (dist0 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist0 <= ZOMBIE_HEAD_RADIUS) ? 0 : 1;
 	
 
-	int dist1 = sqrt((hCount - zombie1X)*(hCount - zombie1X) + (vCount - (ZOMBIE1_ROW_TOP - 32))*(vCount - (ZOMBIE1_ROW_TOP - 32)));
+	assign dist1 = ((hCount - zombie1X)*(hCount - zombie1X) + (vCount - (ZOMBIE1_ROW_TOP - 32))*(vCount - (ZOMBIE1_ROW_TOP - 32))) ** (1/2);
 	assign zombieHead1 = (dist1 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
 	assign zombieOutline1 = (dist1 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist1 <= ZOMBIE_HEAD_RADIUS) ? 0 : 1;
 	
 
-	int dist2 = sqrt((hCount - zombie2X)*(hCount - zombie2X) + (vCount - (ZOMBIE2_ROW_TOP - 32))*(vCount - (ZOMBIE2_ROW_TOP - 32)));
+	assign dist2 = ((hCount - zombie2X)*(hCount - zombie2X) + (vCount - (ZOMBIE2_ROW_TOP - 32))*(vCount - (ZOMBIE2_ROW_TOP - 32))) ** (1/2);
 	assign zombieHead2 = (dist2 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
 	assign zombieOutline2 = (dist2 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist2 <= ZOMBIE_HEAD_RADIUS) ? 0 : 1;
 
-	int dist3 = sqrt((hCount - zombie3X)*(hCount - zombie3X) + (vCount - (ZOMBIE3_ROW_TOP - 32))*(vCount - (ZOMBIE3_ROW_TOP - 32)));
+	assign dist3 = ((hCount - zombie3X)*(hCount - zombie3X) + (vCount - (ZOMBIE3_ROW_TOP - 32))*(vCount - (ZOMBIE3_ROW_TOP - 32))) ** (1/2);
 	assign zombieHead3 = (dist3 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
 	assign zombieOutline3 = (dist3 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist3 <= ZOMBIE_HEAD_RADIUS) ? 0 : 1;
 
-	int dist4 = sqrt((hCount - zombie4X)*(hCount - zombie4X) + (vCount - (ZOMBIE4_ROW_TOP - 32))*(vCount - (ZOMBIE4_ROW_TOP - 32)));
+	assign dist4 = ((hCount - zombie4X)*(hCount - zombie4X) + (vCount - (ZOMBIE4_ROW_TOP - 32))*(vCount - (ZOMBIE4_ROW_TOP - 32))) ** (1/2);
 	assign zombieHead4 = (dist4 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
 	assign zombieOutline4 = (dist4 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist4 <= ZOMBIE_HEAD_RADIUS) ? 0 : 1;
 
