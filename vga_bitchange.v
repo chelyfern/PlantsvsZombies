@@ -110,11 +110,14 @@ module vga_bitchange(
 	reg[9:0] peaShot24X;
 	//Wire to hold current selected plant box
 	wire selectedPlantBox;
-	wire isSelectingPlantBox;
+	reg isSelectingPlantBox = 0;
 	reg[9:0] selectedPlantBoxX;
 	reg[2:0] userPlantSelection; //001 for Pea Shooter, 010 for Sunflower, 100 for Wallnut
 	//Wire to hold current selected lawn position
 	wire selectedLawnPosition;
+	wire isSelectingLawnPosition;
+	reg[9:0] selectedGridBoxX;
+	reg [4:0] userGridSelection;
 	
 	//Store the current state
 //	output q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW;
@@ -314,14 +317,23 @@ module vga_bitchange(
 					begin
 						userPlantSelection = 2'd100;
 					end
+				isSelectingLawnPosition = 1;
+				selectedPlantBoxX = 10'd0;
 			end
+		//If user has selected a plant box, then they are selecting a lawn position
+		else if(isSelectingLawnPosition == 1)
+			begin
+				
+				
+			end
+
 
 	
 	
 	//Range from 000 to 160 (vertically)
 	assign greyZone = (vCount <= 10'd159) ? 1 : 0;
 
-	//Create 5 by 5 grid in the lawn
+	//Create 5 by 5 grid in the lawn VEERTICAL is 524
 	assign GRID = (((vCount >= 10'd160) && (vCount <= 10'287)
 	|| (vCount >= 10'd416) && (vCount <= 10'd543)
 	|| (vCount >= 10'd672) && (vCount <= 10'd799))
