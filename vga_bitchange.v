@@ -49,10 +49,18 @@ module vga_bitchange(
 	parameter OUTLINE_WIDTH = 10'd02;
 	parameter ZOMBIE_BODY_WIDTH = 10'd17;
 
-	
+	//Time definitions
+	parameter TO_KILL_PEA = 50'd5000000;
+	parameter TO_KILL_SUN = 50'd5000000;
+	parameter TO_KILL_ZOMBIE = 50'd5000000;
+
+	//Plant definitions
+	parameter PEA = 3'd001;
+	parameter SUNFLOWER = 3'd010;
+	parameter PEASHOOTER = 3'd100;
 
 	//End of screen
-	parameter END_OF_LAWN = 10'd000;
+	parameter END_OF_LAWN = 10'd124;
 
 	//Register definitions
 	reg reset;
@@ -82,6 +90,30 @@ module vga_bitchange(
 	reg[9:0] zombie3X;
 	reg[9:0] zombie4X;
 	reg[49:0] zombieSpeed;// Regisiter to hold zombie speed
+	//Registers to hold if a zombie has been stopped
+	reg zombie0Stopped;
+	reg zombie1Stopped;
+	reg zombie2Stopped;
+	reg zombie3Stopped;
+	reg zombie4Stopped;
+	//Registers to hold how long a zombie has been stopped
+	reg[60:0] zombie0StoppedCounter;
+	reg[60:0] zombie1StoppedCounter;
+	reg[60:0] zombie2StoppedCounter;
+	reg[60:0] zombie3StoppedCounter;
+	reg[60:0] zombie4StoppedCounter;
+	//Registers to hold location of rightmost plant in every row
+	reg[9:0] plant0X;
+	reg[9:0] plant1X;
+	reg[9:0] plant2X;
+	reg[9:0] plant3X;
+	reg[9:0] plant4X;
+	//Registers to hold what type of plant is the rightmost plant in every row
+	reg[2:0] plant0Type;
+	reg[2:0] plant1Type;
+	reg[2:0] plant2Type;
+	reg[2:0] plant3Type;
+	reg[2:0] plant4Type;
 	//Registers to hold pea shot's X position. There are 25 pea shots
 	reg[9:0] peaShot0X;
 	reg[9:0] peaShot1X;
@@ -109,13 +141,13 @@ module vga_bitchange(
 	reg[9:0] peaShot23X;
 	reg[9:0] peaShot24X;
 	//Wire to hold current selected plant box
-	wire selectedPlantBox;
+	reg selectedPlantBox;
 	reg isSelectingPlantBox = 0;
 	reg[9:0] selectedPlantBoxX;
 	reg[2:0] userPlantSelection; //001 for Pea Shooter, 010 for Sunflower, 100 for Wallnut
 	//Wire to hold current selected lawn position
-	wire selectedLawnPosition;
-	wire isSelectingLawnPosition;
+	reg selectedLawnPosition;
+	reg isSelectingLawnPosition;
 	reg[9:0] selectedGridBoxX;
 	reg [4:0] userGridSelection;
 	
@@ -153,18 +185,6 @@ module vga_bitchange(
 	always@ (*)
     if (~bright)
         rgb = BLACK;
-    else if (sunflowerFace == 1)
-        rgb = BLACK;
-    else if (sunflowerInner == 1)
-        rgb = ORANGE;
-    else if (sunflowerOuter == 1)
-        rgb = YELLOW;
-	else if (zombie0 == 1 || zombie1 == 1 || zombie2 == 1 || zombie3 == 1 || zombie4 == 1)
-		rgb = ZOMBIE_SKIN;
-    else if (greyZone == 1)
-        rgb = GREY;
-	else if (GRID == 1)
-		rgb = DARK_GREEN;
 	else if (selectedPlantBox == 1)
 		rgb = RED;
 	else if (selectedLawnPosition == 1)
@@ -175,6 +195,18 @@ module vga_bitchange(
 		rgb = BLACK;
 	else if((zombieBody0 == 1 && !zombie0Killed) || (zombieBody1 == 1 && !zombie1Killed) || (zombieBody2 == 1 && !zombie2Killed) || (zombieBody3 == 1 && !zombie3Killed) || (zombieBody4 == 1 && !zombie4Killed))
 		rgb = ZOMBIE_SKIN;
+	// else if (zombie0 == 1 || zombie1 == 1 || zombie2 == 1 || zombie3 == 1 || zombie4 == 1)
+	// 	rgb = ZOMBIE_SKIN;
+    else if (sunflowerFace == 1)
+        rgb = BLACK;
+    else if (sunflowerInner == 1)
+        rgb = ORANGE;
+    else if (sunflowerOuter == 1)
+        rgb = YELLOW;
+    else if (greyZone == 1)
+        rgb = GREY;
+	else if (GRID == 1)
+		rgb = DARK_GREEN;
     else
         rgb = GREEN; // background color
  
@@ -182,30 +214,22 @@ module vga_bitchange(
 	always @(posedge clk) begin
     zombieSpeed = zombieSpeed + 50'd1;
     if (zombieSpeed >= 50'd500000) begin
-        if (zombie0Counter >= 4'd4) // Move zombie0 after 4 clock cycles
+        if (zombie1X <= 50'd600 && ~zombie0Stopped) // Move zombie0 after zombie1 has moved 200 pixels across the screen
             zombie0X = zombie0X - 10'd1;
-        else
-            zombie0Counter = zombie0Counter + 1;
-
-        if (zombie1Counter >= 4'd8) // Move zombie1 after 8 clock cycles
-            zombie1X = zombie1X - 10'd1;
-        else
-            zombie1Counter = zombie1Counter + 1;
-
-        if (zombie2Counter >= 4'd12) // Move zombie2 after 12 clock cycles
+		
+        //Zombie 1 always enters the lawn first
+		if (~zombie1Stopped){
+			zombie1X = zombie1X - 10'd1;
+		}
+        
+        if (zombie0X <= 50'd600 && ~zombie2Stopped) // Move zombie2 after zombie0 has moved 200 pixels across the screen
             zombie2X = zombie2X - 10'd1;
-        else
-            zombie2Counter = zombie2Counter + 1;
 
-        if (zombie3Counter >= 5'd16) // Move zombie3 after 16 clock cycles
+        if (zombie0X <= 50'd700 && ~zombie3Stopped) // Move zombie3 after zombie0 has moved 100 pixels across the screen
             zombie3X = zombie3X - 10'd1;
-        else
-            zombie3Counter = zombie3Counter + 1;
 
-        if (zombie4Counter >= 5'd20) // Move zombie4 after 20 clock cycles
+        if (zombie3X <= 50'd700 && ~zombie4Stopped) // Move zombie4 zombie3 has moved 100 pixels across the screen
             zombie4X = zombie4X - 10'd1;
-        else
-            zombie4Counter = zombie4Counter + 1;
 
         zombieSpeed = 50'd0;
 			//If a zombie reaches the end of the lawn, the user loses!
@@ -284,6 +308,21 @@ module vga_bitchange(
 			end
 		end
 
+	//Always at the posedge of the clock, if the zombie is in the same position as the plant, stop the zombie and "eat" the plant
+	if(zombie0X == plant0X){
+		zombie0Stopped = 1'b1;
+		//Have some type of counter to see how long the zombie has been with the plant
+		zombie0Counter = zombie0Counter + 1'd1;
+		if((zombie0Counter == TO_KILL_PEA) && (plant0Type == PEA)){ //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
+			plant0Killed = 1'b1;
+			zombie0Counter = 1'd0;
+			//Edit the new position of the rightmost zombie
+		}
+		
+
+	}
+	
+
 	//Always at the posedge of the clock, check if the user has selected a lawn position
 	always@ (posedge clk)
 		if(selectButton == 1 && isSelectingPlantBox == 0)
@@ -354,30 +393,31 @@ module vga_bitchange(
 		)) ? 1 : 0;
 	
 
-	//Range from 160 to 287
-	assign zombie0 = ((vCount >= 10'd165) && (vCount <= 10'd282)
-		&& (hCount >= zombie0X) && (hCount <= zombie0X + 10'd100)
-		) ? 1 : 0;
 
-	//Range from 288 to 415
-	assign zombie1 = ((vCount >= 10'd293) && (vCount <= 10'd410)
-		&& (hCount >= zombie1X) && (hCount <= zombie1X + 10'd100)
-		) ? 1 : 0;
+	// //Range from 160 to 287
+	// assign zombie0 = ((vCount >= 10'd165) && (vCount <= 10'd282)
+	// 	&& (hCount >= zombie0X) && (hCount <= zombie0X + 10'd100)
+	// 	) ? 1 : 0;
 
-	//Range from 416 to 543
-	assign zombie2 = ((vCount >= 10'd421) && (vCount <= 10'd538)
-		&& (hCount >= zombie2X) && (hCount <= zombie2X + 10'd100)
-		) ? 1 : 0;
+	// //Range from 288 to 415
+	// assign zombie1 = ((vCount >= 10'd293) && (vCount <= 10'd410)
+	// 	&& (hCount >= zombie1X) && (hCount <= zombie1X + 10'd100)
+	// 	) ? 1 : 0;
 
-	//Range from 544 to 671
-	assign zombie3 = ((vCount >= 10'd549) && (vCount <= 10'd666)
-		&& (hCount >= zombie3X) && (hCount <= zombie3X + 10'd100)
-		) ? 1 : 0;
+	// //Range from 416 to 543
+	// assign zombie2 = ((vCount >= 10'd421) && (vCount <= 10'd538)
+	// 	&& (hCount >= zombie2X) && (hCount <= zombie2X + 10'd100)
+	// 	) ? 1 : 0;
 
-	//Range from 672 to 779
-	assign zombie4 = ((vCount >= 10'd677) && (vCount <= 10'd774)
-		&& (hCount >= zombie4X) && (hCount <= zombie4X + 10'd100)
-		) ? 1 : 0;
+	// //Range from 544 to 671
+	// assign zombie3 = ((vCount >= 10'd549) && (vCount <= 10'd666)
+	// 	&& (hCount >= zombie3X) && (hCount <= zombie3X + 10'd100)
+	// 	) ? 1 : 0;
+
+	// //Range from 672 to 779
+	// assign zombie4 = ((vCount >= 10'd677) && (vCount <= 10'd774)
+	// 	&& (hCount >= zombie4X) && (hCount <= zombie4X + 10'd100)
+	// 	) ? 1 : 0;
 
 	//Using the zombie head radius, create the zombie head in the upper part of the row
 	//Calculate distance between current pixel and center of zombie head
