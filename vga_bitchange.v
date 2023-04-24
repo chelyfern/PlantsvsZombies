@@ -110,11 +110,7 @@ module vga_bitchange(
 	reg[9:0] peaShot24X;
 	//Wire to hold current selected plant box
 	wire selectedPlantBox;
-<<<<<<< HEAD
 	reg isSelectingPlantBox = 0;
-=======
-	reg isSelectingPlantBox;
->>>>>>> b99fa37a0f5ad88fa6de9f826a86a43b6479bc93
 	reg[9:0] selectedPlantBoxX;
 	reg[2:0] userPlantSelection; //001 for Pea Shooter, 010 for Sunflower, 100 for Wallnut
 	//Wire to hold current selected lawn position
