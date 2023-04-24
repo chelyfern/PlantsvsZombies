@@ -31,6 +31,24 @@ module vga_bitchange(
 	parameter ORANGE = 12'b1111_1100_0000;
 	parameter RED = 12'b1111_0000_0000;
 	parameter ZOMBIE_SKIN = 12'b1010_1010_1011;
+	parameter ZOMBIE_HEAD = 12'b1010_1010_1011;
+
+	//Size definitions
+	parameter ZOMBIE_HEAD_RADIUS = 21;
+	parameter ZOMBIE_BODY_WIDTH = 12;
+	parameter ZOMBIE0_ROW_TOP = 10'd160;
+	parameter ZOMBIE_0_ROW_BOTTOM = 10'd287;
+	parameter ZOMBIE1_ROW_TOP = 10'd288;
+	parameter ZOMBIE_1_ROW_BOTTOM = 10'd415;
+	parameter ZOMBIE2_ROW_TOP = 10'd416;
+	parameter ZOMBIE_2_ROW_BOTTOM = 10'd543;
+	parameter ZOMBIE3_ROW_TOP = 10'd544;
+	parameter ZOMBIE_3_ROW_BOTTOM = 10'd671;
+	parameter ZOMBIE4_ROW_TOP = 10'd672;
+	parameter ZOMBIE_4_ROW_BOTTOM = 10'd799;
+	parameter OUTLINE_WIDTH = 10'd02;
+	parameter ZOMBIE_BODY_WIDTH = 10'd17;
+
 	
 
 	//End of screen
@@ -44,6 +62,7 @@ module vga_bitchange(
 	wire zombie2;
 	wire zombie3;
 	wire zombie4;
+	reg [3:0] zombie0Counter, zombie1Counter, zombie2Counter, zombie3Counter, zombie4Counter;
 	//Wires to hold if zombie has been "killed"
 	reg zombie0Killed;
 	reg zombie1Killed;
@@ -147,22 +166,45 @@ module vga_bitchange(
 		rgb = RED;
 	else if (selectedLawnPosition == 1)
 		rgb = RED;
+	else if ((zombieHead0 == 1 && !zombie0Killed) || (zombieHead1 == 1 && !zombie1Killed) || (zombieHead2 == 1 && !zombie2Killed) || (zombieHead3 == 1 && !zombie3Killed) || (zombieHead4 == 1 && !zombie4Killed))
+		rgb = ZOMBIE_HEAD;
+	else if ((zombieOutline0 == 1 && !zombie0Killed) || (zombieOutline1 == 1 && !zombie1Killed) || (zombieOutline2 == 1 && !zombie2Killed) || (zombieOutline3 == 1 && !zombie3Killed) || (zombieOutline4 == 1 && !zombie4Killed))
+		rgb = BLACK;
+	else if((zombieBody0 == 1 && !zombie0Killed) || (zombieBody1 == 1 && !zombie1Killed) || (zombieBody2 == 1 && !zombie2Killed) || (zombieBody3 == 1 && !zombie3Killed) || (zombieBody4 == 1 && !zombie4Killed))
+		rgb = ZOMBIE_SKIN;
     else
         rgb = GREEN; // background color
  
 	//At every clock, move the zombies to the right by increasnig the zombie "speed"
-	always@ (posedge clk)
-		begin
-		zombieSpeed = zombieSpeed + 50'd1;
-		if (zombieSpeed >=  50'd500000) //500 thousand
-			begin
-			//Iterate through all zombies: if they have already started moving, then increment their position TODO ask for help on how to implement this
-			zombie0X = zombie0X - 10'd1; //Move the zombie to the left
-			zombie1X = zombie1X - 10'd1;
-			zombie2X = zombie2X - 10'd1;
-			zombie3X = zombie3X - 10'd1;
-			zombie4X = zombie4X - 10'd1;
-			zombieSpeed = 50'd0;
+	always @(posedge clk) begin
+    zombieSpeed = zombieSpeed + 50'd1;
+    if (zombieSpeed >= 50'd500000) begin
+        if (zombie0Counter >= 4'd4) // Move zombie0 after 4 clock cycles
+            zombie0X = zombie0X - 10'd1;
+        else
+            zombie0Counter = zombie0Counter + 1;
+
+        if (zombie1Counter >= 4'd8) // Move zombie1 after 8 clock cycles
+            zombie1X = zombie1X - 10'd1;
+        else
+            zombie1Counter = zombie1Counter + 1;
+
+        if (zombie2Counter >= 4'd12) // Move zombie2 after 12 clock cycles
+            zombie2X = zombie2X - 10'd1;
+        else
+            zombie2Counter = zombie2Counter + 1;
+
+        if (zombie3Counter >= 4'd16) // Move zombie3 after 16 clock cycles
+            zombie3X = zombie3X - 10'd1;
+        else
+            zombie3Counter = zombie3Counter + 1;
+
+        if (zombie4Counter >= 4'd20) // Move zombie4 after 20 clock cycles
+            zombie4X = zombie4X - 10'd1;
+        else
+            zombie4Counter = zombie4Counter + 1;
+
+        zombieSpeed = 50'd0;
 			//If a zombie reaches the end of the lawn, the user loses!
 			//Check if any of the zombies have reached the end of the lawn
 			if((zombie0X == END_OF_LAWN) || (zombie1X == END_OF_LAWN) || (zombie2X == END_OF_LAWN) || (zombie3X == END_OF_LAWN) || (zombie4X == END_OF_LAWN))
@@ -323,6 +365,52 @@ module vga_bitchange(
 	//Range from 672 to 779
 	assign zombie4 = ((vCount >= 10'd677) && (vCount <= 10'd774)
 		&& (hCount >= zombie4X) && (hCount <= zombie4X + 10'd100)
+		) ? 1 : 0;
+
+	//Using the zombie head radius, create the zombie head in the upper part of the row
+	//Calculate distance between current pixel and center of zombie head
+	int dist0 = sqrt((hCount - zombie0X)*(hCount - zombie0X) + (vCount - (ZOMBIE0_ROW_TOP -  32))*(vCount - (ZOMBIE0_ROW_TOP -  32)));
+
+	assign zombieHead0 = (dist0 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
+	assign zombieOutline0 = (dist0 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist0 <= ZOMBIE_HEAD_RADIUS) ? 0 : 1;
+	
+
+	int dist1 = sqrt((hCount - zombie1X)*(hCount - zombie1X) + (vCount - (ZOMBIE1_ROW_TOP - 32))*(vCount - (ZOMBIE1_ROW_TOP - 32)));
+	assign zombieHead1 = (dist1 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
+	assign zombieOutline1 = (dist1 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist1 <= ZOMBIE_HEAD_RADIUS) ? 0 : 1;
+	
+
+	int dist2 = sqrt((hCount - zombie2X)*(hCount - zombie2X) + (vCount - (ZOMBIE2_ROW_TOP - 32))*(vCount - (ZOMBIE2_ROW_TOP - 32)));
+	assign zombieHead2 = (dist2 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
+	assign zombieOutline2 = (dist2 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist2 <= ZOMBIE_HEAD_RADIUS) ? 0 : 1;
+
+	int dist3 = sqrt((hCount - zombie3X)*(hCount - zombie3X) + (vCount - (ZOMBIE3_ROW_TOP - 32))*(vCount - (ZOMBIE3_ROW_TOP - 32)));
+	assign zombieHead3 = (dist3 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
+	assign zombieOutline3 = (dist3 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist3 <= ZOMBIE_HEAD_RADIUS) ? 0 : 1;
+
+	int dist4 = sqrt((hCount - zombie4X)*(hCount - zombie4X) + (vCount - (ZOMBIE4_ROW_TOP - 32))*(vCount - (ZOMBIE4_ROW_TOP - 32)));
+	assign zombieHead4 = (dist4 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
+	assign zombieOutline4 = (dist4 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist4 <= ZOMBIE_HEAD_RADIUS) ? 0 : 1;
+
+	//Using the zombie body width, create the zombie body in the lower part of the row
+	assign zombieBody0 = ((vCount >= ZOMBIE0_ROW_TOP) && (vCount <= ZOMBIE0_ROW_TOP + ZOMBIE_BODY_HEIGHT)
+		&& (hCount >= zombie0X - ZOMBIE_BODY_WIDTH/2) && (hCount <= zombie0X + ZOMBIE_BODY_WIDTH/2)
+		) ? 1 : 0;
+
+	assign zombieBody1 = ((vCount >= ZOMBIE1_ROW_TOP) && (vCount <= ZOMBIE1_ROW_TOP + ZOMBIE_BODY_HEIGHT)
+		&& (hCount >= zombie1X - ZOMBIE_BODY_WIDTH/2) && (hCount <= zombie1X + ZOMBIE_BODY_WIDTH/2)
+		) ? 1 : 0;
+
+	assign zombieBody2 = ((vCount >= ZOMBIE2_ROW_TOP) && (vCount <= ZOMBIE2_ROW_TOP + ZOMBIE_BODY_HEIGHT)
+		&& (hCount >= zombie2X - ZOMBIE_BODY_WIDTH/2) && (hCount <= zombie2X + ZOMBIE_BODY_WIDTH/2)
+		) ? 1 : 0;
+
+	assign zombieBody3 = ((vCount >= ZOMBIE3_ROW_TOP) && (vCount <= ZOMBIE3_ROW_TOP + ZOMBIE_BODY_HEIGHT)
+		&& (hCount >= zombie3X - ZOMBIE_BODY_WIDTH/2) && (hCount <= zombie3X + ZOMBIE_BODY_WIDTH/2)
+		) ? 1 : 0;
+
+	assign zombieBody4 = ((vCount >= ZOMBIE4_ROW_TOP) && (vCount <= ZOMBIE4_ROW_TOP + ZOMBIE_BODY_HEIGHT)
+		&& (hCount >= zombie4X - ZOMBIE_BODY_WIDTH/2) && (hCount <= zombie4X + ZOMBIE_BODY_WIDTH/2)
 		) ? 1 : 0;
 	 
 	//sunflower visualization (to be made relative to the top left corner location, need to add stem + movement)
