@@ -65,7 +65,7 @@ module vga_bitchange(
     parameter ROW_HEIGHT = 10'd87;
 
 	//End of screen
-	parameter END_OF_LAWN = 10'd124;
+	parameter END_OF_LAWN = 10'd300;
 
 	//Register definitions
 	reg reset;
@@ -334,6 +334,11 @@ module vga_bitchange(
 				begin
 					state = DoneL;
 					reset = 1'b1; //TODO I dont think you need to keep track of num zombies killed
+					//Stop the zombie after it reaches the end of the lawn
+					// if(zombie0X == END_OF_LAWN)
+					// 	zombie0Stopped = 1'b1;
+					// if(zombie1X == END_OF_LAWN)
+					// 	zombie1Stopped = 1'b1;
 				end
 			//If zombies are hit by a pea shot, increment their number of shots
 			//Zombie0 can be hit by pea shots 0 through 4
