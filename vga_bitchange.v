@@ -46,27 +46,15 @@ module vga_bitchange(
 	parameter ZOMBIE_3_ROW_BOTTOM = 10'd434;
 	parameter ZOMBIE4_ROW_TOP = 10'd435;
 	parameter ZOMBIE_4_ROW_BOTTOM = 10'd521;
-	parameter OUTLINE_WIDTH = 10'd02;
+	parameter OUTLINE_WIDTH = 10'd05;
 	parameter HALF_ZOMBIE_BODY_WIDTH = 10'd08;
 
-	//Time definitions
-	parameter TO_KILL_PEA = 50'd5000000;
-	parameter TO_KILL_SUN = 50'd5000000;
-	parameter TO_KILL_ZOMBIE = 50'd5000000;
-
-	//Plant definitions
-	parameter PEASHOOTER = 3'd001;
-	parameter SUNFLOWER = 3'd010;
-	parameter WALNUT = 3'd100;
 
     //Column and row widths
     parameter COLUMN_WIDTH = 10'd100;
 	parameter HALF_COLUMN_WIDTH = 10'd50;
     parameter ROW_HEIGHT = 10'd87;
-	parameter RED = 12'b1111_0000_0000;
-	parameter GREY = 12'b1010_1010_1011;
-	parameter ZOMBIE_HEAD = 12'b1010_1010_1011;
-	parameter ZOMBIE_EYE = 12'b1111_1111_1111;
+	parameter HALF_ROW_HEIGHT = 10'd43;
 	
 	parameter STEM_GREEN = 12'b0000_1011_0100;
 	parameter BROWN = 12'b0111_0011_0000;
@@ -77,40 +65,19 @@ module vga_bitchange(
     parameter WSCALE = 10'd2; 
     parameter PSSCALE = 10'd3;
 
-	//Size definitions
-	parameter ZOMBIE_HEAD_RADIUS = 10'd21;
-	parameter ZOMBIE_BODY_HEIGHT = 10'd50;
-	parameter ZOMBIE0_ROW_TOP = 10'd87;
-	parameter ZOMBIE_0_ROW_BOTTOM = 10'd173;
-	parameter ZOMBIE1_ROW_TOP = 10'd174;
-	parameter ZOMBIE_1_ROW_BOTTOM = 10'd260;
-	parameter ZOMBIE2_ROW_TOP = 10'd261;
-	parameter ZOMBIE_2_ROW_BOTTOM = 10'd347;
-	parameter ZOMBIE3_ROW_TOP = 10'd348;
-	parameter ZOMBIE_3_ROW_BOTTOM = 10'd434;
-	parameter ZOMBIE4_ROW_TOP = 10'd435;
-	parameter ZOMBIE_4_ROW_BOTTOM = 10'd521;
-	parameter OUTLINE_WIDTH = 10'd02;
-	parameter HALF_ZOMBIE_BODY_WIDTH = 10'd08;
-
 	//Time definitions
 	parameter TO_KILL_PEA = 50'd5000000;
 	parameter TO_KILL_SUN = 50'd5000000;
 	parameter TO_KILL_ZOMBIE = 50'd5000000;
 
 	//Plant definitions
-	parameter PEASHOOTER = 3'd001;
-	parameter SUNFLOWER = 3'd010;
-	parameter WALNUT = 3'd100;
-
-    //Column and row widths
-    parameter COLUMN_WIDTH = 10'd100;
-	parameter HALF_COLUMN_WIDTH = 10'd50;
-    parameter ROW_HEIGHT = 10'd87;
+	parameter PEASHOOTER = 3'b001;
+	parameter SUNFLOWER = 3'b010;
+	parameter WALNUT = 3'b100;
 
 	//End of screen
 	parameter END_OF_LAWN = 10'd300;
-	parameter END_OF_LAWN = 10'd124;
+
 	
 	
     reg[9:0] sfVPos;
@@ -151,7 +118,13 @@ module vga_bitchange(
 	reg zombie2Stopped;
 	reg zombie3Stopped;
 	reg zombie4Stopped;
-	//Wires to hold if zombie has been "killed"
+	//Registers to hold if zombie has reached the end of the lawn
+	reg zombie0ReachedEnd;
+	reg zombie1ReachedEnd;
+	reg zombie2ReachedEnd;
+	reg zombie3ReachedEnd;
+	reg zombie4ReachedEnd;
+	//Registers to hold if zombie has been "killed"
 	reg zombie0Killed;
 	reg zombie1Killed;
 	reg zombie2Killed;
@@ -163,28 +136,7 @@ module vga_bitchange(
 	reg[3:0] zombie2Hits;
 	reg[3:0] zombie3Hits;
 	reg[3:0] zombie4Hits;
-	reg[3:0] zombie0Counter;
-	reg[3:0] zombie1Counter;
-	reg[3:0] zombie2Counter;
-	reg[3:0] zombie3Counter;
-	reg[3:0] zombie4Counter;
-	reg zombie0Stopped;
-	reg zombie1Stopped;
-	reg zombie2Stopped;
-	reg zombie3Stopped;
-	reg zombie4Stopped;
-	//Wires to hold if zombie has been "killed"
-	reg zombie0Killed;
-	reg zombie1Killed;
-	reg zombie2Killed;
-	reg zombie3Killed;
-	reg zombie4Killed;
-	//Registers to hold times that zombie has been hit by a pea
-	reg[3:0] zombie0Hits;
-	reg[3:0] zombie1Hits;
-	reg[3:0] zombie2Hits;
-	reg[3:0] zombie3Hits;
-	reg[3:0] zombie4Hits;
+
 	//Registers to hold zombie's X position
 	reg[9:0] zombie0X;
 	reg[9:0] zombie1X;
@@ -192,109 +144,13 @@ module vga_bitchange(
 	reg[9:0] zombie3X;
 	reg[9:0] zombie4X;
 	//Registers to hold zombie's Y position
-	//Registers to hold zombie's Y position
+	reg[9:0] zombie0Y;
+	reg[9:0] zombie1Y;
+	reg[9:0] zombie2Y;
+	reg[9:0] zombie3Y;
+	reg[9:0] zombie4Y;
 	reg[49:0] zombieSpeed;// Regisiter to hold zombie speed
 	
-	//Registers to hold how long a zombie has been stopped
-	reg[60:0] zombie0StoppedCounter;
-	reg[60:0] zombie1StoppedCounter;
-	reg[60:0] zombie2StoppedCounter;
-	reg[60:0] zombie3StoppedCounter;
-	reg[60:0] zombie4StoppedCounter;
-	//Registers to hold location of rightmost plant in every row
-	reg[9:0] plant0X;
-	reg[9:0] plant1X;
-	reg[9:0] plant2X;
-	reg[9:0] plant3X;
-	reg[9:0] plant4X;
-	//Registers to hold what type of plant is the rightmost plant in every row
-	reg[2:0] plant0Type;
-	reg[2:0] plant1Type;
-	reg[2:0] plant2Type;
-	reg[2:0] plant3Type;
-	reg[2:0] plant4Type;
-	reg plant0Killed;
-	reg plant1Killed;
-	reg plant2Killed;
-	reg plant3Killed;
-	reg plant4Killed;
-	//Registers to hold pea shot's X position. There are 25 pea shots
-	reg[9:0] peaShot0X;
-	reg[9:0] peaShot1X;
-	reg[9:0] peaShot2X;
-	reg[9:0] peaShot3X;
-	reg[9:0] peaShot4X;
-	reg[9:0] peaShot5X;
-	reg[9:0] peaShot6X;
-	reg[9:0] peaShot7X;
-	reg[9:0] peaShot8X;
-	reg[9:0] peaShot9X;
-	reg[9:0] peaShot10X;
-	reg[9:0] peaShot11X;
-	reg[9:0] peaShot12X;
-	reg[9:0] peaShot13X;
-	reg[9:0] peaShot14X;
-	reg[9:0] peaShot15X;
-	reg[9:0] peaShot16X;
-	reg[9:0] peaShot17X;
-	reg[9:0] peaShot18X;
-	reg[9:0] peaShot19X;
-	reg[9:0] peaShot20X;
-	reg[9:0] peaShot21X;
-	reg[9:0] peaShot22X;
-	reg[9:0] peaShot23X;
-	reg[9:0] peaShot24X;
-	//Registers to hold if a plant has been placed on a certain grid box
-	reg plant0Placed;
-	reg plant1Placed;
-	reg plant2Placed;
-	reg plant3Placed;
-	reg plant4Placed;
-	reg plant5Placed;
-	reg plant6Placed;
-	reg plant7Placed;
-	reg plant8Placed;
-	reg plant9Placed;
-	reg plant10Placed;
-	reg plant11Placed;
-	reg plant12Placed;
-	reg plant13Placed;
-	reg plant14Placed;
-	reg plant15Placed;
-	reg plant16Placed;
-	reg plant17Placed;
-	reg plant18Placed;
-	reg plant19Placed;
-	reg plant20Placed;
-	reg plant21Placed;
-	reg plant22Placed;
-	reg plant23Placed;
-	reg plant24Placed;
-
-	//Wires for zombie graphics
-	wire zombieEye0;
-	wire zombieEye1;
-	wire zombieEye2;
-	wire zombieEye3;
-	wire zombieEye4;
-
-	wire zombieHead0;
-	wire zombieHead1;
-	wire zombieHead2;
-	wire zombieHead3;
-	wire zombieHead4;
-
-	wire zombieBody0;
-	wire zombieBody1;
-	wire zombieBody2;
-	wire zombieBody3;
-	wire zombieBody4;
-
-	wire zombieOutline0;
-	wire zombieOutline1;
-	wire zombieOutline2;
-	wire zombieOutline3;
-	wire zombieOutline4;
 
 	//Wires for plant graphics
 	wire sunflowerInner;
@@ -312,7 +168,7 @@ module vga_bitchange(
 	reg[9:0] selectedPlantBoxX;
 	reg[2:0] userPlantSelection; //001 for Pea Shooter, 010 for Sunflower, 100 for Wallnut
 	//Wire to hold current selected lawn position
-	reg selectedLawnPositionOutline;
+	wire selectedLawnPositionOutline;
 	reg isSelectingLawnPosition;
 	reg[9:0] selectedGridBoxX;
 	reg[9:0] selectedGridBoxY;
@@ -420,27 +276,8 @@ module vga_bitchange(
 	wire zombieOutline3;
 	wire zombieOutline4;
 
-	//Wires for plant graphics
-	wire sunflowerInner;
-	wire sunflowerOuter;
-	wire sunflowerFace;
 
-	wire selectedPlantBoxOutline;
-	wire GRID;
 
-	
-
-	//Wire to hold current selected plant box
-	// reg selectedPlantBox;
-	reg isSelectingPlantBox;
-	reg[9:0] selectedPlantBoxX;
-	reg[2:0] userPlantSelection; //001 for Pea Shooter, 010 for Sunflower, 100 for Wallnut
-	//Wire to hold current selected lawn position
-	reg selectedLawnPositionOutline;
-	reg isSelectingLawnPosition;
-	reg[9:0] selectedGridBoxX;
-	reg[9:0] selectedGridBoxY;
-	reg [4:0] userGridSelection;
 	
 	//Store the current state
 //	output q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW;
@@ -463,6 +300,12 @@ module vga_bitchange(
 		zombie2X = 10'd799;
 		zombie3X = 10'd799;
 		zombie4X = 10'd799;
+		//Initialize the zombie Y position to be in the middle of their respective rows
+		zombie0Y = 10'd130;
+		zombie1Y = 10'd217;
+		zombie2Y = 10'd304;
+		zombie3Y = 10'd391;
+		zombie4Y = 10'd478;
 		//Initialize the zombies to be alive
 		zombie0Killed = 1'b0;
 		zombie1Killed = 1'b0;
@@ -528,9 +371,11 @@ module vga_bitchange(
 	always@ (*)
     if (~bright)
         rgb = BLACK;
-	else if (selectedPlantBoxOutline == 1 && isSelectingPlantBox == 0)
+	// else if (selectedPlantBoxOutline == 1 && isSelectingPlantBox == 0)
+	else if(isSelectingPlantBox == 1)
 		rgb = RED;
-	else if (selectedLawnPositionOutline == 1 && isSelectingLawnPosition == 0)
+	// else if (selectedLawnPositionOutline == 1 && isSelectingLawnPosition == 0)
+	else if(isSelectingLawnPosition == 1)
 		rgb = RED;
 	else if ((zombieEye0 == 1 && ~zombie0Killed) || (zombieEye1 == 1 && ~zombie1Killed) || (zombieEye2 == 1 && ~zombie2Killed) || (zombieEye3 == 1 && ~zombie3Killed) || (zombieEye4 == 1 && ~zombie4Killed))
 		rgb = ZOMBIE_EYE;
@@ -583,14 +428,6 @@ module vga_bitchange(
 		
         //Zombie 1 always enters the lawn first
 		if (~zombie1Stopped)
-	always @(posedge clk) begin
-    zombieSpeed = zombieSpeed + 50'd1;
-    if (zombieSpeed >= 50'd1000000) begin
-        if (zombie1X <= 50'd600 && ~zombie0Stopped) // Move zombie0 after zombie1 has moved 200 pixels across the screen
-            zombie0X = zombie0X - 10'd1;
-		
-        //Zombie 1 always enters the lawn first
-		if (~zombie1Stopped)
 			zombie1X = zombie1X - 10'd1;
 		
         
@@ -625,23 +462,23 @@ module vga_bitchange(
 					//Stop the zombie after it reaches the end of the lawn
 					if(zombie0X == END_OF_LAWN)
 						begin
-							zombie0Stopped = 1'b1
+							zombie0ReachedEnd = 1'b1;
 						end
 					if(zombie1X == END_OF_LAWN)
 						begin
-							zombie1Stopped = 1'b1;
+							zombie1ReachedEnd = 1'b1;
 						end
 					if(zombie2X == END_OF_LAWN)
 						begin
-							zombie2Stopped = 1'b1;
+							zombie2ReachedEnd = 1'b1;
 						end
 					if(zombie3X == END_OF_LAWN)
 						begin
-							zombie3Stopped = 1'b1;
+							zombie3ReachedEnd = 1'b1;
 						end
 					if(zombie4X == END_OF_LAWN)
 						begin
-							zombie4Stopped = 1'b1;
+							zombie4ReachedEnd = 1'b1;
 						end
 				end
 			//If zombies are hit by a pea shot, increment their number of shots
@@ -1053,8 +890,8 @@ module vga_bitchange(
 					end
 				isSelectingPlantBox = 0;
 				isSelectingLawnPosition = 1;
-				selectedPlantBoxX = 10'd40;
-                selectedGridBoxX = 10'd40;
+				selectedPlantBoxX = 10'd50;
+                selectedGridBoxX = 10'd50;
                 selectedGridBoxY = 10'd130; //May need to change 87 to 86
 			end
 		//If user has selected a plant box, then they are selecting a lawn position
@@ -1080,60 +917,111 @@ module vga_bitchange(
                 //Box 0
 				//TODO: fix thisi logic
                 if(selectedGridBoxX == 10'd350 && selectedGridBoxY == 10'd130)
+				begin
                     plant0Placed = 2'd01;
+				end
                 
                 else if(selectedGridBoxX == 10'd450 && selectedGridBoxY == 10'd130)
+				begin
                     plant1Placed = 2'd01;
+				end
                 
                 else if(selectedGridBoxX == 10'd550 && selectedGridBoxY == 10'd130)
+				begin
                     plant2Placed = 2'd01;
+				end
                 
                 else if(selectedGridBoxX == 10'd650 && selectedGridBoxY == 10'd130)
+				begin
                     plant3Placed = 2'd01;
+				end
                 
                 else if(selectedGridBoxX == 10'd750 && selectedGridBoxY == 10'd130)
+				begin
                     plant4Placed = 2'd01;
+				end
 
 				else if(selectedGridBoxX == 10'd350 && selectedGridBoxY == 10'd217)
+				begin
 					plant5Placed = 2'd01;
+				end
 				else if(selectedGridBoxX == 10'd450 && selectedGridBoxY == 10'd217)
+				begin
 					plant6Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd550 && selectedGridBoxY == 10'd217)
+				begin
 					plant7Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd650 && selectedGridBoxY == 10'd217)
+				begin
 					plant8Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd750 && selectedGridBoxY == 10'd217)
+				begin
 					plant9Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd350 && selectedGridBoxY == 10'd304)
+				begin
 					plant10Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd450 && selectedGridBoxY == 10'd304)
+				begin
 					plant11Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd550 && selectedGridBoxY == 10'd304)
+				begin
 					plant12Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd650 && selectedGridBoxY == 10'd304)
+				begin
 					plant13Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd750 && selectedGridBoxY == 10'd304)
+				begin
 					plant14Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd350 && selectedGridBoxY == 10'd391)
+				begin
 					plant15Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd450 && selectedGridBoxY == 10'd391)
+				begin
 					plant16Placed = 2'd01;
+
+					end
 				else if(selectedGridBoxX == 10'd550 && selectedGridBoxY == 10'd391)
+				begin
 					plant17Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd650 && selectedGridBoxY == 10'd391)
+				begin
 					plant18Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd750 && selectedGridBoxY == 10'd391)
+				begin
 					plant19Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd350 && selectedGridBoxY == 10'd478)
+				begin
 					plant20Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd450 && selectedGridBoxY == 10'd478)
+				begin
 					plant21Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd550 && selectedGridBoxY == 10'd478)
+				begin
 					plant22Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd650 && selectedGridBoxY == 10'd478)
+				begin
 					plant23Placed = 2'd01;
+					end
 				else if(selectedGridBoxX == 10'd750 && selectedGridBoxY == 10'd478)
+				begin
 					plant24Placed = 2'd01;
+					end
             end
 		end
     
@@ -1191,77 +1079,7 @@ module vga_bitchange(
 	//Range from 000 to 160 (vertically)
 	assign greyZone = (vCount <= 10'd86) ? 1 : 0;
 
-	//Create 5 by 5 grid in the lawn
-	//First row, Third Row, and 5th row of lawn
-	//2nd column, 4th column
-	assign GRID1 = (((vCount >= 10'd87) && (vCount <= 10'd173)
-	|| (vCount >= 10'd261) && (vCount <= 10'd347)
-	|| (vCount >= 10'd435) && (vCount <= 10'd521))
-	&& ((hCount >= 10'd600) && (hCount <= 10'd699)
-	|| (hCount >= 10'd400) && (hCount <= 10'd499))
-	) ? 1 : 0;
-
-	//Second row, Fourth Row
-	//1st column, 3rd column, 5th column
-	assign GRID2 = (((vCount >= 10'd174) && (vCount <= 10'd260)
-	|| (vCount >= 10'd348) && (vCount <= 10'd434))
-	&& ((hCount >= 10'd700) && (hCount <= 10'd799)
-	|| (hCount >= 10'd500) && (hCount <= 10'd599)
-	|| (hCount >= 10'd300) && (hCount <= 10'd399))
-	) ? 1 : 0;
-
-
-	//Define the selected plant box
-	assign selectedPlantBoxOutline = (
-		//Horizontal lines
-		(((vCount <= 10'd05) || ((vCount >= 10'd82) && (vCount <= 10'd86)))
-		&& (hCount >= selectedPlantBoxX + HALF_COLUMN_WIDTH ) && (hCount <= selectedPlantBoxX - HALF_COLUMN_WIDTH))
-		||
-		//Vertical lines
-		((vCount <= ROW_HEIGHT) 
-		&& ((hCount >= selectedPlantBoxX - HALF_COLUMN_WIDTH) && (hCount <= selectedPlantBoxX - HALF_COLUMN_WIDTH + 10'd005)
-		|| (hCount >= selectedPlantBoxX + HALF_COLUMN_WIDTH - 10'd005) && (hCount <= selectedPlantBoxX + HALF_COLUMN_WIDTH))
-		)) ? 1 : 0;
-
-	//Define the selected grid box
-	// assign selectedLawnPositionOutline = (
-	// 	//Horizontal lines
-
-
-	// 	//Vertical lines
-	//  	//Grid 0
-	// 	//Define the vertical height
-	// 	((vCount >= ROW_HEIGHT) && (vCount <= 10'd173) &&
-	// 	//Define the horizontal width
-	// 	(hCount >= 10'd300)
-
-	// )) ? 1 : 0;
-
-	// //Range from 160 to 287
-	// assign zombie0 = ((vCount >= 10'd165) && (vCount <= 10'd282)
-	// 	&& (hCount >= zombie0X) && (hCount <= zombie0X + 10'd100)
-	// 	) ? 1 : 0;
-
-	// //Range from 288 to 415
-	// assign zombie1 = ((vCount >= 10'd293) && (vCount <= 10'd410)
-	// 	&& (hCount >= zombie1X) && (hCount <= zombie1X + 10'd100)
-	// 	) ? 1 : 0;
-
-	// //Range from 416 to 543
-	// assign zombie2 = ((vCount >= 10'd421) && (vCount <= 10'd538)
-	// 	&& (hCount >= zombie2X) && (hCount <= zombie2X + 10'd100)
-	// 	) ? 1 : 0;
-
-	// //Range from 544 to 671
-	// assign zombie3 = ((vCount >= 10'd549) && (vCount <= 10'd666)
-	// 	&& (hCount >= zombie3X) && (hCount <= zombie3X + 10'd100)
-	// 	) ? 1 : 0;
-
-	// //Range from 672 to 779
-	// assign zombie4 = ((vCount >= 10'd677) && (vCount <= 10'd774)
-	// 	&& (hCount >= zombie4X) && (hCount <= zombie4X + 10'd100)
-	// 	) ? 1 : 0;
-	assign greyZone = (vCount <= 10'd86) ? 1 : 0;
+	
 
 	//Create 5 by 5 grid in the lawn
 	//First row, Third Row, and 5th row of lawn
@@ -1282,12 +1100,11 @@ module vga_bitchange(
 	|| (hCount >= 10'd300) && (hCount <= 10'd399))
 	) ? 1 : 0;
 
-
 	//Define the selected plant box
 	assign selectedPlantBoxOutline = (
 		//Horizontal lines
 		(((vCount <= 10'd05) || ((vCount >= 10'd82) && (vCount <= 10'd86)))
-		&& (hCount >= selectedPlantBoxX + HALF_COLUMN_WIDTH ) && (hCount <= selectedPlantBoxX - HALF_COLUMN_WIDTH))
+		&& (hCount >= selectedPlantBoxX - HALF_COLUMN_WIDTH ) && (hCount <= selectedPlantBoxX + HALF_COLUMN_WIDTH))
 		||
 		//Vertical lines
 		((vCount <= ROW_HEIGHT) 
@@ -1295,40 +1112,26 @@ module vga_bitchange(
 		|| (hCount >= selectedPlantBoxX + HALF_COLUMN_WIDTH - 10'd005) && (hCount <= selectedPlantBoxX + HALF_COLUMN_WIDTH))
 		)) ? 1 : 0;
 
-	//Define the selected grid box
-	// assign selectedLawnPositionOutline = (
-	// 	//Horizontal lines
+	// Define the selected grid box
+	assign selectedLawnPositionOutline = (
+		//Horizontal lines
+		((((vCount <= selectedGridBoxY + HALF_ROW_HEIGHT) && (vCount >= selectedGridBoxY + HALF_ROW_HEIGHT - 10'd05)) ||
+		((vCount <= selectedGridBoxY - HALF_ROW_HEIGHT + 10'd05) && (vCount >= selectedGridBoxY - HALF_ROW_HEIGHT)))
+		&& ((hCount >= selectedGridBoxX - HALF_COLUMN_WIDTH) && (hCount <= selectedGridBoxX + HALF_COLUMN_WIDTH)))
+		||
+		//Grid 0
+		//Vertical lines
+		(((vCount >= selectedGridBoxY - HALF_ROW_HEIGHT) && (vCount <= selectedGridBoxY - HALF_ROW_HEIGHT + 10'd05))
+		|| ((vCount >= selectedGridBoxY + HALF_ROW_HEIGHT - 10'd05) && (vCount <= selectedGridBoxY + HALF_ROW_HEIGHT)))
+		&& ((hCount >= selectedGridBoxX - HALF_COLUMN_WIDTH) && (hCount <= selectedGridBoxX - HALF_COLUMN_WIDTH + 10'd005)
+		|| (hCount >= selectedGridBoxX + HALF_COLUMN_WIDTH - 10'd005) && (hCount <= selectedGridBoxX + HALF_COLUMN_WIDTH))
 
+		//Horizontal lines
 
-	// 	//Vertical lines
-	// 	((vCount >= ROW_HEIGHT)
+		//Grid 1
 
-	// )
+		) ? 1 : 0;
 
-	// //Range from 160 to 287
-	// assign zombie0 = ((vCount >= 10'd165) && (vCount <= 10'd282)
-	// 	&& (hCount >= zombie0X) && (hCount <= zombie0X + 10'd100)
-	// 	) ? 1 : 0;
-
-	// //Range from 288 to 415
-	// assign zombie1 = ((vCount >= 10'd293) && (vCount <= 10'd410)
-	// 	&& (hCount >= zombie1X) && (hCount <= zombie1X + 10'd100)
-	// 	) ? 1 : 0;
-
-	// //Range from 416 to 543
-	// assign zombie2 = ((vCount >= 10'd421) && (vCount <= 10'd538)
-	// 	&& (hCount >= zombie2X) && (hCount <= zombie2X + 10'd100)
-	// 	) ? 1 : 0;
-
-	// //Range from 544 to 671
-	// assign zombie3 = ((vCount >= 10'd549) && (vCount <= 10'd666)
-	// 	&& (hCount >= zombie3X) && (hCount <= zombie3X + 10'd100)
-	// 	) ? 1 : 0;
-
-	// //Range from 672 to 779
-	// assign zombie4 = ((vCount >= 10'd677) && (vCount <= 10'd774)
-	// 	&& (hCount >= zombie4X) && (hCount <= zombie4X + 10'd100)
-	// 	) ? 1 : 0;
 
 	//Using the zombie body width, create the zombie body in the lower part of the row
 	assign zombieBody0 = ((vCount >= ZOMBIE_0_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_0_ROW_BOTTOM)
@@ -1351,7 +1154,8 @@ module vga_bitchange(
 		&& (hCount >= zombie4X - HALF_ZOMBIE_BODY_WIDTH) && (hCount <= zombie4X + HALF_ZOMBIE_BODY_WIDTH)
 		) ? 1 : 0;
 
-	//Create (for now) square zombie heads
+	//Create zombie heads
+	//Definie the vertical and horizontal positions of the zombie heads
 	
 	 
     //PLANTS
