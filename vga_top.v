@@ -25,9 +25,6 @@ module vga_top(
 	input ClkPort,
 	input BtnC,
 	input BtnU,
-	input BtnD,
-	input BtnL,
-	input BtnR,
 	
 	//VGA signal
 	output hSync, vSync,
@@ -43,12 +40,18 @@ module vga_top(
 	wire bright;
 	wire[9:0] hc, vc;
 	wire[15:0] zombiesKilled;
+	wire zombie0Stopped;
+	wire zombie1Stopped;
+	wire zombie2Stopped;
+	wire zombie3Stopped;
+	wire zombie4Stopped;
 	wire [6:0] ssdOut;
 	wire [3:0] anode;
 	wire [11:0] rgb;
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
-	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .hCount(hc), .vCount(vc), .rgb(rgb), .zombies_killed(zombiesKilled),
-		.upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), .selectButton(BtnC));
+	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), .selectButton(BtnC), .hCount(hc), .vCount(vc), .rgb(rgb), .zombies_killed(zombiesKilled),
+		.zombie0Stopped(zombie0Stopped), .zombie1Stopped(zombie1Stopped), .zombie2Stopped(zombie2Stopped),
+		.zombie3Stopped(zombie3Stopped), .zombie4Stopped(zombie4Stopped));
 	
 	counter cnt(.clk(ClkPort), .displayNumber(zombiesKilled), .anode(anode), .ssdOut(ssdOut));
 	

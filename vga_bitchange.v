@@ -11,6 +11,19 @@ module vga_bitchange(
 	input upButton, downButton, leftButton, rightButton, selectButton,
 	output reg [11:0] rgb,
 	output reg [15:0] zombies_killed,
+	//Reg to calculate distances for zombie head
+	output reg [4:0] calcDist0,
+	output reg [4:0] calcDist1,
+	output reg [4:0] calcDist2,
+	output reg [4:0] calcDist3,
+	output reg [4:0] calcDist4,
+	//Reg to hold distance calculations for zombie head
+	output reg[4:0] dist0,
+	output reg[4:0] dist1,
+	output reg[4:0] dist2,
+	output reg[4:0] dist3,
+	output reg[4:0] dist4,
+	//
 	output q_I, 
 	output q_L1, 
 	output q_NL2, 
@@ -18,7 +31,13 @@ module vga_bitchange(
 	output q_NL3, 
 	output q_L3, 
 	output q_DoneL, 
-	output q_DoneW
+	output q_DoneW,
+	//Registers to hold if a zombie has been stopped
+	output reg zombie0Stopped,
+	output reg zombie1Stopped,
+	output reg zombie2Stopped,
+	output reg zombie3Stopped,
+	output reg zombie4Stopped
     );
 
 	//Color definitions
@@ -32,11 +51,12 @@ module vga_bitchange(
 	parameter RED = 12'b1111_0000_0000;
 	parameter ZOMBIE_SKIN = 12'b1010_1010_1011;
 	parameter ZOMBIE_HEAD = 12'b1010_1010_1011;
+	parameter ZOMBIE_EYE = 12'b1111_1111_1111;
 
 	//Size definitions
 	parameter ZOMBIE_HEAD_RADIUS = 10'd21;
 	parameter ZOMBIE_BODY_HEIGHT = 10'd128;
-	parameter ZOMBIE0_ROW_TOP = 10'd160;
+	parameter ZOMBIE0_ROW_TOP = 10'd87;
 	parameter ZOMBIE_0_ROW_BOTTOM = 10'd287;
 	parameter ZOMBIE1_ROW_TOP = 10'd288;
 	parameter ZOMBIE_1_ROW_BOTTOM = 10'd415;
@@ -90,12 +110,7 @@ module vga_bitchange(
 	reg[9:0] zombie3X;
 	reg[9:0] zombie4X;
 	reg[49:0] zombieSpeed;// Regisiter to hold zombie speed
-	//Registers to hold if a zombie has been stopped
-	reg zombie0Stopped;
-	reg zombie1Stopped;
-	reg zombie2Stopped;
-	reg zombie3Stopped;
-	reg zombie4Stopped;
+	
 	//Registers to hold how long a zombie has been stopped
 	reg[60:0] zombie0StoppedCounter;
 	reg[60:0] zombie1StoppedCounter;
@@ -167,13 +182,48 @@ module vga_bitchange(
 	reg plant23Placed;
 	reg plant24Placed;
 
+	//Wires for zombie graphics
+	wire zombieEye0;
+	wire zombieEye1;
+	wire zombieEye2;
+	wire zombieEye3;
+	wire zombieEye4;
+
+	wire zombieHead0;
+	wire zombieHead1;
+	wire zombieHead2;
+	wire zombieHead3;
+	wire zombieHead4;
+
+	wire zombieBody0;
+	wire zombieBody1;
+	wire zombieBody2;
+	wire zombieBody3;
+	wire zombieBody4;
+
+	wire zombieOutline0;
+	wire zombieOutline1;
+	wire zombieOutline2;
+	wire zombieOutline3;
+	wire zombieOutline4;
+
+	//Wires for plant graphics
+	wire sunflowerInner;
+	wire sunflowerOuter;
+	wire sunflowerFace;
+
+	wire selectedPlantBoxOutline;
+	wire GRID;
+
+	
+
 	//Wire to hold current selected plant box
 	reg selectedPlantBox;
 	reg isSelectingPlantBox = 0;
 	reg[9:0] selectedPlantBoxX;
 	reg[2:0] userPlantSelection; //001 for Pea Shooter, 010 for Sunflower, 100 for Wallnut
 	//Wire to hold current selected lawn position
-	reg selectedLawnPosition;
+	reg selectedLawnPositionOutline;
 	reg isSelectingLawnPosition;
 	reg[9:0] selectedGridBoxX;
 	reg [4:0] userGridSelection;
@@ -212,15 +262,17 @@ module vga_bitchange(
 	always@ (*)
     if (~bright)
         rgb = BLACK;
-	else if (selectedPlantBox == 1)
+	else if (selectedPlantBoxOutline == 1)
 		rgb = RED;
-	else if (selectedLawnPosition == 1)
+	else if (selectedLawnPositionOutline == 1)
 		rgb = RED;
-	else if ((zombieHead0 == 1 && !zombie0Killed) || (zombieHead1 == 1 && !zombie1Killed) || (zombieHead2 == 1 && !zombie2Killed) || (zombieHead3 == 1 && !zombie3Killed) || (zombieHead4 == 1 && !zombie4Killed))
+	else if ((zombieEye0 == 1 && ~zombie0Killed) || (zombieEye1 == 1 && ~zombie1Killed) || (zombieEye2 == 1 && ~zombie2Killed) || (zombieEye3 == 1 && ~zombie3Killed) || (zombieEye4 == 1 && ~zombie4Killed))
+		rgb = ZOMBIE_EYE;
+	else if ((zombieHead0 == 1 && ~zombie0Killed) || (zombieHead1 == 1 && ~zombie1Killed) || (zombieHead2 == 1 && ~zombie2Killed) || (zombieHead3 == 1 && ~zombie3Killed) || (zombieHead4 == 1 && ~zombie4Killed))
 		rgb = ZOMBIE_HEAD;
-	else if ((zombieOutline0 == 1 && !zombie0Killed) || (zombieOutline1 == 1 && !zombie1Killed) || (zombieOutline2 == 1 && !zombie2Killed) || (zombieOutline3 == 1 && !zombie3Killed) || (zombieOutline4 == 1 && !zombie4Killed))
+	else if ((zombieOutline0 == 1 && ~zombie0Killed) || (zombieOutline1 == 1 && ~zombie1Killed) || (zombieOutline2 == 1 && ~zombie2Killed) || (zombieOutline3 == 1 && ~zombie3Killed) || (zombieOutline4 == 1 && ~zombie4Killed))
 		rgb = BLACK;
-	else if((zombieBody0 == 1 && !zombie0Killed) || (zombieBody1 == 1 && !zombie1Killed) || (zombieBody2 == 1 && !zombie2Killed) || (zombieBody3 == 1 && !zombie3Killed) || (zombieBody4 == 1 && !zombie4Killed))
+	else if((zombieBody0 == 1 && ~zombie0Killed) || (zombieBody1 == 1 && ~zombie1Killed) || (zombieBody2 == 1 && ~zombie2Killed) || (zombieBody3 == 1 && ~zombie3Killed) || (zombieBody4 == 1 && ~zombie4Killed))
 		rgb = ZOMBIE_SKIN;
 	// else if (zombie0 == 1 || zombie1 == 1 || zombie2 == 1 || zombie3 == 1 || zombie4 == 1)
 	// 	rgb = ZOMBIE_SKIN;
@@ -245,9 +297,9 @@ module vga_bitchange(
             zombie0X = zombie0X - 10'd1;
 		
         //Zombie 1 always enters the lawn first
-		if (~zombie1Stopped){
+		if (~zombie1Stopped)
 			zombie1X = zombie1X - 10'd1;
-		}
+		
         
         if (zombie0X <= 50'd600 && ~zombie2Stopped) // Move zombie2 after zombie0 has moved 200 pixels across the screen
             zombie2X = zombie2X - 10'd1;
@@ -336,170 +388,171 @@ module vga_bitchange(
 		end
 
 	//Always at the posedge of the clock, if the zombie is in the same position as the plant, stop the zombie and "eat" the plant
-	always@ (posedge clk)
-		if(zombie0X == plant0X){
-			zombie0Stopped = 1'b1;
-			//Have some type of counter to see how long the zombie has been with the plant
-			zombie0Counter = zombie0Counter + 1'd1;
-			if((zombie0Counter == TO_KILL_PEA) && (plant0Type == PEA)){ //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
-				plant0Killed = 1'b1;
-				zombie0Counter = 1'd0;
-				//Compute the new position of the rightmost plant by iterating through the plant placements in this row
-				if(plant4Placed == 1){
-					plan0X = d'484;
-				}
-				else if(plant3Placed == 1){
-					plant0X = d'404;
-				}
-				else if(plant2Placed == 1){
-					plant0X = d'324;
-				}
-				else if(plant1Placed == 1){
-					plant0X = d'244;
-				}
-				else if(plant0Placed == 1){
-					plant0X = d'164;
-				}
-				else{
-					plant0X = d'0;
-				}
-			}
-		}
-		else{
-			zombie0Stopped = 1'b0;
-			zombie0Counter = 1'd0;
-		}
+	// always@ (posedge clk)
+	// 	if(zombie0X == plant0X){
+	// 		zombie0Stopped = 1'b1;
+	// 		//Have some type of counter to see how long the zombie has been with the plant
+	// 		zombie0Counter = zombie0Counter + 1'd1;
+	// 		if((zombie0Counter == TO_KILL_PEA) && (plant0Type == PEA)){ //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
+	// 			plant0Killed = 1'b1;
+	// 			//Set the plant placed back to 0
+	// 			zombie0Counter = 1'd0;
+	// 			//Compute the new position of the rightmost plant by iterating through the plant placements in this row
+	// 			if(plant4Placed == 1){
+	// 				plan0X = d'484;
+	// 			}
+	// 			else if(plant3Placed == 1){
+	// 				plant0X = d'404;
+	// 			}
+	// 			else if(plant2Placed == 1){
+	// 				plant0X = d'324;
+	// 			}
+	// 			else if(plant1Placed == 1){
+	// 				plant0X = d'244;
+	// 			}
+	// 			else if(plant0Placed == 1){
+	// 				plant0X = d'164;
+	// 			}
+	// 			else{
+	// 				plant0X = d'0;
+	// 			}
+	// 		}
+	// 	}
+	// 	else{
+	// 		zombie0Stopped = 1'b0;
+	// 		zombie0Counter = 1'd0;
+	// 	}
 
-		if(zombie1X == plant1X){
-			zombie1Stopped = 1'b1;
-			//Have some type of counter to see how long the zombie has been with the plant
-			zombie1Counter = zombie1Counter + 1'd1;
-			if((zombie1Counter == TO_KILL_PEA) && (plant1Type == PEA)){ //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
-				plant1Killed = 1'b1;
-				zombie1Counter = 1'd0;
-				//Compute the new position of the rightmost plant by iterating through the plant placements in this row
-				if(plant4Placed == 1){
-					plan1X = d'484;
-				}
-				else if(plant3Placed == 1){
-					plant1X = d'404;
-				}
-				else if(plant2Placed == 1){
-					plant1X = d'324;
-				}
-				else if(plant1Placed == 1){
-					plant1X = d'244;
-				}
-				else if(plant0Placed == 1){
-					plant1X = d'164;
-				}
-				else{
-					plant1X = d'0;
-				}
-			}
-		}
-		else{
-			zombie1Stopped = 1'b0;
-			zombie1Counter = 1'd0;
-		}
+	// 	if(zombie1X == plant1X){
+	// 		zombie1Stopped = 1'b1;
+	// 		//Have some type of counter to see how long the zombie has been with the plant
+	// 		zombie1Counter = zombie1Counter + 1'd1;
+	// 		if((zombie1Counter == TO_KILL_PEA) && (plant1Type == PEA)){ //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
+	// 			plant1Killed = 1'b1;
+	// 			zombie1Counter = 1'd0;
+	// 			//Compute the new position of the rightmost plant by iterating through the plant placements in this row
+	// 			if(plant9Placed == 1){
+	// 				plan1X = d'484;
+	// 			}
+	// 			else if(plant8Placed == 1){
+	// 				plant1X = d'404;
+	// 			}
+	// 			else if(plant7Placed == 1){
+	// 				plant1X = d'324;
+	// 			}
+	// 			else if(plant6Placed == 1){
+	// 				plant1X = d'244;
+	// 			}
+	// 			else if(plant5Placed == 1){
+	// 				plant1X = d'164;
+	// 			}
+	// 			else{
+	// 				plant1X = d'0;
+	// 			}
+	// 		}
+	// 	}
+	// 	else{
+	// 		zombie1Stopped = 1'b0;
+	// 		zombie1Counter = 1'd0;
+	// 	}
 
-		if(zombie2X == plant2X){
-			zombie2Stopped = 1'b1;
-			//Have some type of counter to see how long the zombie has been with the plant
-			zombie2Counter = zombie2Counter + 1'd1;
-			if((zombie2Counter == TO_KILL_PEA) && (plant2Type == PEA)){ //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
-				plant2Killed = 1'b1;
-				zombie2Counter = 1'd0;
-				//Compute the new position of the rightmost plant by iterating through the plant placements in this row
-				if(plant4Placed == 1){
-					plan2X = d'484;
-				}
-				else if(plant3Placed == 1){
-					plant2X = d'404;
-				}
-				else if(plant2Placed == 1){
-					plant2X = d'324;
-				}
-				else if(plant1Placed == 1){
-					plant2X = d'244;
-				}
-				else if(plant0Placed == 1){
-					plant2X = d'164;
-				}
-				else{
-					plant2X = d'0;
-				}
-			}
-		}
-		else{
-			zombie2Stopped = 1'b0;
-			zombie2Counter = 1'd0;
-		}
+	// 	if(zombie2X == plant2X){
+	// 		zombie2Stopped = 1'b1;
+	// 		//Have some type of counter to see how long the zombie has been with the plant
+	// 		zombie2Counter = zombie2Counter + 1'd1;
+	// 		if((zombie2Counter == TO_KILL_PEA) && (plant2Type == PEA)){ //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
+	// 			plant2Killed = 1'b1;
+	// 			zombie2Counter = 1'd0;
+	// 			//Compute the new position of the rightmost plant by iterating through the plant placements in this row
+	// 			if(plant14Placed == 1){
+	// 				plan2X = d'484;
+	// 			}
+	// 			else if(plant13Placed == 1){
+	// 				plant2X = d'404;
+	// 			}
+	// 			else if(plant2Placed == 1){
+	// 				plant2X = d'324;
+	// 			}
+	// 			else if(plant1Placed == 1){
+	// 				plant2X = d'244;
+	// 			}
+	// 			else if(plant0Placed == 1){
+	// 				plant2X = d'164;
+	// 			}
+	// 			else{
+	// 				plant2X = d'0;
+	// 			}
+	// 		}
+	// 	}
+	// 	else{
+	// 		zombie2Stopped = 1'b0;
+	// 		zombie2Counter = 1'd0;
+	// 	}
 
-		if(zombie3X == plant3X){
-			zombie3Stopped = 1'b1;
-			//Have some type of counter to see how long the zombie has been with the plant
-			zombie3Counter = zombie3Counter + 1'd1;
-			if((zombie3Counter == TO_KILL_PEA) && (plant3Type == PEA)){ //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
-				plant3Killed = 1'b1;
-				zombie3Counter = 1'd0;
-				//Compute the new position of the rightmost plant by iterating through the plant placements in this row
-				if(plant4Placed == 1){
-					plan3X = d'484;
-				}
-				else if(plant3Placed == 1){
-					plant3X = d'404;
-				}
-				else if(plant2Placed == 1){
-					plant3X = d'324;
-				}
-				else if(plant1Placed == 1){
-					plant3X = d'244;
-				}
-				else if(plant0Placed == 1){
-					plant3X = d'164;
-				}
-				else{
-					plant3X = d'0;
-				}
-			}
-		}
-		else{
-			zombie3Stopped = 1'b0;
-			zombie3Counter = 1'd0;
-		}
-		if(zombie4X == plant4X){
-			zombie4Stopped = 1'b1;
-			//Have some type of counter to see how long the zombie has been with the plant
-			zombie4Counter = zombie4Counter + 1'd1;
-			if((zombie4Counter == TO_KILL_PEA) && (plant4Type == PEA)){ //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
-				plant4Killed = 1'b1;
-				zombie4Counter = 1'd0;
-				//Compute the new position of the rightmost plant by iterating through the plant placements in this row
-				if(plant4Placed == 1){
-					plan4X = d'484;
-				}
-				else if(plant3Placed == 1){
-					plant4X = d'404;
-				}
-				else if(plant2Placed == 1){
-					plant4X = d'324;
-				}
-				else if(plant1Placed == 1){
-					plant4X = d'244;
-				}
-				else if(plant0Placed == 1){
-					plant4X = d'164;
-				}
-				else{
-					plant4X = d'0;
-				}
-			}
-		}
-		else{
-			zombie4Stopped = 1'b0;
-			zombie4Counter = 1'd0;
-		}
+	// 	if(zombie3X == plant3X){
+	// 		zombie3Stopped = 1'b1;
+	// 		//Have some type of counter to see how long the zombie has been with the plant
+	// 		zombie3Counter = zombie3Counter + 1'd1;
+	// 		if((zombie3Counter == TO_KILL_PEA) && (plant3Type == PEA)){ //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
+	// 			plant3Killed = 1'b1;
+	// 			zombie3Counter = 1'd0;
+	// 			//Compute the new position of the rightmost plant by iterating through the plant placements in this row
+	// 			if(plant4Placed == 1){
+	// 				plan3X = d'484;
+	// 			}
+	// 			else if(plant3Placed == 1){
+	// 				plant3X = d'404;
+	// 			}
+	// 			else if(plant2Placed == 1){
+	// 				plant3X = d'324;
+	// 			}
+	// 			else if(plant1Placed == 1){
+	// 				plant3X = d'244;
+	// 			}
+	// 			else if(plant0Placed == 1){
+	// 				plant3X = d'164;
+	// 			}
+	// 			else{
+	// 				plant3X = d'0;
+	// 			}
+	// 		}
+	// 	}
+	// 	else{
+	// 		zombie3Stopped = 1'b0;
+	// 		zombie3Counter = 1'd0;
+	// 	}
+	// 	if(zombie4X == plant4X){
+	// 		zombie4Stopped = 1'b1;
+	// 		//Have some type of counter to see how long the zombie has been with the plant
+	// 		zombie4Counter = zombie4Counter + 1'd1;
+	// 		if((zombie4Counter == TO_KILL_PEA) && (plant4Type == PEA)){ //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
+	// 			plant4Killed = 1'b1;
+	// 			zombie4Counter = 1'd0;
+	// 			//Compute the new position of the rightmost plant by iterating through the plant placements in this row
+	// 			if(plant4Placed == 1){
+	// 				plan4X = d'484;
+	// 			}
+	// 			else if(plant3Placed == 1){
+	// 				plant4X = d'404;
+	// 			}
+	// 			else if(plant2Placed == 1){
+	// 				plant4X = d'324;
+	// 			}
+	// 			else if(plant1Placed == 1){
+	// 				plant4X = d'244;
+	// 			}
+	// 			else if(plant0Placed == 1){
+	// 				plant4X = d'164;
+	// 			}
+	// 			else{
+	// 				plant4X = d'0;
+	// 			}
+	// 		}
+	// 	}
+	// 	else{
+	// 		zombie4Stopped = 1'b0;
+	// 		zombie4Counter = 1'd0;
+	// 	}
 	
 
 	//Always at the posedge of the clock, check if the user has selected a lawn position
@@ -561,7 +614,7 @@ module vga_bitchange(
 	) ? 1 : 0;
 
 	//Define the selected plant box
-	assign selectedPlantBox = (
+	assign selectedPlantBoxOutline = (
 		((vCount <= 10'd005) 
 		|| (vCount >= 10'd155) && (vCount <= 10'd159)
 		&& (hCount >= selectedPlantBoxX) && (hCount <= selectedPlantBoxX + 10'd160))
@@ -600,28 +653,41 @@ module vga_bitchange(
 
 	//Using the zombie head radius, create the zombie head in the upper part of the row
 	//Calculate distance between current pixel and center of zombie head
-	assign dist0 = ((hCount - zombie0X)*(hCount - zombie0X) + (vCount - (ZOMBIE0_ROW_TOP -  32))*(vCount - (ZOMBIE0_ROW_TOP -  32))) ** (1/2);
+	// always@ (posedge clk)
+	//    begin
+	// 		calcDist0 <= ((hCount - zombie0X)*(hCount - zombie0X) + (vCount - (ZOMBIE0_ROW_TOP -  32))*(vCount - (ZOMBIE0_ROW_TOP -  32))) ** (1/2);
+	// 	    dist0 <= calcDist0;
+	// 		calcDist1 <= ((hCount - zombie1X)*(hCount - zombie1X) + (vCount - (ZOMBIE1_ROW_TOP -  32))*(vCount - (ZOMBIE1_ROW_TOP -  32))) ** (1/2);
+	// 		dist1 <= calcDist1;
+	// 		calcDist2 <= ((hCount - zombie2X)*(hCount - zombie2X) + (vCount - (ZOMBIE2_ROW_TOP -  32))*(vCount - (ZOMBIE2_ROW_TOP -  32))) ** (1/2);
+	// 		dist2 <= calcDist2;
+	// 		calcDist3 <= ((hCount - zombie3X)*(hCount - zombie3X) + (vCount - (ZOMBIE3_ROW_TOP -  32))*(vCount - (ZOMBIE3_ROW_TOP -  32))) ** (1/2);
+	// 		dist3 <= calcDist3;
+	// 		calcDist4 <= ((hCount - zombie4X)*(hCount - zombie4X) + (vCount - (ZOMBIE4_ROW_TOP -  32))*(vCount - (ZOMBIE4_ROW_TOP -  32))) ** (1/2);
+	// 		dist4 <= calcDist4;
 
-	assign zombieHead0 = (dist0 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
-	assign zombieOutline0 = (dist0 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist0 <= ZOMBIE_HEAD_RADIUS) ? 1 : 0;
+	//     end
+
+	// assign zombieHead0 = (dist0 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
+	// assign zombieOutline0 = (dist0 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist0 <= ZOMBIE_HEAD_RADIUS) ? 1 : 0;
 	
 
-	assign dist1 = ((hCount - zombie1X)*(hCount - zombie1X) + (vCount - (ZOMBIE1_ROW_TOP - 32))*(vCount - (ZOMBIE1_ROW_TOP - 32))) ** (1/2);
-	assign zombieHead1 = (dist1 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
-	assign zombieOutline1 = (dist1 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist1 <= ZOMBIE_HEAD_RADIUS) ? 1 : 0;
+	
+	// assign zombieHead1 = (dist1 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
+	// assign zombieOutline1 = (dist1 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist1 <= ZOMBIE_HEAD_RADIUS) ? 1 : 0;
 	
 
-	assign dist2 = ((hCount - zombie2X)*(hCount - zombie2X) + (vCount - (ZOMBIE2_ROW_TOP - 32))*(vCount - (ZOMBIE2_ROW_TOP - 32))) ** (1/2);
-	assign zombieHead2 = (dist2 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
-	assign zombieOutline2 = (dist2 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist2 <= ZOMBIE_HEAD_RADIUS) ? 1 : 0;
+	
+	// assign zombieHead2 = (dist2 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
+	// assign zombieOutline2 = (dist2 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist2 <= ZOMBIE_HEAD_RADIUS) ? 1 : 0;
 
-	assign dist3 = ((hCount - zombie3X)*(hCount - zombie3X) + (vCount - (ZOMBIE3_ROW_TOP - 32))*(vCount - (ZOMBIE3_ROW_TOP - 32))) ** (1/2);
-	assign zombieHead3 = (dist3 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
-	assign zombieOutline3 = (dist3 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist3 <= ZOMBIE_HEAD_RADIUS) ? 1 : 0;
+	
+	// assign zombieHead3 = (dist3 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
+	// assign zombieOutline3 = (dist3 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist3 <= ZOMBIE_HEAD_RADIUS) ? 1 : 0;
 
-	assign dist4 = ((hCount - zombie4X)*(hCount - zombie4X) + (vCount - (ZOMBIE4_ROW_TOP - 32))*(vCount - (ZOMBIE4_ROW_TOP - 32))) ** (1/2);
-	assign zombieHead4 = (dist4 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
-	assign zombieOutline4 = (dist4 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist4 <= ZOMBIE_HEAD_RADIUS) ? 1 : 0;
+	
+	// assign zombieHead4 = (dist4 <= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) ? 1 : 0;
+	// assign zombieOutline4 = (dist4 >= ZOMBIE_HEAD_RADIUS - OUTLINE_WIDTH) && (dist4 <= ZOMBIE_HEAD_RADIUS) ? 1 : 0;
 
 	//Using the zombie body width, create the zombie body in the lower part of the row
 	assign zombieBody0 = ((vCount >= ZOMBIE0_ROW_TOP) && (vCount <= ZOMBIE0_ROW_TOP + ZOMBIE_BODY_HEIGHT)
