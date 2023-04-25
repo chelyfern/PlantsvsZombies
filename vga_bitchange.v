@@ -267,6 +267,11 @@ module vga_bitchange(
 	//Local parameters for state
 	parameter I = 8'b0000_0001, L1 = 8'b0000_0010, NL2 = 8'b0000_0100, L2 = 8'b0000_1000, NL3 = 8'b0001_0000, L3 = 8'b0010_0000, DoneL = 8'b0100_0000, DoneW = 8'b1000_0000;
 
+    
+    //sun logic
+    reg[49:0] numSuns;
+    parameter SECS_BETWEEN_SUNS = 10'd30;
+    reg [49:0] sunTimer;
 
 	initial begin
 		//Initialize the X position on the zombies to be the right side of the lawn
