@@ -218,7 +218,7 @@ module vga_bitchange(
 	
 
 	//Wire to hold current selected plant box
-	reg selectedPlantBox;
+	// reg selectedPlantBox;
 	reg isSelectingPlantBox;
 	reg[9:0] selectedPlantBoxX;
 	reg[2:0] userPlantSelection; //001 for Pea Shooter, 010 for Sunflower, 100 for Wallnut
@@ -258,6 +258,7 @@ module vga_bitchange(
 		reset = 1'b0;
 		userPlantSelection = 10'd0;
 		isSelectingPlantBox = 0;
+		isSelectingLawnPosition = 0;
 		//Initially the zombies are moving
 		zombie0Stopped = 1'b0;
 		zombie1Stopped = 1'b0;
@@ -277,9 +278,9 @@ module vga_bitchange(
 	always@ (*)
     if (~bright)
         rgb = BLACK;
-	else if (selectedPlantBoxOutline == 1)
+	else if (selectedPlantBoxOutline == 1 && isSelectingPlantBox == 0)
 		rgb = RED;
-	else if (selectedLawnPositionOutline == 1)
+	else if (selectedLawnPositionOutline == 1 && isSelectingLawnPosition == 0)
 		rgb = RED;
 	else if ((zombieEye0 == 1 && ~zombie0Killed) || (zombieEye1 == 1 && ~zombie1Killed) || (zombieEye2 == 1 && ~zombie2Killed) || (zombieEye3 == 1 && ~zombie3Killed) || (zombieEye4 == 1 && ~zombie4Killed))
 		rgb = ZOMBIE_EYE;
@@ -679,6 +680,7 @@ module vga_bitchange(
 					begin
 						userPlantSelection = WALNUT;
 					end
+				isSelectingPlantBox = 0;
 				isSelectingLawnPosition = 1;
 				selectedPlantBoxX = 10'd40;
                 selectedGridBoxX = 10'd40;
@@ -803,6 +805,7 @@ module vga_bitchange(
 	// assign selectedLawnPositionOutline = (
 	// 	//Horizontal lines
 
+
 	// 	//Vertical lines
 	// 	((vCount >= ROW_HEIGHT)
 
@@ -834,23 +837,23 @@ module vga_bitchange(
 	// 	) ? 1 : 0;
 
 	//Using the zombie body width, create the zombie body in the lower part of the row
-	assign zombieBody0 = ((vCount >= ZOMBIE0_ROW_TOP) && (vCount <= ZOMBIE0_ROW_TOP + ZOMBIE_BODY_HEIGHT)
+	assign zombieBody0 = ((vCount >= ZOMBIE_0_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_0_ROW_BOTTOM)
 		&& (hCount >= zombie0X - HALF_ZOMBIE_BODY_WIDTH) && (hCount <= zombie0X + HALF_ZOMBIE_BODY_WIDTH)
 		) ? 1 : 0;
 
-	assign zombieBody1 = ((vCount >= ZOMBIE1_ROW_TOP) && (vCount <= ZOMBIE1_ROW_TOP + ZOMBIE_BODY_HEIGHT)
+	assign zombieBody1 = ((vCount >= ZOMBIE_1_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_1_ROW_BOTTOM)
 		&& (hCount >= zombie1X - HALF_ZOMBIE_BODY_WIDTH) && (hCount <= zombie1X + HALF_ZOMBIE_BODY_WIDTH)
 		) ? 1 : 0;
 
-	assign zombieBody2 = ((vCount >= ZOMBIE2_ROW_TOP) && (vCount <= ZOMBIE2_ROW_TOP + ZOMBIE_BODY_HEIGHT)
+	assign zombieBody2 = ((vCount >= ZOMBIE_2_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_2_ROW_BOTTOM)
 		&& (hCount >= zombie2X - HALF_ZOMBIE_BODY_WIDTH) && (hCount <= zombie2X + HALF_ZOMBIE_BODY_WIDTH)
 		) ? 1 : 0;
 
-	assign zombieBody3 = ((vCount >= ZOMBIE3_ROW_TOP) && (vCount <= ZOMBIE3_ROW_TOP + ZOMBIE_BODY_HEIGHT)
+	assign zombieBody3 = ((vCount >= ZOMBIE_3_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_3_ROW_BOTTOM)
 		&& (hCount >= zombie3X - HALF_ZOMBIE_BODY_WIDTH) && (hCount <= zombie3X + HALF_ZOMBIE_BODY_WIDTH)
 		) ? 1 : 0;
 
-	assign zombieBody4 = ((vCount >= ZOMBIE4_ROW_TOP) && (vCount <= ZOMBIE4_ROW_TOP + ZOMBIE_BODY_HEIGHT)
+	assign zombieBody4 = ((vCount >= ZOMBIE_4_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_4_ROW_BOTTOM)
 		&& (hCount >= zombie4X - HALF_ZOMBIE_BODY_WIDTH) && (hCount <= zombie4X + HALF_ZOMBIE_BODY_WIDTH)
 		) ? 1 : 0;
 
