@@ -20,8 +20,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 module counter(
 	input clk,
-	input[15:0] displayNumber,
-	output reg [3:0] anode,
+	input[15:0] displayNumber1,
+	input[15:0] displayNumber2,
+	output reg [7:0] anode,
 	output reg [6:0] ssdOut	
     );
 	 
@@ -34,26 +35,42 @@ module counter(
 	begin
 		refresh <= refresh + 21'd1;
 	end
-	assign LEDCounter = refresh[20:19];
+	assign LEDCounter = refresh[20:18];
 	
 	always @ (*)
 	 begin
 		case (LEDCounter)
-		2'b00: begin
-			anode = 4'b0111;
-			LEDNumber = displayNumber/1000;
+		3'b000: begin
+			anode = 8'b1111_0111;
+			LEDNumber = displayNumber1/1000;
 				end
-		2'b01: begin
-			anode = 4'b1011;
-			LEDNumber = (displayNumber % 1000)/100;
+		3'b001: begin
+			anode = 8'b1111_1011;
+			LEDNumber = (displayNumber1 % 1000)/100;
 				end
-		2'b10: begin
-			anode = 4'b1101;
-			LEDNumber = ((displayNumber % 1000)%100)/10;
+		3'b010: begin
+			anode = 8'b1111_1101;
+			LEDNumber = ((displayNumber1 % 1000)%100)/10;
 				end
-		2'b11: begin
-			anode = 4'b1110;
-			LEDNumber = ((displayNumber % 1000)%100)%10;
+		3'b011: begin
+			anode = 8'b1111_1110;
+			LEDNumber = ((displayNumber1 % 1000)%100)%10;
+				end
+		3'b100: begin
+			anode = 8'b0111_1111;
+			LEDNumber = displayNumber2/1000;
+				end
+		3'b101: begin
+			anode = 8'b1011_1111;
+			LEDNumber = (displayNumber2 % 1000)/100;
+				end
+		3'b110: begin
+			anode = 8'b1101_1111;
+			LEDNumber = ((displayNumber2 % 1000)%100)/10;
+				end
+		3'b111: begin
+			anode = 8'b1110_1111;
+			LEDNumber = ((displayNumber2 % 1000)%100)%10;
 				end		
 		endcase
 	end
