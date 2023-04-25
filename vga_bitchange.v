@@ -335,10 +335,26 @@ module vga_bitchange(
 					state = DoneL;
 					reset = 1'b1; //TODO I dont think you need to keep track of num zombies killed
 					//Stop the zombie after it reaches the end of the lawn
-					// if(zombie0X == END_OF_LAWN)
-					// 	zombie0Stopped = 1'b1;
-					// if(zombie1X == END_OF_LAWN)
-					// 	zombie1Stopped = 1'b1;
+					if(zombie0X == END_OF_LAWN)
+						begin
+							zombie0Stopped = 1'b1
+						end
+					if(zombie1X == END_OF_LAWN)
+						begin
+							zombie1Stopped = 1'b1;
+						end
+					if(zombie2X == END_OF_LAWN)
+						begin
+							zombie2Stopped = 1'b1;
+						end
+					if(zombie3X == END_OF_LAWN)
+						begin
+							zombie3Stopped = 1'b1;
+						end
+					if(zombie4X == END_OF_LAWN)
+						begin
+							zombie4Stopped = 1'b1;
+						end
 				end
 			//If zombies are hit by a pea shot, increment their number of shots
 			//Zombie0 can be hit by pea shots 0 through 4
@@ -812,9 +828,13 @@ module vga_bitchange(
 
 
 	// 	//Vertical lines
-	// 	((vCount >= ROW_HEIGHT)
+	//  	//Grid 0
+	// 	//Define the vertical height
+	// 	((vCount >= ROW_HEIGHT) && (vCount <= 10'd173) &&
+	// 	//Define the horizontal width
+	// 	(hCount >= 10'd300)
 
-	// )
+	// )) ? 1 : 0;
 
 	// //Range from 160 to 287
 	// assign zombie0 = ((vCount >= 10'd165) && (vCount <= 10'd282)
