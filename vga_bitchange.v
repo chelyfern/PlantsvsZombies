@@ -22,20 +22,20 @@ module vga_bitchange(
 
 	//Color definitions
 	parameter BLACK = 12'b0000_0000_0000;
-	parameter GREY = 12'b0000_1011_0100;
+	parameter ZOMBIE_SKIN = 12'b0000_1011_0100;
 	parameter LIGHT_GREY = 12'b0011_0011_0010;
 	parameter GREEN = 12'b0000_1111_0000;
 	parameter DARK_GREEN = 12'b001110010010;
 	parameter YELLOW = 12'b1111_1111_0000;
 	parameter ORANGE = 12'b1111_1100_0000;
 	parameter RED = 12'b1111_0000_0000;
-	parameter ZOMBIE_SKIN = 12'b1010_1010_1011;
+	parameter GREY = 12'b1010_1010_1011;
 	parameter ZOMBIE_HEAD = 12'b1010_1010_1011;
 	parameter ZOMBIE_EYE = 12'b1111_1111_1111;
 
 	//Size definitions
 	parameter ZOMBIE_HEAD_RADIUS = 10'd21;
-	parameter ZOMBIE_BODY_HEIGHT = 10'd128;
+	parameter ZOMBIE_BODY_HEIGHT = 10'd50;
 	parameter ZOMBIE0_ROW_TOP = 10'd87;
 	parameter ZOMBIE_0_ROW_BOTTOM = 10'd173;
 	parameter ZOMBIE1_ROW_TOP = 10'd174;
@@ -308,7 +308,7 @@ module vga_bitchange(
 	//At every clock, move the zombies to the right by increasnig the zombie "speed"
 	always @(posedge clk) begin
     zombieSpeed = zombieSpeed + 50'd1;
-    if (zombieSpeed >= 50'd500000) begin
+    if (zombieSpeed >= 50'd1000000) begin
         if (zombie1X <= 50'd600 && ~zombie0Stopped) // Move zombie0 after zombie1 has moved 200 pixels across the screen
             zombie0X = zombie0X - 10'd1;
 		
@@ -765,17 +765,27 @@ module vga_bitchange(
 		end
 
 	//Range from 000 to 160 (vertically)
-	assign greyZone = (vCount <= 10'd159) ? 1 : 0;
+	assign greyZone = (vCount <= 10'd86) ? 1 : 0;
 
 	//Create 5 by 5 grid in the lawn
 	//First row, Third Row, and 5th row of lawn
 	//2nd column, 4th column
-	assign GRID = (((vCount >= 10'd87) && (vCount <= 10'd213)
-	|| (vCount >= 10'd301) && (vCount <= 10'd387)
-	|| (vCount >= 10'd475) && (vCount <= 10'd562))
+	assign GRID1 = (((vCount >= 10'd87) && (vCount <= 10'd173)
+	|| (vCount >= 10'd261) && (vCount <= 10'd347)
+	|| (vCount >= 10'd435) && (vCount <= 10'd521))
 	&& ((hCount >= 10'd600) && (hCount <= 10'd699)
 	|| (hCount >= 10'd400) && (hCount <= 10'd499))
 	) ? 1 : 0;
+
+	//Second row, Fourth Row
+	//1st column, 3rd column, 5th column
+	assign GRID2 = (((vCount >= 10'd174) && (vCount <= 10'd260)
+	|| (vCount >= 10'd348) && (vCount <= 10'd434))
+	&& ((hCount >= 10'd700) && (hCount <= 10'd799)
+	|| (hCount >= 10'd500) && (hCount <= 10'd599)
+	|| (hCount >= 10'd300) && (hCount <= 10'd399))
+	) ? 1 : 0;
+
 
 	//Define the selected plant box
 	assign selectedPlantBoxOutline = (
