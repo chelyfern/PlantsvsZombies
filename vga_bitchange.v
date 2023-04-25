@@ -300,7 +300,7 @@ module vga_bitchange(
         rgb = YELLOW;
     else if (greyZone == 1)
         rgb = GREY;
-	else if (GRID == 1)
+	else if (GRID1 == 1 || GRID2 == 1)
 		rgb = DARK_GREEN;
     else
         rgb = GREEN; // background color
@@ -789,14 +789,24 @@ module vga_bitchange(
 
 	//Define the selected plant box
 	assign selectedPlantBoxOutline = (
-		(
-			((vCount <= 10'd005) || ((vCount >= 10'd82) && (vCount <= 10'd86)))
+		//Horizontal lines
+		(((vCount <= 10'd05) || ((vCount >= 10'd82) && (vCount <= 10'd86)))
 		&& (hCount >= selectedPlantBoxX + HALF_COLUMN_WIDTH ) && (hCount <= selectedPlantBoxX - HALF_COLUMN_WIDTH))
 		||
+		//Vertical lines
 		((vCount <= ROW_HEIGHT) 
 		&& ((hCount >= selectedPlantBoxX - HALF_COLUMN_WIDTH) && (hCount <= selectedPlantBoxX - HALF_COLUMN_WIDTH + 10'd005)
-		|| (hCount >= selectedPlantBoxX + HALF_COLUMN_WIDTH - 10'd005) && (hCount <= selectedPlantBoxX + COLUMN_WIDTH))
+		|| (hCount >= selectedPlantBoxX + HALF_COLUMN_WIDTH - 10'd005) && (hCount <= selectedPlantBoxX + HALF_COLUMN_WIDTH))
 		)) ? 1 : 0;
+
+	//Define the selected grid box
+	// assign selectedLawnPositionOutline = (
+	// 	//Horizontal lines
+
+	// 	//Vertical lines
+	// 	((vCount >= ROW_HEIGHT)
+
+	// )
 
 	// //Range from 160 to 287
 	// assign zombie0 = ((vCount >= 10'd165) && (vCount <= 10'd282)
