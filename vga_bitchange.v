@@ -181,6 +181,9 @@ module vga_bitchange(
 	reg[9:0] zombie3HeadY;
 	reg[9:0] zombie4HeadY;
 	reg[49:0] zombieSpeed;// Regisiter to hold zombie speed
+
+	//Register to hold count of select button press
+	reg[3:0] selectButtonCounter;
 	
 
 	//Wires for plant graphics
@@ -325,6 +328,7 @@ module vga_bitchange(
     reg [49:0] sunTimer;
 
 	initial begin
+		selectButtonCounter = 4'd0;
 		//Initialize the X position on the zombies to be the right side of the lawn
 		zombie0X = BEGINNING_OF_LAWN_X;
 		zombie1X = BEGINNING_OF_LAWN_X;
@@ -339,7 +343,7 @@ module vga_bitchange(
 		zombie4Y = 10'd478;
 		//Initialize the X and Y position of the zombie heads
 		zombie0HeadX = BEGINNING_OF_LAWN_X - 10'd05;
-		zombie0HeadY = zombie0Y - 10'd15;
+		zombie0HeadY = zombie0Y - 10'd15; //TODO MAYBE FIX LATER IN CASE YOU CANT SET ZOMBIE0Y TO zombie0HeadY
 		zombie1HeadX = BEGINNING_OF_LAWN_X - 10'd05;
 		zombie1HeadY = zombie1Y - 10'd15;
 		zombie2HeadX = BEGINNING_OF_LAWN_X - 10'd05;
@@ -411,9 +415,11 @@ module vga_bitchange(
 		rgb = RED;
 	else if (selectedLawnPositionOutline == 1 && isSelectingLawnPosition == 1)
 		rgb = RED;
-	else if ((zombieEye0 == 1 && ~zombie0Killed) || (zombieEye1 == 1 && ~zombie1Killed) || (zombieEye2 == 1 && ~zombie2Killed) || (zombieEye3 == 1 && ~zombie3Killed) || (zombieEye4 == 1 && ~zombie4Killed))
+	// else if ((zombieEye0 == 1 && ~zombie0Killed) || (zombieEye1 == 1 && ~zombie1Killed) || (zombieEye2 == 1 && ~zombie2Killed) || (zombieEye3 == 1 && ~zombie3Killed) || (zombieEye4 == 1 && ~zombie4Killed))
+	else if(zombieEye0 || zombieEye1 || zombieEye2 || zombieEye3 || zombieEye4)
 		rgb = ZOMBIE_EYE;
-	else if ((zombieHead0 == 1 && ~zombie0Killed) || (zombieHead1 == 1 && ~zombie1Killed) || (zombieHead2 == 1 && ~zombie2Killed) || (zombieHead3 == 1 && ~zombie3Killed) || (zombieHead4 == 1 && ~zombie4Killed))
+	//else if ((zombieHead0 == 1 && ~zombie0Killed) || (zombieHead1 == 1 && ~zombie1Killed) || (zombieHead2 == 1 && ~zombie2Killed) || (zombieHead3 == 1 && ~zombie3Killed) || (zombieHead4 == 1 && ~zombie4Killed))
+	else if(zombieHead0 || zombieHead1 || zombieHead2 || zombieHead3 || zombieHead4)
 		rgb = ZOMBIE_HEAD;
 	else if ((zombieOutline0 == 1 && ~zombie0Killed) || (zombieOutline1 == 1 && ~zombie1Killed) || (zombieOutline2 == 1 && ~zombie2Killed) || (zombieOutline3 == 1 && ~zombie3Killed) || (zombieOutline4 == 1 && ~zombie4Killed))
 		rgb = BLACK;
@@ -446,39 +452,32 @@ module vga_bitchange(
 		rgb = DARK_GREEN;
     else
         rgb = GREEN; // background color
+
  
 	//At every clock, move the zombies to the right by increasnig the zombie "speed"
 	always @(posedge clk) begin
     zombieSpeed = zombieSpeed + 50'd1;
-    if (zombieSpeed >= 50'd1000000) begin
+    if (zombieSpeed >= 50'd50000000) begin
         if (zombie1X <= 50'd600 && ~zombie0Stopped) // Move zombie0 after zombie1 has moved 200 pixels across the screen
             zombie0X = zombie0X - 10'd1;
+			zombie0HeadX = zombie0HeadX - 10'd1;
 		
         //Zombie 1 always enters the lawn first
 		if (~zombie1Stopped)
 			zombie1X = zombie1X - 10'd1;
-		
+			zombie1HeadX = zombie1HeadX - 10'd1;
         
         if (zombie0X <= 50'd600 && ~zombie2Stopped) // Move zombie2 after zombie0 has moved 200 pixels across the screen
             zombie2X = zombie2X - 10'd1;
+			zombie2HeadX = zombie2HeadX - 10'd1;
 
         if (zombie0X <= 50'd700 && ~zombie3Stopped) // Move zombie3 after zombie0 has moved 100 pixels across the screen
             zombie3X = zombie3X - 10'd1;
+			zombie3HeadX = zombie3HeadX - 10'd1;
 
         if (zombie3X <= 50'd700 && ~zombie4Stopped) // Move zombie4 zombie3 has moved 100 pixels across the screen
             zombie4X = zombie4X - 10'd1;
-
-        zombieSpeed = 50'd0;
-		
-        
-        if (zombie0X <= 50'd600 && ~zombie2Stopped) // Move zombie2 after zombie0 has moved 200 pixels across the screen
-            zombie2X = zombie2X - 10'd1;
-
-        if (zombie0X <= 50'd700 && ~zombie3Stopped) // Move zombie3 after zombie0 has moved 100 pixels across the screen
-            zombie3X = zombie3X - 10'd1;
-
-        if (zombie3X <= 50'd700 && ~zombie4Stopped) // Move zombie4 zombie3 has moved 100 pixels across the screen
-            zombie4X = zombie4X - 10'd1;
+			zombie4HeadX = zombie4HeadX - 10'd1;
 
         zombieSpeed = 50'd0;
 			//If a zombie reaches the end of the lawn, the user loses!
@@ -715,7 +714,7 @@ module vga_bitchange(
 			zombie2Counter = zombie2Counter + 1'd1;
 			if((zombie2Counter == TO_KILL_PEA) && (plant2Type == PEASHOOTER)) //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
 				begin
-					if(zombiei2X == FIRST_COL_MIDDLE_X)
+					if(zombie2X == FIRST_COL_MIDDLE_X)
                         begin
                             plant10Placed = 1'b0;
                         end
@@ -916,15 +915,18 @@ module vga_bitchange(
 	//Always at the posedge of the clock, check if the user has selected a lawn position
 	always@ (posedge clk)
 	begin
-		if(selectButton == 1 && isSelectingPlantBox == 0 && isSelectingLawnPosition == 0)
+		if(selectButton == 1'b1)
+		begin
+			selectButtonCounter = selectButtonCounter + 4'd1;
+		end
+		// if((selectButton == 1'b1) && (isSelectingPlantBox == 1'b0) && (isSelectingLawnPosition == 1'b0))
+		if(selectButtonCounter == 4'd1)
 			begin
-				isSelectingPlantBox = 1;
+				isSelectingPlantBox = 1'b1;
 				//Assign the X coordinate of the selected plant box to the middle of the upper left square
 				selectedPlantBoxX = FIRST_COL_MIDDLE_X;
-			end
-		else if(isSelectingPlantBox == 1)
-            begin
-                if(switches == 10'd0)
+
+				if(switches == 10'd0)
                     begin
                         selectedPlantBoxX = FIRST_COL_MIDDLE_X;
                     end
@@ -936,9 +938,9 @@ module vga_bitchange(
                     begin
                         selectedPlantBoxX = THIRD_COL_MIDDLE_X;
                     end
-            end
+			end
 
-		else if(selectButton == 1 && isSelectingPlantBox == 1) //User has selected a plant
+		else if(selectButtonCounter == 4'd2) //User has selected a plant
 			begin
 				//If user selects leftmost plant box, assign the selection to pea shooter
 				if(selectedPlantBoxX == FIRST_COL_MIDDLE_X)
@@ -955,15 +957,13 @@ module vga_bitchange(
 					begin
 						userPlantSelection = WALNUT;
 					end
-				isSelectingPlantBox = 0;
-				isSelectingLawnPosition = 1;
+				isSelectingPlantBox = 1'b0;
+				isSelectingLawnPosition = 1'b1;
 				selectedPlantBoxX = FIRST_COL_MIDDLE_X;
                 selectedGridBoxX = FIRST_COL_MIDDLE_X;
                 selectedGridBoxY = 10'd130; //May need to change 87 to 86
-			end
-		//If user has selected a plant box, then they are selecting a lawn position
-		else if(isSelectingLawnPosition == 1)
-			begin
+			
+		
                 //Map the switches to the X and Y coordinates of the selected lawn position
                 //3 is the 0th grid box at X = 350, Y = 130
                 if(switches == 10'd3)
@@ -1115,8 +1115,8 @@ module vga_bitchange(
                         selectedGridBoxX = FIFTH_COL_MIDDLE_X;
                         selectedGridBoxY = FIFTH_ROW_MIDDLE_Y;
                     end
-			end
-        else if(isSelectingLawnPosition == 1 && selectButton == 1)
+				end
+        else if(selectButtonCounter == 4'd3)
             begin
                 //For every box in the grid, check if the selected X and Y coordinates match that box
                 //Box 0
@@ -1233,7 +1233,9 @@ module vga_bitchange(
 				selectedGridBoxY = 10'd130;
 				
 				//Reset the selection flag
-				isSelectingLawnPosition = 1'd0;
+				// isSelectingLawnPosition = 1'b0;
+				selectButtonCounter = 4'd0;
+
             end
 		end
     
@@ -1366,8 +1368,11 @@ module vga_bitchange(
 		) ? 1 : 0;
 
 	//Create zombie heads
-	//Definie the vertical and horizontal positions of the zombie heads
-	//assign zombieHead0 =
+	zombie_face zombie0Face(.clk(clk), .zombie0HeadX(zombie0HeadX),
+	.zombie0HeadY(zombie0HeadY), .hCount(hCount), .vCount(vCount), .zombieHead(zombieHead0),
+	.zombieEye(zombieEye0));
+
+	
 	
 	
 	 
