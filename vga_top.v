@@ -48,18 +48,18 @@ module vga_top(
 	
 	
 	wire [6:0] ssdOut;
-	wire [7:0] anode;
-	wire [3:0] upperAnodes;
+	wire [3:0] anode;
 	wire [11:0] rgb;
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
 	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), .selectButton(BtnC), 
 	                   .hCount(hc), .vCount(vc), .rgb(rgb), .zombies_killed(zombiesKilled), .numSuns(numSuns));
 	
-	counter cnt(.clk(ClkPort), .displayNumber1(zombiesKilled), .displayNumber2(numSuns), .anode(anode), .ssdOut(ssdOut));
+    counter cnt(.clk(ClkPort), .displayNumber(numSuns), .anode(anode), .ssdOut(ssdOut));
+//	counter cnt(.clk(ClkPort), .displayNumber1(zombiesKilled), .displayNumber2(numSuns), .anode(anode), .ssdOut(ssdOut));
 	
 	assign Dp = 1;
 	assign {Ca, Cb, Cc, Cd, Ce, Cf, Cg} = ssdOut[6 : 0];
-    assign {An7, An6, An5, An4, An3, An2, An1, An0} = anode[7:0];
+    assign {An7, An6, An5, An4, An3, An2, An1, An0} = {4'b1111, anode};
 
 	
 	assign vgaR = rgb[11 : 8];

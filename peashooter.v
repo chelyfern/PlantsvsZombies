@@ -25,10 +25,12 @@ module peashooter(
     input [9:0] psHPosGiven,
     input [9:0] hCount, vCount,
     input enable,
+    input penable,
     output peashooterHead,
     output peashooterBlack,
     output peashooterStem,
-    output pea
+    output pea, 
+    output peaX
     );
 
     
@@ -41,6 +43,8 @@ module peashooter(
     reg[9:0] psHPos;
     
     reg [1:0] cnt = 2'd00;
+    
+    assign peaX = pHPos;
 
     always@ (*)
     begin
@@ -78,7 +82,7 @@ module peashooter(
 	   end
 	end
 
-    assign pea = ( (enable == 1'd1) && ((vCount >= pVPos) && (vCount <= pVPos + 10'd14) && (hCount >= pHPos) && (hCount <= pHPos + 10'd14))) ? 1 : 0;
+    assign pea = ( (penable == 1'd1) && (enable == 1'd1) && ((vCount >= pVPos) && (vCount <= pVPos + 10'd14) && (hCount >= pHPos) && (hCount <= pHPos + 10'd14))) ? 1 : 0;
 
 
 	assign peashooterHead = ( (enable == 1'd1) && 
