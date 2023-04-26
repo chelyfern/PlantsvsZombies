@@ -5,6 +5,8 @@
 module vga_bitchange(
 	input clk,
 	input bright,
+    //Switches input for switches 0 - 4
+    input [4:0] switches,
 	//5 different positions for the zombies
 	input [9:0] hCount, vCount,
 	//Input for different buttons
@@ -81,6 +83,19 @@ module vga_bitchange(
 	parameter BEGINNING_OF_LAWN_X = 10'd799;
 	parameter BEGINNING_OF_LAWN_Y = 10'd87;
 
+    //With respect to the grid
+	parameter FIRST_COL_MIDDLE_X = 10'd350;
+	parameter SECOND_COL_MIDDLE_X = 10'd450;
+	parameter THIRD_COL_MIDDLE_X = 10'd550;
+    parameter FOURTH_COL_MIDDLE_X = 10'd650;
+    parameter FIFTH_COL_MIDDLE_X = 10'd750;
+	parameter FIRST_ROW_MIDDLE_Y = 10'd130;
+	parameter SECOND_ROW_MIDDLE_Y = 10'd217;
+	parameter THIRD_ROW_MIDDLE_Y = 10'd304;
+	parameter FOURTH_ROW_MIDDLE_Y = 10'd391;
+	parameter FIFTH_ROW_MIDDLE_Y = 10'd478;
+
+
 
 	
 	
@@ -153,6 +168,18 @@ module vga_bitchange(
 	reg[9:0] zombie2Y;
 	reg[9:0] zombie3Y;
 	reg[9:0] zombie4Y;
+	//Registers to hold zombie head's X position
+	reg[9:0] zombie0HeadX;
+	reg[9:0] zombie1HeadX;
+	reg[9:0] zombie2HeadX;
+	reg[9:0] zombie3HeadX;
+	reg[9:0] zombie4HeadX;
+	//Registers to hold zombie head's Y position
+	reg[9:0] zombie0HeadY;
+	reg[9:0] zombie1HeadY;
+	reg[9:0] zombie2HeadY;
+	reg[9:0] zombie3HeadY;
+	reg[9:0] zombie4HeadY;
 	reg[49:0] zombieSpeed;// Regisiter to hold zombie speed
 	
 
@@ -197,11 +224,11 @@ module vga_bitchange(
 	reg[2:0] plant2Type;
 	reg[2:0] plant3Type;
 	reg[2:0] plant4Type;
-	reg plant0Killed;
-	reg plant1Killed;
-	reg plant2Killed;
-	reg plant3Killed;
-	reg plant4Killed;
+	// reg plant0Killed;
+	// reg plant1Killed;
+	// reg plant2Killed;
+	// reg plant3Killed;
+	// reg plant4Killed;
 	//Registers to hold pea shot's X position. There are 25 pea shots
 	reg[9:0] peaShot0X;
 	reg[9:0] peaShot1X;
@@ -299,11 +326,11 @@ module vga_bitchange(
 
 	initial begin
 		//Initialize the X position on the zombies to be the right side of the lawn
-		zombie0X = 10'd799;
-		zombie1X = 10'd799;
-		zombie2X = 10'd799;
-		zombie3X = 10'd799;
-		zombie4X = 10'd799;
+		zombie0X = BEGINNING_OF_LAWN_X;
+		zombie1X = BEGINNING_OF_LAWN_X;
+		zombie2X = BEGINNING_OF_LAWN_X;
+		zombie3X = BEGINNING_OF_LAWN_X;
+		zombie4X = BEGINNING_OF_LAWN_X;
 		//Initialize the zombie Y position to be in the middle of their respective rows
 		zombie0Y = 10'd130;
 		zombie1Y = 10'd217;
@@ -311,13 +338,22 @@ module vga_bitchange(
 		zombie3Y = 10'd391;
 		zombie4Y = 10'd478;
 		//Initialize the X and Y position of the zombie heads
+		zombie0HeadX = BEGINNING_OF_LAWN_X - 10'd05;
+		zombie0HeadY = zombie0Y - 10'd15;
+		zombie1HeadX = BEGINNING_OF_LAWN_X - 10'd05;
+		zombie1HeadY = zombie1Y - 10'd15;
+		zombie2HeadX = BEGINNING_OF_LAWN_X - 10'd05;
+		zombie2HeadY = zombie2Y - 10'd15;
+		zombie3HeadX = BEGINNING_OF_LAWN_X - 10'd05;
+		zombie3HeadY = zombie3Y - 10'd15;
+		zombie4HeadX = BEGINNING_OF_LAWN_X - 10'd05;
+		zombie4HeadY = zombie4Y - 10'd15;
 		//Initialize the zombies to be alive
 		zombie0Killed = 1'b0;
 		zombie1Killed = 1'b0;
 		zombie2Killed = 1'b0;
 		zombie3Killed = 1'b0;
 		zombie4Killed = 1'b0;
-		//TODO: initiliaze the state?
 		//Initialize the X position on the zombies to be the right side of the lawn
 		zombie0X = 10'd799;
 		zombie1X = 10'd799;
@@ -325,7 +361,7 @@ module vga_bitchange(
 		zombie3X = 10'd799;
 		zombie4X = 10'd799;
 		//Initiliaze the X coordinate of the selected plant box
-		selectedPlantBoxX = 10'd50;
+		selectedPlantBoxX = 10'd350;
 		//Initiliaze the X and Y coordinates of the selected grid box
 		selectedGridBoxX = 10'd350;
 		selectedGridBoxY = 10'd130;
@@ -342,6 +378,12 @@ module vga_bitchange(
 		zombie3Stopped = 1'b0;
 		zombie4Stopped = 1'b0;
 		
+		//Initially the zombies have not reached the end
+		zombie0ReachedEnd = 1'b0;
+		zombie1ReachedEnd = 1'b0;
+		zombie2ReachedEnd = 1'b0;
+		zombie3ReachedEnd = 1'b0;
+		zombie4ReachedEnd = 1'b0;
 		sfVPos = 10'd220;
 		
 		sfVPosTemp = sfVPos + 10'd154;
@@ -541,8 +583,28 @@ module vga_bitchange(
 			zombie0Counter = zombie0Counter + 1'd1;
 			if((zombie0Counter == TO_KILL_PEA) && (plant0Type == PEASHOOTER)) //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
 				begin
-					plant0Killed = 1'b1;
-					//Set the plant placed back to 0
+					//Determine which plant killed the zombie
+                    //If zombie X was in the first grid box, plant0 killed it
+                    if(zombie0X == FIRST_COL_MIDDLE_X)
+                        begin
+                            plant0Placed = 1'b0;
+                        end
+                    else if(zombie0X == SECOND_COL_MIDDLE_X)
+                        begin
+                            plant1Placed = 1'b0;
+                        end
+                    else if(zombie0X == THIRD_COL_MIDDLE_X)
+                        begin
+                            plant2Placed = 1'b0;
+                        end
+                    else if(zombie0X == FOURTH_COL_MIDDLE_X)
+                        begin
+                            plant3Placed = 1'b0;
+                        end
+                    else if(zombie0X == FIFTH_COL_MIDDLE_X)
+                        begin
+                            plant4Placed = 1'b0;
+                        end
 					zombie0Counter = 1'd0;
 					//Compute the new position of the rightmost plant by iterating through the plant placements in this row
 					if(plant4Placed == 1)
@@ -587,7 +649,26 @@ module vga_bitchange(
 			zombie1Counter = zombie1Counter + 1'd1;
 			if((zombie1Counter == TO_KILL_PEA) && (plant1Type == PEASHOOTER)) //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
 				begin
-					plant1Killed = 1'b1;
+                    if(zombie1X == FIRST_COL_MIDDLE_X)
+                        begin
+                            plant5Placed = 1'b0;
+                        end
+                    else if(zombie1X == SECOND_COL_MIDDLE_X)
+                        begin
+                            plant6Placed = 1'b0;
+                        end
+                    else if(zombie1X == THIRD_COL_MIDDLE_X)
+                        begin
+                            plant7Placed = 1'b0;
+                        end
+                    else if(zombie1X == FOURTH_COL_MIDDLE_X)
+                        begin
+                            plant8Placed = 1'b0;
+                        end
+                    else if(zombie1X == FIFTH_COL_MIDDLE_X)
+                        begin
+                            plant9Placed = 1'b0;
+                        end
 					//Set the plant placed back to 0
 					zombie1Counter = 1'd0;
 					//Compute the new position of the rightmost plant by iterating through the plant placements in this row
@@ -634,7 +715,26 @@ module vga_bitchange(
 			zombie2Counter = zombie2Counter + 1'd1;
 			if((zombie2Counter == TO_KILL_PEA) && (plant2Type == PEASHOOTER)) //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
 				begin
-					plant2Killed = 1'b1;
+					if(zombiei2X == FIRST_COL_MIDDLE_X)
+                        begin
+                            plant10Placed = 1'b0;
+                        end
+                    else if(zombie2X == SECOND_COL_MIDDLE_X)
+                        begin
+                            plant11Placed = 1'b0;
+                        end
+                    else if(zombie2X == THIRD_COL_MIDDLE_X)
+                        begin
+                            plant12Placed = 1'b0;
+                        end
+                    else if(zombie2X == FOURTH_COL_MIDDLE_X)
+                        begin
+                            plant13Placed = 1'b0;
+                        end
+                    else if(zombie2X == FIFTH_COL_MIDDLE_X)
+                        begin
+                            plant14Placed = 1'b0;
+                        end
 					//Set the plant placed back to 0
 					zombie2Counter = 1'd0;
 					//Compute the new position of the rightmost plant by iterating through the plant placements in this row
@@ -681,7 +781,27 @@ module vga_bitchange(
 			zombie3Counter = zombie3Counter + 1'd1;
 			if((zombie3Counter == TO_KILL_PEA) && (plant3Type == PEASHOOTER)) //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
 				begin
-					plant3Killed = 1'b1;
+					if(zombie3X == FIRST_COL_MIDDLE_X)
+                        begin
+                            plant15Placed = 1'b0;
+                        end
+                    else if(zombie3X == SECOND_COL_MIDDLE_X)
+                        begin
+                            plant16Placed = 1'b0;
+                        end
+                    else if(zombie3X == THIRD_COL_MIDDLE_X)
+                        begin
+                            plant17Placed = 1'b0;
+                        end
+                    else if(zombie3X == FOURTH_COL_MIDDLE_X)
+                        begin
+                            plant18Placed = 1'b0;
+                        end
+                    else if(zombie3X == FIFTH_COL_MIDDLE_X)
+                        begin
+                            plant19Placed = 1'b0;
+                        end
+
 					//Set the plant placed back to 0
 					zombie3Counter = 1'd0;
 					//Compute the new position of the rightmost plant by iterating through the plant placements in this row
@@ -729,7 +849,26 @@ module vga_bitchange(
 			zombie4Counter = zombie4Counter + 1'd1;
 			if((zombie4Counter == TO_KILL_PEA) && (plant4Type == PEASHOOTER)) //TO DO, EDIT HOW LONG THE ZOMBIE NEEDS TO BE WITH THE PLANT FOR
 				begin
-					plant4Killed = 1'b1;
+					if(zombie4X == FIRST_COL_MIDDLE_X)
+                        begin
+                            plant20Placed = 1'b0;
+                        end
+                    else if(zombie4X == SECOND_COL_MIDDLE_X)
+                        begin
+                            plant21Placed = 1'b0;
+                        end
+                    else if(zombie4X == THIRD_COL_MIDDLE_X)
+                        begin
+                            plant22Placed = 1'b0;
+                        end
+                    else if(zombie4X == FOURTH_COL_MIDDLE_X)
+                        begin
+                            plant23Placed = 1'b0;
+                        end
+                    else if(zombie4X == FIFTH_COL_MIDDLE_X)
+                        begin
+                            plant24Placed = 1'b0;
+                        end
 					//Set the plant placed back to 0
 					zombie4Counter = 1'd0;
 					//Compute the new position of the rightmost plant by iterating through the plant placements in this row
@@ -777,68 +916,205 @@ module vga_bitchange(
 	//Always at the posedge of the clock, check if the user has selected a lawn position
 	always@ (posedge clk)
 	begin
-		if(selectButton == 1 && isSelectingPlantBox == 0)
+		if(selectButton == 1 && isSelectingPlantBox == 0 && isSelectingLawnPosition == 0)
 			begin
 				isSelectingPlantBox = 1;
 				//Assign the X coordinate of the selected plant box to the middle of the upper left square
-				selectedPlantBoxX = 10'd40;
+				selectedPlantBoxX = FIRST_COL_MIDDLE_X;
 			end
-		else if(isSelectingPlantBox == 1 && leftButton == 1)
-			begin
-				selectedPlantBoxX = selectedPlantBoxX - COLUMN_WIDTH;
-			end
-		else if(isSelectingPlantBox == 1 && rightButton == 1)
-			begin
-				selectedPlantBoxX = selectedPlantBoxX + COLUMN_WIDTH;
-			end
+		else if(isSelectingPlantBox == 1)
+            begin
+                if(switches == 10'd0)
+                    begin
+                        selectedPlantBoxX = FIRST_COL_MIDDLE_X;
+                    end
+                else if(switches == 10'd1)
+                    begin
+                        selectedPlantBoxX = SECOND_COL_MIDDLE_X;
+                    end
+                else if(switches == 10'd2)
+                    begin
+                        selectedPlantBoxX = THIRD_COL_MIDDLE_X;
+                    end
+            end
+
 		else if(selectButton == 1 && isSelectingPlantBox == 1) //User has selected a plant
 			begin
 				//If user selects leftmost plant box, assign the selection to pea shooter
-				if(selectedPlantBoxX == 10'd50)
+				if(selectedPlantBoxX == FIRST_COL_MIDDLE_X)
 					begin
 						userPlantSelection = PEASHOOTER;
 					end
 				//If user selects middle plant box, assign the selection to sunflower
-				else if(selectedPlantBoxX == 10'd150)
+				else if(selectedPlantBoxX == SECOND_COL_MIDDLE_X)
 					begin
 						userPlantSelection = SUNFLOWER;
 					end
 				//If user selects rightmost plant box, assign the selection to wallnut
-				else if(selectedPlantBoxX == 10'd250)
+				else if(selectedPlantBoxX == THIRD_COL_MIDDLE_X)
 					begin
 						userPlantSelection = WALNUT;
 					end
 				isSelectingPlantBox = 0;
 				isSelectingLawnPosition = 1;
-				selectedPlantBoxX = 10'd50;
-                selectedGridBoxX = 10'd350;
+				selectedPlantBoxX = FIRST_COL_MIDDLE_X;
+                selectedGridBoxX = FIRST_COL_MIDDLE_X;
                 selectedGridBoxY = 10'd130; //May need to change 87 to 86
 			end
 		//If user has selected a plant box, then they are selecting a lawn position
-		else if(isSelectingLawnPosition == 1 && selectButton == 0)
+		else if(isSelectingLawnPosition == 1)
 			begin
-                //Start the selected Grid position at the top left corner of the lawn
-                if(leftButton == 1)
-                    selectedGridBoxX = selectedGridBoxX - COLUMN_WIDTH;
-                
-                else if(rightButton == 1)
-                    selectedGridBoxX = selectedGridBoxX + COLUMN_WIDTH;
-                
-                else if(upButton == 1)
-                    selectedGridBoxY = selectedGridBoxY + ROW_HEIGHT;
-					if(selectedGridBoxY < BEGINNING_OF_LAWN_Y)
-						begin
-						selectedGridBoxY = 10'd478;
-						end
-                
-				//If down button is pressed, check if the Y position is larger than the bottom of the lawn
-                else if(downButton == 1)
-                    selectedGridBoxY = selectedGridBoxY - ROW_HEIGHT;
-					if(selectedGridBoxY > END_OF_LAWN_Y)
-						begin
-						selectedGridBoxY = 10'd130;
-						end
-                
+                //Map the switches to the X and Y coordinates of the selected lawn position
+                //3 is the 0th grid box at X = 350, Y = 130
+                if(switches == 10'd3)
+                    begin
+                        selectedGridBoxX = FIRST_COL_MIDDLE_X;
+                        selectedGridBoxY = FIRST_ROW_MIDDLE_Y;
+                    end
+                //4 is the 1st grid box at X = 450, Y = 130
+                else if(switches == 10'd4)
+                    begin
+                        selectedGridBoxX = SECOND_COL_MIDDLE_X;
+                        selectedGridBoxY = FIRST_ROW_MIDDLE_Y;
+                    end
+                //5 is the 2nd grid box at X = 550, Y = 130
+                else if(switches == 10'd5)
+                    begin
+                        selectedGridBoxX = THIRD_COL_MIDDLE_X;
+                        selectedGridBoxY = FIRST_ROW_MIDDLE_Y;
+                    end
+                //6 is the 3rd grid box at X = 650, Y = 130
+                else if(switches == 10'd6)
+                    begin
+                        selectedGridBoxX = FOURTH_COL_MIDDLE_X;
+                        selectedGridBoxY = FIRST_ROW_MIDDLE_Y;
+                    end
+                //7 is the 4th grid box at X = 750, Y = 130
+                else if(switches == 10'd7)
+                    begin
+                        selectedGridBoxX = FIFTH_COL_MIDDLE_X;
+                        selectedGridBoxY = FIRST_ROW_MIDDLE_Y;
+                    end
+                //8 is the 5th grid box at X = 350, Y = 217
+                else if(switches == 10'd8)
+                    begin
+                        selectedGridBoxX = FIRST_COL_MIDDLE_X;
+                        selectedGridBoxY = SECOND_ROW_MIDDLE_Y;
+                    end
+                //9 is the 6th grid box at X = 450, Y = 217
+                else if(switches == 10'd9)
+                    begin
+                        selectedGridBoxX = SECOND_COL_MIDDLE_X;
+                        selectedGridBoxY = SECOND_ROW_MIDDLE_Y;
+                    end
+                //10 is the 7th grid box at X = 550, Y = 217
+                else if(switches == 10'd10)
+                    begin
+                        selectedGridBoxX = THIRD_COL_MIDDLE_X;
+                        selectedGridBoxY = SECOND_ROW_MIDDLE_Y;
+                    end
+                //11 is the 8th grid box at X = 650, Y = 217
+                else if(switches == 10'd11)
+                    begin
+                        selectedGridBoxX = FOURTH_COL_MIDDLE_X;
+                        selectedGridBoxY = SECOND_ROW_MIDDLE_Y;
+                    end
+                //12 is the 9th grid box at X = 750, Y = 217
+                else if(switches == 10'd12)
+                    begin
+                        selectedGridBoxX = FIFTH_COL_MIDDLE_X;
+                        selectedGridBoxY = SECOND_ROW_MIDDLE_Y;
+                    end
+                //13 is the 10th grid box at X = 350, Y = 304
+                else if(switches == 10'd13)
+                    begin
+                        selectedGridBoxX = FIRST_COL_MIDDLE_X;
+                        selectedGridBoxY = THIRD_ROW_MIDDLE_Y;
+                    end
+                //14 is the 11th grid box at X = 450, Y = 304
+                else if(switches == 10'd14)
+                    begin
+                        selectedGridBoxX = SECOND_COL_MIDDLE_X;
+                        selectedGridBoxY = THIRD_ROW_MIDDLE_Y;
+                    end
+                //15 is the 12th grid box at X = 550, Y = 304
+                else if(switches == 10'd15)
+                    begin
+                        selectedGridBoxX = THIRD_COL_MIDDLE_X;
+                        selectedGridBoxY = THIRD_ROW_MIDDLE_Y;
+                    end
+                //16 is the 13th grid box at X = 650, Y = 304
+                else if(switches == 10'd16)
+                    begin
+                        selectedGridBoxX = FOURTH_COL_MIDDLE_X;
+                        selectedGridBoxY = THIRD_ROW_MIDDLE_Y;
+                    end
+                //17 is the 14th grid box at X = 750, Y = 304
+                else if(switches == 10'd17)
+                    begin
+                        selectedGridBoxX = FIFTH_COL_MIDDLE_X;
+                        selectedGridBoxY = THIRD_ROW_MIDDLE_Y;
+                    end
+                //18 is the 15th grid box at X = 350, Y = 391
+                else if(switches == 10'd18)
+                    begin
+                        selectedGridBoxX = FIRST_COL_MIDDLE_X;
+                        selectedGridBoxY = FOURTH_ROW_MIDDLE_Y;
+                    end
+                //19 is the 16th grid box at X = 450, Y = 391
+                else if(switches == 10'd19)
+                    begin
+                        selectedGridBoxX = SECOND_COL_MIDDLE_X;
+                        selectedGridBoxY = FOURTH_ROW_MIDDLE_Y;
+                    end
+                //20 is the 17th grid box at X = 550, Y = 391
+                else if(switches == 10'd20)
+                    begin
+                        selectedGridBoxX = THIRD_COL_MIDDLE_X;
+                        selectedGridBoxY = FOURTH_ROW_MIDDLE_Y;
+                    end
+                //21 is the 18th grid box at X = 650, Y = 391
+                else if(switches == 10'd21)
+                    begin
+                        selectedGridBoxX = FOURTH_COL_MIDDLE_X;
+                        selectedGridBoxY = FOURTH_ROW_MIDDLE_Y;
+                    end
+                //22 is the 19th grid box at X = 750, Y = 391
+                else if(switches == 10'd22)
+                    begin
+                        selectedGridBoxX = FIFTH_COL_MIDDLE_X;
+                        selectedGridBoxY = FOURTH_ROW_MIDDLE_Y;
+                    end
+                //23 is the 20th grid box at X = 350, Y = 478
+                else if(switches == 10'd23)
+                    begin
+                        selectedGridBoxX = FIRST_COL_MIDDLE_X;
+                        selectedGridBoxY = FIFTH_ROW_MIDDLE_Y;
+                    end
+                //24 is the 21st grid box at X = 450, Y = 478
+                else if(switches == 10'd24)
+                    begin
+                        selectedGridBoxX = SECOND_COL_MIDDLE_X;
+                        selectedGridBoxY = FIFTH_ROW_MIDDLE_Y;
+                    end
+                //25 is the 22nd grid box at X = 550, Y = 478
+                else if(switches == 10'd25)
+                    begin
+                        selectedGridBoxX = THIRD_COL_MIDDLE_X;
+                        selectedGridBoxY = FIFTH_ROW_MIDDLE_Y;
+                    end
+                //26 is the 23rd grid box at X = 650, Y = 478
+                else if(switches == 10'd26)
+                    begin
+                        selectedGridBoxX = FOURTH_COL_MIDDLE_X;
+                        selectedGridBoxY = FIFTH_ROW_MIDDLE_Y;
+                    end
+                //27 is the 24th grid box at X = 750, Y = 478
+                else if(switches == 10'd27)
+                    begin
+                        selectedGridBoxX = FIFTH_COL_MIDDLE_X;
+                        selectedGridBoxY = FIFTH_ROW_MIDDLE_Y;
+                    end
 			end
         else if(isSelectingLawnPosition == 1 && selectButton == 1)
             begin
@@ -1039,7 +1315,7 @@ module vga_bitchange(
 	//Define the selected plant box
 	assign selectedPlantBoxOutline = (
 		//Horizontal lines
-		(((vCount <= 10'd05) || ((vCount >= 10'd82) && (vCount <= 10'd86)))
+		(((vCount <= 10'd05) || ((vCount >= 10'd82) && (vCount <= 10'd87)))
 		&& (hCount >= selectedPlantBoxX - HALF_COLUMN_WIDTH ) && (hCount <= selectedPlantBoxX + HALF_COLUMN_WIDTH))
 		||
 		//Vertical lines
@@ -1057,8 +1333,7 @@ module vga_bitchange(
 		||
 		//Grid 0
 		//Vertical lines
-		(((vCount >= selectedGridBoxY - HALF_ROW_HEIGHT) && (vCount <= selectedGridBoxY - HALF_ROW_HEIGHT + 10'd05))
-		|| ((vCount >= selectedGridBoxY + HALF_ROW_HEIGHT - 10'd05) && (vCount <= selectedGridBoxY + HALF_ROW_HEIGHT)))
+		(vCount <= selectedGridBoxY + HALF_ROW_HEIGHT) && (vCount >= selectedGridBoxY - HALF_ROW_HEIGHT)
 		&& ((hCount >= selectedGridBoxX - HALF_COLUMN_WIDTH) && (hCount <= selectedGridBoxX - HALF_COLUMN_WIDTH + 10'd005)
 		|| (hCount >= selectedGridBoxX + HALF_COLUMN_WIDTH - 10'd005) && (hCount <= selectedGridBoxX + HALF_COLUMN_WIDTH))
 
@@ -1092,6 +1367,8 @@ module vga_bitchange(
 
 	//Create zombie heads
 	//Definie the vertical and horizontal positions of the zombie heads
+	//assign zombieHead0 =
+	
 	
 	 
     //PLANTS

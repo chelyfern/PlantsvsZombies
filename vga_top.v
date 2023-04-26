@@ -28,6 +28,7 @@ module vga_top(
 	input BtnD,
 	input BtnL,
 	input BtnR,
+    input Sw4, Sw3, Sw2, Sw1, Sw0,
 
 	
 	//VGA signal
@@ -40,6 +41,10 @@ module vga_top(
 	
 	output MemOE, MemWR, RamCS, QuadSpiFlashCS
 	);
+
+    
+	wire [4:0] switches;
+    assign switches = {Sw4, Sw3, Sw2, Sw1, Sw0};
 	
 	wire bright;
 	wire[9:0] hc, vc;
@@ -50,7 +55,8 @@ module vga_top(
 	wire [3:0] upperAnodes;
 	wire [11:0] rgb;
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
-	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), .selectButton(BtnC), .hCount(hc), .vCount(vc), .rgb(rgb), .zombies_killed(zombiesKilled));
+	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), 
+	.selectButton(BtnC), .hCount(hc), .vCount(vc), .rgb(rgb), .zombies_killed(zombiesKilled), .switches(switches));
 	
 	counter cnt(.clk(ClkPort), .displayNumber(zombiesKilled), .anode(anode), .ssdOut(ssdOut));
 //	counter cnt(.clk(ClkPort), .displayNumber(zombiesKilled), .anode(upperAnodes), .ssdOut(ssdOut));
@@ -66,5 +72,7 @@ module vga_top(
 	
 	// disable mamory ports
 	assign {MemOE, MemWR, RamCS, QuadSpiFlashCS} = 4'b1111;
+
+    
 
 endmodule
