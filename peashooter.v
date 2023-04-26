@@ -25,6 +25,7 @@ module peashooter(
     input [9:0] psHPosGiven,
     input [9:0] hCount, vCount,
     input enable,
+    input [25:0] pSpeed,
     input hitZombie,
     output peashooterHead,
     output peashooterBlack,
@@ -36,7 +37,7 @@ module peashooter(
     
     parameter PSSCALE = 10'd3;
     reg [9:0] psVPosTemp; 
-    reg[25:0] pSpeed;
+//    reg[25:0] pSpeed;
     reg[9:0] pVPos;
     reg[9:0] pHPos;
     reg[9:0] psVPos;
@@ -72,16 +73,16 @@ module peashooter(
                 pHPos = psHPos + 10'd115;
 	           cnt = cnt + 1'd1;
 	       end
-       pSpeed = pSpeed + 50'd1;
-	   if (pSpeed >= 50'd1000000)
+//       pSpeed = pSpeed + 50'd1;
+	   if (pSpeed >= 26'd999995)
 	   begin
-	       pSpeed = 50'd0;
+//	       pSpeed = 50'd0;
 	       pHPos = pHPos + 10'd1;
 	       if (pHPos >= 10'd800) 
 		      pHPos = psHPos + 10'd50;
 	   end
-	   if (hitZombie == 1'd1)
-		      pHPos = psHPos + 10'd50;
+//	   if (hitZombie == 1'd1)
+//		      pHPos = psHPos + 10'd50;
 	end
 
     assign pea = ((enable == 1'd1) && ((vCount >= pVPos) && (vCount <= pVPos + 10'd14) && (hCount >= pHPos) && (hCount <= pHPos + 10'd14))) ? 1 : 0;

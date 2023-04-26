@@ -26,6 +26,7 @@ module sunflower(
     input [9:0] sfHPosGiven,
     input [9:0] hCount, vCount,
     input enable,
+    input [24:0] sfBounceSpeed,
     output sunflowerOuter,
     output sunflowerInner,
     output sunflowerFace, 
@@ -40,7 +41,7 @@ module sunflower(
     reg [9:0] sfVPos;
     reg [9:0] sfHPos;
     
-    reg[24:0] sfBounceSpeed;
+//    reg[24:0] sfBounceSpeed;
     reg sfHeadFlag;
     reg [1:0] cnt = 2'd00;
     
@@ -69,10 +70,10 @@ module sunflower(
                sfHeadVPos = sfVPos + 10'd154;
 	           cnt = cnt + 1'd1;
 	       end
-	   sfBounceSpeed = sfBounceSpeed + 50'd1;
-	   if (sfBounceSpeed >= 50'd6000000)
+//	   sfBounceSpeed = sfBounceSpeed + 50'd1;
+	   if (sfBounceSpeed >= 26'd5999995)
 	   begin
-	       sfBounceSpeed = 50'd0;	       
+//	       sfBounceSpeed = 50'd0;	       
 	       if (sfHeadHPos <= (sfHPos - (10'd30 / SFSCALE)))
 	       begin
 	           sfHeadFlag = 1'd0;
