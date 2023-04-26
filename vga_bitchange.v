@@ -1233,7 +1233,7 @@ module vga_bitchange(
 				selectedGridBoxY = 10'd130;
 				
 				//Reset the selection flag
-				// isSelectingLawnPosition = 1'b0;
+				isSelectingLawnPosition = 1'b0;
 				selectButtonCounter = 4'd0;
 
             end
