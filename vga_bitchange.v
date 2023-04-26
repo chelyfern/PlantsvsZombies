@@ -33,6 +33,7 @@ module vga_bitchange(
 	parameter YELLOW = 12'b1111_1111_0000;
 	parameter ORANGE = 12'b1111_1100_0000;
 	parameter RED = 12'b1111_0000_0000;
+	parameter BLUE = 12'b0000_0000_1111;
 	parameter GREY = 12'b1010_1010_1011;
 	parameter ZOMBIE_HEAD = 12'b0000_1011_0100;
 	parameter ZOMBIE_EYE = 12'b1111_1111_1111;
@@ -131,6 +132,10 @@ module vga_bitchange(
 	//Register definitions
 	reg reset;
 	wire greyZone;
+	reg youLose;
+	wire youLose_RED;
+	reg youWin;
+	wire youWin_BLUE;
 	wire zombie0; // Wires to hold zombie information
 	wire zombie1;
 	wire zombie2;
@@ -345,6 +350,8 @@ module vga_bitchange(
 	initial begin
 		state = L1;
 		selectButtonCounter = 4'd0;
+		youLose = 1'b0;
+		youWin = 1'b0;
 		//Initialize the X position on the zombies to be the right side of the lawn
 		zombie0X = BEGINNING_OF_LAWN_X;
 		zombie1X = BEGINNING_OF_LAWN_X;
@@ -422,6 +429,15 @@ module vga_bitchange(
 	always@ (*)
     if (~bright)
         rgb = BLACK;
+	else if(youLose_RED == 1)
+	begin
+		rgb = RED;
+	end
+	else if (youWin_BLUE == 1)
+	begin
+		rgb = BLUE;
+	end
+
 	else if (selectedPlantBoxOutline == 1 && isSelectingPlantBox == 1)
 		rgb = RED;
 	else if (selectedLawnPositionOutline == 1 && isSelectingLawnPosition == 1)
@@ -510,8 +526,9 @@ module vga_bitchange(
 			//Check if any of the zombies have reached the end of the lawn
 			if((zombie0X == END_OF_LAWN_X) || (zombie1X == END_OF_LAWN_X) || (zombie2X == END_OF_LAWN_X) || (zombie3X == END_OF_LAWN_X) || (zombie4X == END_OF_LAWN_X))
 				begin
-					state = DoneL;
-					reset = 1'b1; //TODO I dont think you need to keep track of num zombies killed
+					// state = DoneL;
+					youLose = 1'b1;
+					//reset = 1'b1; //TODO I dont think you need to keep track of num zombies killed
 					//Stop the zombie after it reaches the end of the lawn
 					if(zombie0X == END_OF_LAWN_X)
 						begin
@@ -593,8 +610,9 @@ module vga_bitchange(
 			//If all zombies are killed, go to the next state
 			if(zombies_killed == 4'd5 && state == L1)
 				begin
-					state = DoneW;
-					reset = 1'b1;
+					// state = DoneW;
+					// reset = 1'b1;
+					youWin = 1'b1;
 				end
 			end
 		end
@@ -1318,6 +1336,10 @@ module vga_bitchange(
 
 	//Range from 000 to 160 (vertically)
 	assign greyZone = (vCount <= 10'd86) ? 1 : 0;
+
+	assign youLose_RED = (youLose == 1'b1) ? 1 : 0;
+
+	assign youWin_BLUE = (youWin == 1'b1) ? 1 : 0;
 
 	
 
