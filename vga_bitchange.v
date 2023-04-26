@@ -13,14 +13,16 @@ module vga_bitchange(
 	input upButton, downButton, leftButton, rightButton, selectButton,
 	output reg [11:0] rgb,
 	output reg [15:0] zombies_killed,
-	output q_I, 
-	output q_L1, 
-	output q_NL2, 
-	output q_L2, 
-	output q_NL3, 
-	output q_L3, 
-	output q_DoneL, 
-	output q_DoneW );
+	output reg [7:0] state
+	// output q_I, 
+	// output q_L1, 
+	// output q_NL2, 
+	// output q_L2, 
+	// output q_NL3, 
+	// output q_L3, 
+	// output q_DoneL, 
+	// output q_DoneW 
+	);
 
 	//Color definitions
 	parameter BLACK = 12'b0000_0000_0000;
@@ -69,9 +71,9 @@ module vga_bitchange(
 	parameter WHITE = 12'b1111_1111_1111;
 	parameter PEA_GREEN = 12'b0111_1111_0010;
 	
-	parameter SFSCALE = 10'd3;
-    parameter WSCALE = 10'd2; 
-    parameter PSSCALE = 10'd3;
+	parameter SFSCALE = 10'd4;
+    parameter WSCALE = 10'd3; 
+    parameter PSSCALE = 10'd4;
 
 	//Time definitions
 	parameter TO_KILL_PEA = 50'd5000000;
@@ -134,11 +136,11 @@ module vga_bitchange(
 	wire zombie2;
 	wire zombie3;
 	wire zombie4;
-	reg[3:0] zombie0Counter;
-	reg[3:0] zombie1Counter;
-	reg[3:0] zombie2Counter;
-	reg[3:0] zombie3Counter;
-	reg[3:0] zombie4Counter;
+	reg[15:0] zombie0Counter;
+	reg[15:0] zombie1Counter;
+	reg[15:0] zombie2Counter;
+	reg[15:0] zombie3Counter;
+	reg[15:0] zombie4Counter;
 	reg zombie0Stopped;
 	reg zombie1Stopped;
 	reg zombie2Stopped;
@@ -328,8 +330,8 @@ module vga_bitchange(
 	
 	//Store the current state
 //	output q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW;
-	reg [7:0] state;
-	assign {q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW} = state;
+	//reg [7:0] state;
+	// assign {q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW} = state;
 	
 	//Local parameters for state
 	parameter I = 8'b1000_0000, L1 = 8'b0100_0000, NL2 = 8'b0010_0000, L2 = 8'b0001_0000, NL3 = 8'b0000_1000, L3 = 8'b0000_0100, DoneL = 8'b0000_0010, DoneW = 8'b0000_0001;
@@ -424,36 +426,41 @@ module vga_bitchange(
 		rgb = RED;
 	else if (selectedLawnPositionOutline == 1 && isSelectingLawnPosition == 1)
 		rgb = RED;
+	
 	// else if ((zombieEye0 == 1 && ~zombie0Killed) || (zombieEye1 == 1 && ~zombie1Killed) || (zombieEye2 == 1 && ~zombie2Killed) || (zombieEye3 == 1 && ~zombie3Killed) || (zombieEye4 == 1 && ~zombie4Killed))
-	else if((zombieEye0 && ~zombie0ReachedEnd) || (zombieEye1 && ~zombie1ReachedEnd) || (zombieEye2 && ~zombie2ReachedEnd) || (zombieEye3 && ~zombie3ReachedEnd) || (zombieEye4 && ~zombie4ReachedEnd))
+	// else if((zombieEye0 && ~zombie0ReachedEnd) || (zombieEye1 && ~zombie1ReachedEnd) || (zombieEye2 && ~zombie2ReachedEnd) || (zombieEye3 && ~zombie3ReachedEnd) || (zombieEye4 && ~zombie4ReachedEnd))
+	else if((zombieEye0 && ~zombie0ReachedEnd && ~zombie0Killed) || (zombieEye1 && ~zombie1ReachedEnd && ~zombie1Killed) || (zombieEye2 && ~zombie2ReachedEnd && ~zombie2Killed) || (zombieEye3 && ~zombie3ReachedEnd && ~zombie3Killed) || (zombieEye4 && ~zombie4ReachedEnd && ~zombie4Killed))
 		rgb = ZOMBIE_EYE;
+
 	//else if ((zombieHead0 == 1 && ~zombie0Killed) || (zombieHead1 == 1 && ~zombie1Killed) || (zombieHead2 == 1 && ~zombie2Killed) || (zombieHead3 == 1 && ~zombie3Killed) || (zombieHead4 == 1 && ~zombie4Killed))
-	else if((zombieHead0 && ~zombie0ReachedEnd) || (zombieHead1 && ~zombie1ReachedEnd) || (zombieHead2 && ~zombie2ReachedEnd) || (zombieHead3 && ~zombie3ReachedEnd) || (zombieHead4 && ~zombie4ReachedEnd))
+	// else if((zombieHead0 && ~zombie0ReachedEnd) || (zombieHead1 && ~zombie1ReachedEnd) || (zombieHead2 && ~zombie2ReachedEnd) || (zombieHead3 && ~zombie3ReachedEnd) || (zombieHead4 && ~zombie4ReachedEnd))
+	else if((zombieHead0 && ~zombie0ReachedEnd && ~zombie0Killed) || (zombieHead1 && ~zombie1ReachedEnd && ~zombie1Killed) || (zombieHead2 && ~zombie2ReachedEnd && ~zombie2Killed) || (zombieHead3 && ~zombie3ReachedEnd && ~zombie3Killed) || (zombieHead4 && ~zombie4ReachedEnd && ~zombie4Killed))
 		rgb = ZOMBIE_HEAD;
+
+	// else if((zombieBody0 == 1 && ~zombie0ReachedEnd) || (zombieBody1 == 1 && ~zombie1ReachedEnd) || (zombieBody2 == 1 && ~zombie2ReachedEnd) || (zombieBody3 == 1 && ~zombie3ReachedEnd) || (zombieBody4 == 1 && ~zombie4ReachedEnd))
+	else if((zombieBody0 && ~zombie0ReachedEnd && ~zombie0Killed) || (zombieBody1 && ~zombie1ReachedEnd && ~zombie1Killed) || (zombieBody2 && ~zombie2ReachedEnd && ~zombie2Killed) || (zombieBody3 && ~zombie3ReachedEnd && ~zombie3Killed) || (zombieBody4 && ~zombie4ReachedEnd && ~zombie4Killed))
+		rgb = ZOMBIE_SKIN;
+	
 	else if ((zombieOutline0 == 1 && ~zombie0Killed) || (zombieOutline1 == 1 && ~zombie1Killed) || (zombieOutline2 == 1 && ~zombie2Killed) || (zombieOutline3 == 1 && ~zombie3Killed) || (zombieOutline4 == 1 && ~zombie4Killed))
 		rgb = BLACK;
-	// else if((zombieBody0 == 1 && ~zombie0Killed) || (zombieBody1 == 1 && ~zombie1Killed) || (zombieBody2 == 1 && ~zombie2Killed) || (zombieBody3 == 1 && ~zombie3Killed) || (zombieBody4 == 1 && ~zombie4Killed))
-	else if((zombieBody0 == 1 && ~zombie0ReachedEnd) || (zombieBody1 == 1 && ~zombie1ReachedEnd) || (zombieBody2 == 1 && ~zombie2ReachedEnd) || (zombieBody3 == 1 && ~zombie3ReachedEnd) || (zombieBody4 == 1 && ~zombie4ReachedEnd))
-		rgb = ZOMBIE_SKIN;
-    else if (pea == 1)
-        rgb = PEA_GREEN;
-    else if (walnutBlack == 1)
+    
+    else if (displayWalnutBlack == 1)
         rgb = BLACK;
-    else if (walnutWhite == 1)
+    else if (displayWalnutWhite == 1)
         rgb = WHITE;
-    else if (walnut == 1)
+    else if (displayWalnut == 1)
         rgb = BROWN;
-    else if (peashooterBlack == 1)
+    else if (displayPeashooterBlack == 1)
         rgb = BLACK;
-    else if (peashooterHead == 1)
+    else if (displayPeashooterHead == 1)
         rgb = PEA_GREEN;
-    else if (peashooterStem == 1)
+    else if (displayPeashooterStem == 1)
         rgb = STEM_GREEN;
-    else if (sunflowerFace == 1)
+    else if (displaySunflowerFace == 1)
         rgb = BLACK;
-    else if (sunflowerInner == 1)
+    else if (displaySunflowerInner == 1)
         rgb = ORANGE;
-    else if (sunflowerOuter == 1)
+    else if (displaySunflowerOuter == 1)
         rgb = YELLOW;
     else if (greyZone == 1)
         rgb = GREY;
@@ -532,59 +539,59 @@ module vga_bitchange(
 			if (peaShot0X == zombie0X || peaShot1X == zombie0X || peaShot2X == zombie0X || peaShot3X == zombie0X || peaShot4X == zombie0X)
 				begin
 					//Increment zombie hits
-					zombie0Hits = zombie0Hits + 15'd1;
-					if(zombie0Hits == 15'd5)
+					zombie0Hits = zombie0Hits + 4'd1;
+					if(zombie0Hits == 4'd5)
 						begin
 							zombie0Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
+							zombies_killed = zombies_killed + 4'd1;
 						end
 				end
 			//Zombie1 can be hit by pea shots 5 through 9
 			if (peaShot5X == zombie1X || peaShot6X == zombie1X || peaShot7X == zombie1X || peaShot8X == zombie1X || peaShot9X == zombie1X)
 				begin
 					//Increment zombie hits
-					zombie1Hits = zombie1Hits + 15'd1;
-					if(zombie1Hits == 15'd5)
+					zombie1Hits = zombie1Hits + 4'd1;
+					if(zombie1Hits == 4'd5)
 						begin
 							zombie1Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
+							zombies_killed = zombies_killed + 4'd1;
 						end
 				end
 			//Zombie2 can be hit by pea shots 10 through 14
 			if (peaShot10X == zombie2X || peaShot11X == zombie2X || peaShot12X == zombie2X || peaShot13X == zombie2X || peaShot14X == zombie2X)
 				begin
 					//Increment zombie hits
-					zombie2Hits = zombie2Hits + 15'd1;
-					if(zombie2Hits == 15'd5)
+					zombie2Hits = zombie2Hits + 4'd1;
+					if(zombie2Hits == 4'd5)
 						begin
 							zombie2Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
+							zombies_killed = zombies_killed + 4'd1;
 						end
 				end
 			//Zombie3 can be hit by pea shots 15 through 19
 			if (peaShot15X == zombie3X || peaShot16X == zombie3X || peaShot17X == zombie3X || peaShot18X == zombie3X || peaShot19X == zombie3X)
 				begin
 					//Increment zombie hits
-					zombie3Hits = zombie3Hits + 15'd1;
-					if(zombie3Hits == 15'd5)
+					zombie3Hits = zombie3Hits + 4'd1;
+					if(zombie3Hits == 4'd5)
 						begin
 							zombie3Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
+							zombies_killed = zombies_killed + 4'd1;
 						end
 				end
 			//Zombie4 can be hit by pea shots 20 through 24
 			if (peaShot20X == zombie4X || peaShot21X == zombie4X || peaShot22X == zombie4X || peaShot23X == zombie4X || peaShot24X == zombie4X)
 				begin
 					//Increment zombie hits
-					zombie4Hits = zombie4Hits + 15'd1;
-					if(zombie4Hits == 15'd5)
+					zombie4Hits = zombie4Hits + 4'd1;
+					if(zombie4Hits == 4'd5)
 						begin
 							zombie4Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
+							zombies_killed = zombies_killed + 4'd1;
 						end
 				end
 			//If all zombies are killed, go to the next state
-			if(zombies_killed == 15'd5 && state == L1)
+			if(zombies_killed == 4'd5 && state == L1)
 				begin
 					state = DoneW;
 					reset = 1'b1;
@@ -1407,345 +1414,364 @@ module vga_bitchange(
 	.zombieHeadY(zombie4HeadY), .hCount(hCount), .vCount(vCount), .zombieHead(zombieHead4),
 	.zombieEye(zombieEye4));
 
-	//Create zombiie heads WITHOUT using zombie_face module
 	
-	 
-    //PLANTS
-	assign pea = ((vCount >= pVPos) && (vCount <= pVPos + 10'd14) && (hCount >= pHPos) && (hCount <= pHPos + 10'd14)) ? 1 : 0;
-	
-
-	assign peashooterHead = (((vCount >= (psVPos + 10'd60)) && (vCount <= (psVPos + 10'd60 + (10'd5 / PSSCALE))) && (hCount >= (psHPos + (10'd27 / PSSCALE))) && (hCount <= (psHPos + (10'd48 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd3 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd8 / PSSCALE))) && (hCount >= (psHPos + (10'd23 / PSSCALE))) && (hCount <= (psHPos + (10'd52 / PSSCALE))))
-                           
-                           ||((vCount >= (psVPos + 10'd60 + (10'd6 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd11 / PSSCALE))) && (hCount >= (psHPos + (10'd19 / PSSCALE))) && (hCount <= (psHPos + (10'd56 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd9 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd14 / PSSCALE))) && (hCount >= (psHPos + (10'd17 / PSSCALE))) && (hCount <= (psHPos + (10'd58 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd12 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd17 / PSSCALE))) && (hCount >= (psHPos + (10'd15 / PSSCALE))) && (hCount <= (psHPos + (10'd60 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd15 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd20 / PSSCALE))) && (hCount >= (psHPos + (10'd13 / PSSCALE))) && (hCount <= (psHPos + (10'd62 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd18 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd23 / PSSCALE))) && (hCount >= (psHPos + (10'd11 / PSSCALE))) && (hCount <= (psHPos + (10'd64 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd21 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd26 / PSSCALE))) && (hCount >= (psHPos + (10'd9 / PSSCALE))) && (hCount <= (psHPos + (10'd66 / PSSCALE))))
-        
-                           ||((vCount >= (psVPos + 10'd60 + (10'd24 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd29 / PSSCALE))) && (hCount >= (psHPos + (10'd8 / PSSCALE))) && (hCount <= (psHPos + (10'd67 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd27 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd32 / PSSCALE))) && (hCount >= (psHPos + (10'd7 / PSSCALE))) && (hCount <= (psHPos + (10'd68 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd30 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd35 / PSSCALE))) && (hCount >= (psHPos + (10'd6 / PSSCALE))) && (hCount <= (psHPos + (10'd69 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd33 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd38 / PSSCALE))) && (hCount >= (psHPos + (10'd5 / PSSCALE))) && (hCount <= (psHPos + (10'd70 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd36 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd41 / PSSCALE))) && (hCount >= (psHPos + (10'd4 / PSSCALE))) && (hCount <= (psHPos + (10'd71 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd39 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd44 / PSSCALE))) && (hCount >= (psHPos + (10'd3 / PSSCALE))) && (hCount <= (psHPos + (10'd72 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd42 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd47 / PSSCALE))) && (hCount >= (psHPos + (10'd2 / PSSCALE))) && (hCount <= (psHPos + (10'd73 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd45 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd50 / PSSCALE))) && (hCount >= (psHPos + (10'd1 / PSSCALE))) && (hCount <= (psHPos + (10'd74 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd48 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd53 / PSSCALE))) && (hCount >= (psHPos)) && (hCount <= (psHPos + (10'd75 / PSSCALE))))
-                           
-                                     
-                           ||((vCount >= (psVPos + 10'd60 + (10'd51 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd56 / PSSCALE))) && (hCount >= (psHPos + (10'd1 / PSSCALE))) && (hCount <= (psHPos + (10'd74 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd54 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd59 / PSSCALE))) && (hCount >= (psHPos + (10'd2 / PSSCALE))) && (hCount <= (psHPos + (10'd73 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd57 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd62 / PSSCALE))) && (hCount >= (psHPos + (10'd3 / PSSCALE))) && (hCount <= (psHPos + (10'd72 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd60 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd65 / PSSCALE))) && (hCount >= (psHPos + (10'd4 / PSSCALE))) && (hCount <= (psHPos + (10'd71 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd63 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd68 / PSSCALE))) && (hCount >= (psHPos + (10'd5 / PSSCALE))) && (hCount <= (psHPos + (10'd70 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd66 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd71 / PSSCALE))) && (hCount >= (psHPos + (10'd6 / PSSCALE))) && (hCount <= (psHPos + (10'd69 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd69 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd74 / PSSCALE))) && (hCount >= (psHPos + (10'd7 / PSSCALE))) && (hCount <= (psHPos + (10'd68 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd72 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd77 / PSSCALE))) && (hCount >= (psHPos + (10'd8 / PSSCALE))) && (hCount <= (psHPos + (10'd67 / PSSCALE))))
-                           
-                           ||((vCount >= (psVPos + 10'd60 + (10'd75 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd80 / PSSCALE))) && (hCount >= (psHPos + (10'd9 / PSSCALE))) && (hCount <= (psHPos + (10'd66 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd78 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd83 / PSSCALE))) && (hCount >= (psHPos + (10'd11 / PSSCALE))) && (hCount <= (psHPos + (10'd64 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd81 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd86 / PSSCALE))) && (hCount >= (psHPos + (10'd13 / PSSCALE))) && (hCount <= (psHPos + (10'd62 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd84 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd89 / PSSCALE))) && (hCount >= (psHPos + (10'd15 / PSSCALE))) && (hCount <= (psHPos + (10'd60 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd87 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd92 / PSSCALE))) && (hCount >= (psHPos + (10'd17 / PSSCALE))) && (hCount <= (psHPos + (10'd58 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd90 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd95 / PSSCALE))) && (hCount >= (psHPos + (10'd19 / PSSCALE))) && (hCount <= (psHPos + (10'd56 / PSSCALE))))
-                           
-                           ||((vCount >= (psVPos + 10'd60 + (10'd93 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd98 / PSSCALE))) && (hCount >= (psHPos + (10'd23 / PSSCALE))) && (hCount <= (psHPos + (10'd52 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd96 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd101 / PSSCALE))) && (hCount >= (psHPos + (10'd27 / PSSCALE))) && (hCount <= (psHPos + (10'd48 / PSSCALE))))
-                           
-                           ||((vCount >= (psVPos + 10'd60 + (10'd35 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd65 / PSSCALE))) && (hCount >= (psHPos + (10'd68 / PSSCALE))) && (hCount <= (psHPos + (10'd119 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd30 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd70 / PSSCALE))) && (hCount >= (psHPos + (10'd78 / PSSCALE))) && (hCount <= (psHPos + (10'd119 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd25 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd75 / PSSCALE))) && (hCount >= (psHPos + (10'd88 / PSSCALE))) && (hCount <= (psHPos + (10'd119 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd20 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd80 / PSSCALE))) && (hCount >= (psHPos + (10'd98 / PSSCALE))) && (hCount <= (psHPos + (10'd119 / PSSCALE))))
-                           ||((vCount >= (psVPos + 10'd60 + (10'd15 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd85 / PSSCALE))) && (hCount >= (psHPos + (10'd108 / PSSCALE))) && (hCount <= (psHPos + (10'd119 / PSSCALE))))
-	                        ) ? 1 : 0;
-	                       
-    assign peashooterBlack = ((vCount >= (psVPos + 10'd60 + (10'd35 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd50 / PSSCALE))) && (hCount >= (psHPos + (10'd45 / PSSCALE))) && (hCount <= (psHPos + (10'd60 / PSSCALE)))) ? 1 : 0;
-	
-	assign peashooterStem = (
-                             ((vCount <= (psVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd86 / PSSCALE))) && (hCount >= (psHPos + (10'd55 / PSSCALE))) && (hCount <= (psHPos + (10'd71 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd81 / PSSCALE))) && (hCount >= (psHPos + (10'd54 / PSSCALE))) && (hCount <= (psHPos + (10'd70 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd86 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd76 / PSSCALE))) && (hCount >= (psHPos + (10'd53 / PSSCALE))) && (hCount <= (psHPos + (10'd69 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd81 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd71 / PSSCALE))) && (hCount >= (psHPos + (10'd52 / PSSCALE))) && (hCount <= (psHPos + (10'd68 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd76 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd66 / PSSCALE))) && (hCount >= (psHPos + (10'd51 / PSSCALE))) && (hCount <= (psHPos + (10'd67 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd71 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd61 / PSSCALE))) && (hCount >= (psHPos + (10'd50 / PSSCALE))) && (hCount <= (psHPos + (10'd66 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd66 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd56 / PSSCALE))) && (hCount >= (psHPos + (10'd49 / PSSCALE))) && (hCount <= (psHPos + (10'd65 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd61 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd51 / PSSCALE))) && (hCount >= (psHPos + (10'd48 / PSSCALE))) && (hCount <= (psHPos + (10'd64 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd56 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd46 / PSSCALE))) && (hCount >= (psHPos + (10'd47 / PSSCALE))) && (hCount <= (psHPos + (10'd63 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd51 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd41 / PSSCALE))) && (hCount >= (psHPos + (10'd46 / PSSCALE))) && (hCount <= (psHPos + (10'd62 / PSSCALE))))
-                             
-                             ||((vCount <= (psVPosTemp + (10'd6 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd0 / PSSCALE))) && (hCount >= (psHPos + (10'd37 / PSSCALE))) && (hCount <= (psHPos + (10'd53 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd11 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd1 / PSSCALE))) && (hCount >= (psHPos + (10'd38 / PSSCALE))) && (hCount <= (psHPos + (10'd54 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd16 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd6 / PSSCALE))) && (hCount >= (psHPos + (10'd39 / PSSCALE))) && (hCount <= (psHPos + (10'd55 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd21 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd11 / PSSCALE))) && (hCount >= (psHPos + (10'd40 / PSSCALE))) && (hCount <= (psHPos + (10'd56 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd26 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd16 / PSSCALE))) && (hCount >= (psHPos + (10'd41 / PSSCALE))) && (hCount <= (psHPos + (10'd57 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd31 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd21 / PSSCALE))) && (hCount >= (psHPos + (10'd42 / PSSCALE))) && (hCount <= (psHPos + (10'd58 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd36 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd26 / PSSCALE))) && (hCount >= (psHPos + (10'd43 / PSSCALE))) && (hCount <= (psHPos + (10'd59 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd41 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd31 / PSSCALE))) && (hCount >= (psHPos + (10'd44 / PSSCALE))) && (hCount <= (psHPos + (10'd60 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd46 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd36 / PSSCALE))) && (hCount >= (psHPos + (10'd45 / PSSCALE))) && (hCount <= (psHPos + (10'd61 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd51 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd41 / PSSCALE))) && (hCount >= (psHPos + (10'd46 / PSSCALE))) && (hCount <= (psHPos + (10'd62 / PSSCALE))))
-                             
-                             ||((vCount <= (psVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd94 / PSSCALE))) && (hCount >= (psHPos - (10'd4 / PSSCALE))) && (hCount <= (psHPos + (10'd60 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd95 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd93 / PSSCALE))) && (hCount >= (psHPos - (10'd3 / PSSCALE))) && (hCount <= (psHPos + (10'd59 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd94 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd92 / PSSCALE))) && (hCount >= (psHPos - (10'd2 / PSSCALE))) && (hCount <= (psHPos + (10'd58 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd93 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd91 / PSSCALE))) && (hCount >= (psHPos - (10'd1 / PSSCALE))) && (hCount <= (psHPos + (10'd57 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd92 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd90 / PSSCALE))) && (hCount >= (psHPos - (10'd0 / PSSCALE))) && (hCount <= (psHPos + (10'd56 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd89 / PSSCALE))) && (hCount >= (psHPos + (10'd1 / PSSCALE))) && (hCount <= (psHPos + (10'd55 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd90 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd88 / PSSCALE))) && (hCount >= (psHPos + (10'd2 / PSSCALE))) && (hCount <= (psHPos + (10'd54 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd89 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd87 / PSSCALE))) && (hCount >= (psHPos + (10'd3 / PSSCALE))) && (hCount <= (psHPos + (10'd53 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd88 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd86 / PSSCALE))) && (hCount >= (psHPos + (10'd4 / PSSCALE))) && (hCount <= (psHPos + (10'd52 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd87 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd85 / PSSCALE))) && (hCount >= (psHPos + (10'd5 / PSSCALE))) && (hCount <= (psHPos + (10'd51 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd86 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd84 / PSSCALE))) && (hCount >= (psHPos + (10'd6 / PSSCALE))) && (hCount <= (psHPos + (10'd50 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd85 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd83 / PSSCALE))) && (hCount >= (psHPos + (10'd7 / PSSCALE))) && (hCount <= (psHPos + (10'd49 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd84 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd82 / PSSCALE))) && (hCount >= (psHPos + (10'd8 / PSSCALE))) && (hCount <= (psHPos + (10'd48 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd83 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd81 / PSSCALE))) && (hCount >= (psHPos + (10'd9 / PSSCALE))) && (hCount <= (psHPos + (10'd47 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd82 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd80 / PSSCALE))) && (hCount >= (psHPos + (10'd10 / PSSCALE))) && (hCount <= (psHPos + (10'd46 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd81 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd79 / PSSCALE))) && (hCount >= (psHPos + (10'd11 / PSSCALE))) && (hCount <= (psHPos + (10'd45 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd80 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd78 / PSSCALE))) && (hCount >= (psHPos + (10'd12 / PSSCALE))) && (hCount <= (psHPos + (10'd44 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd79 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd77 / PSSCALE))) && (hCount >= (psHPos + (10'd13 / PSSCALE))) && (hCount <= (psHPos + (10'd43 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd78 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd76 / PSSCALE))) && (hCount >= (psHPos + (10'd14 / PSSCALE))) && (hCount <= (psHPos + (10'd42 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd77 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd75 / PSSCALE))) && (hCount >= (psHPos + (10'd15 / PSSCALE))) && (hCount <= (psHPos + (10'd41 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd76 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd74 / PSSCALE))) && (hCount >= (psHPos + (10'd16 / PSSCALE))) && (hCount <= (psHPos + (10'd40 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd75 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd73 / PSSCALE))) && (hCount >= (psHPos + (10'd17 / PSSCALE))) && (hCount <= (psHPos + (10'd39 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd74 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd72 / PSSCALE))) && (hCount >= (psHPos + (10'd18 / PSSCALE))) && (hCount <= (psHPos + (10'd38 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd73 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd71 / PSSCALE))) && (hCount >= (psHPos + (10'd19 / PSSCALE))) && (hCount <= (psHPos + (10'd37 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd72 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd70 / PSSCALE))) && (hCount >= (psHPos + (10'd20 / PSSCALE))) && (hCount <= (psHPos + (10'd36 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd71 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd69 / PSSCALE))) && (hCount >= (psHPos + (10'd21 / PSSCALE))) && (hCount <= (psHPos + (10'd35 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd70 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd68 / PSSCALE))) && (hCount >= (psHPos + (10'd22 / PSSCALE))) && (hCount <= (psHPos + (10'd34 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd69 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd67 / PSSCALE))) && (hCount >= (psHPos + (10'd23 / PSSCALE))) && (hCount <= (psHPos + (10'd33 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd68 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd66 / PSSCALE))) && (hCount >= (psHPos + (10'd24 / PSSCALE))) && (hCount <= (psHPos + (10'd32 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd67 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd65 / PSSCALE))) && (hCount >= (psHPos + (10'd25 / PSSCALE))) && (hCount <= (psHPos + (10'd31 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd66 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd64 / PSSCALE))) && (hCount >= (psHPos + (10'd26 / PSSCALE))) && (hCount <= (psHPos + (10'd30 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd65 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd63 / PSSCALE))) && (hCount >= (psHPos + (10'd27 / PSSCALE))) && (hCount <= (psHPos + (10'd29 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd64 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd62 / PSSCALE))) && (hCount >= (psHPos + (10'd28 / PSSCALE))) && (hCount <= (psHPos + (10'd28 / PSSCALE))))
-
-
-                             ||((vCount <= (psVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd94 / PSSCALE))) && (hCount <= (psHPos + (10'd124 / PSSCALE))) && (hCount >= (psHPos + (10'd60 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd95 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd93 / PSSCALE))) && (hCount <= (psHPos + (10'd123 / PSSCALE))) && (hCount >= (psHPos + (10'd61 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd94 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd92 / PSSCALE))) && (hCount <= (psHPos + (10'd122 / PSSCALE))) && (hCount >= (psHPos + (10'd62 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd93 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd91 / PSSCALE))) && (hCount <= (psHPos + (10'd120 / PSSCALE))) && (hCount >= (psHPos + (10'd63 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd92 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd90 / PSSCALE))) && (hCount <= (psHPos + (10'd119 / PSSCALE))) && (hCount >= (psHPos + (10'd64 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd89 / PSSCALE))) && (hCount <= (psHPos + (10'd118 / PSSCALE))) && (hCount >= (psHPos + (10'd65 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd90 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd88 / PSSCALE))) && (hCount <= (psHPos + (10'd117 / PSSCALE))) && (hCount >= (psHPos + (10'd66 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd89 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd87 / PSSCALE))) && (hCount <= (psHPos + (10'd116 / PSSCALE))) && (hCount >= (psHPos + (10'd67 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd88 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd86 / PSSCALE))) && (hCount <= (psHPos + (10'd115 / PSSCALE))) && (hCount >= (psHPos + (10'd68 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd87 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd85 / PSSCALE))) && (hCount <= (psHPos + (10'd114 / PSSCALE))) && (hCount >= (psHPos + (10'd69 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd86 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd84 / PSSCALE))) && (hCount <= (psHPos + (10'd113 / PSSCALE))) && (hCount >= (psHPos + (10'd70 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd85 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd83 / PSSCALE))) && (hCount <= (psHPos + (10'd112 / PSSCALE))) && (hCount >= (psHPos + (10'd71 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd84 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd82 / PSSCALE))) && (hCount <= (psHPos + (10'd111 / PSSCALE))) && (hCount >= (psHPos + (10'd72 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd83 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd81 / PSSCALE))) && (hCount <= (psHPos + (10'd110 / PSSCALE))) && (hCount >= (psHPos + (10'd73 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd82 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd80 / PSSCALE))) && (hCount <= (psHPos + (10'd109 / PSSCALE))) && (hCount >= (psHPos + (10'd74 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd81 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd79 / PSSCALE))) && (hCount <= (psHPos + (10'd108 / PSSCALE))) && (hCount >= (psHPos + (10'd75 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd80 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd78 / PSSCALE))) && (hCount <= (psHPos + (10'd107 / PSSCALE))) && (hCount >= (psHPos + (10'd76 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd79 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd77 / PSSCALE))) && (hCount <= (psHPos + (10'd106 / PSSCALE))) && (hCount >= (psHPos + (10'd77 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd78 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd76 / PSSCALE))) && (hCount <= (psHPos + (10'd105 / PSSCALE))) && (hCount >= (psHPos + (10'd78 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd77 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd75 / PSSCALE))) && (hCount <= (psHPos + (10'd104 / PSSCALE))) && (hCount >= (psHPos + (10'd79 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd76 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd74 / PSSCALE))) && (hCount <= (psHPos + (10'd103 / PSSCALE))) && (hCount >= (psHPos + (10'd80 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd75 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd73 / PSSCALE))) && (hCount <= (psHPos + (10'd102 / PSSCALE))) && (hCount >= (psHPos + (10'd81 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd74 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd72 / PSSCALE))) && (hCount <= (psHPos + (10'd101 / PSSCALE))) && (hCount >= (psHPos + (10'd82 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd73 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd71 / PSSCALE))) && (hCount <= (psHPos + (10'd100 / PSSCALE))) && (hCount >= (psHPos + (10'd83 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd72 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd70 / PSSCALE))) && (hCount <= (psHPos + (10'd99 / PSSCALE))) && (hCount >= (psHPos + (10'd84 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd71 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd69 / PSSCALE))) && (hCount <= (psHPos + (10'd98 / PSSCALE))) && (hCount >= (psHPos + (10'd85 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd70 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd68 / PSSCALE))) && (hCount <= (psHPos + (10'd97 / PSSCALE))) && (hCount >= (psHPos + (10'd86 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd69 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd67 / PSSCALE))) && (hCount <= (psHPos + (10'd96 / PSSCALE))) && (hCount >= (psHPos + (10'd87 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd68 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd66 / PSSCALE))) && (hCount <= (psHPos + (10'd95 / PSSCALE))) && (hCount >= (psHPos + (10'd88 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd67 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd65 / PSSCALE))) && (hCount <= (psHPos + (10'd94 / PSSCALE))) && (hCount >= (psHPos + (10'd89 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd66 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd64 / PSSCALE))) && (hCount <= (psHPos + (10'd93 / PSSCALE))) && (hCount >= (psHPos + (10'd90 / PSSCALE))))
-                             ||((vCount <= (psVPosTemp + (10'd65 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd63 / PSSCALE))) && (hCount <= (psHPos + (10'd92 / PSSCALE))) && (hCount >= (psHPos + (10'd91 / PSSCALE))))
-                             ) ? 1 : 0;	
-	assign walnut = 
+  
+    parameter displayWHpos = 10'd520;
+    parameter displayWVpos = 10'd40; 
+    assign displayWalnut = 
 	               (
-	               ((vCount >= wVPos) && (vCount <= (wVPos + (10'd5 / WSCALE))) && (hCount >= (wHPos + (10'd27 / WSCALE))) && (hCount <= (wHPos + (10'd48 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd3 / WSCALE))) && (vCount <= (wVPos + (10'd8 / WSCALE))) && (hCount >= (wHPos + (10'd23 / WSCALE))) && (hCount <= (wHPos + (10'd52 / WSCALE) / WSCALE)))
+                    (
+	               ((vCount >= displayWVpos) && (vCount <= (displayWVpos + (10'd5 / WSCALE))) && (hCount >= (displayWHpos + (10'd27 / WSCALE))) && (hCount <= (displayWHpos + (10'd48 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd3 / WSCALE))) && (vCount <= (displayWVpos + (10'd8 / WSCALE))) && (hCount >= (displayWHpos + (10'd23 / WSCALE))) && (hCount <= (displayWHpos + (10'd52 / WSCALE) / WSCALE)))
 	               
-	               ||((vCount >= (wVPos + (10'd6 / WSCALE))) && (vCount <= (wVPos + (10'd11 / WSCALE))) && (hCount >= (wHPos + (10'd19 / WSCALE))) && (hCount <= (wHPos + (10'd56 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd9 / WSCALE))) && (vCount <= (wVPos + (10'd14 / WSCALE))) && (hCount >= (wHPos + (10'd17 / WSCALE))) && (hCount <= (wHPos + (10'd58 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd12 / WSCALE))) && (vCount <= (wVPos + (10'd17 / WSCALE))) && (hCount >= (wHPos + (10'd15 / WSCALE))) && (hCount <= (wHPos + (10'd60 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd15 / WSCALE))) && (vCount <= (wVPos + (10'd20 / WSCALE))) && (hCount >= (wHPos + (10'd13 / WSCALE))) && (hCount <= (wHPos + (10'd62 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd18 / WSCALE))) && (vCount <= (wVPos + (10'd23 / WSCALE))) && (hCount >= (wHPos + (10'd11 / WSCALE))) && (hCount <= (wHPos + (10'd64 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd21 / WSCALE))) && (vCount <= (wVPos + (10'd26 / WSCALE))) && (hCount >= (wHPos + (10'd9 / WSCALE))) && (hCount <= (wHPos + (10'd66 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd6 / WSCALE))) && (vCount <= (displayWVpos + (10'd11 / WSCALE))) && (hCount >= (displayWHpos + (10'd19 / WSCALE))) && (hCount <= (displayWHpos + (10'd56 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd9 / WSCALE))) && (vCount <= (displayWVpos + (10'd14 / WSCALE))) && (hCount >= (displayWHpos + (10'd17 / WSCALE))) && (hCount <= (displayWHpos + (10'd58 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd12 / WSCALE))) && (vCount <= (displayWVpos + (10'd17 / WSCALE))) && (hCount >= (displayWHpos + (10'd15 / WSCALE))) && (hCount <= (displayWHpos + (10'd60 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd15 / WSCALE))) && (vCount <= (displayWVpos + (10'd20 / WSCALE))) && (hCount >= (displayWHpos + (10'd13 / WSCALE))) && (hCount <= (displayWHpos + (10'd62 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd18 / WSCALE))) && (vCount <= (displayWVpos + (10'd23 / WSCALE))) && (hCount >= (displayWHpos + (10'd11 / WSCALE))) && (hCount <= (displayWHpos + (10'd64 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd21 / WSCALE))) && (vCount <= (displayWVpos + (10'd26 / WSCALE))) && (hCount >= (displayWHpos + (10'd9 / WSCALE))) && (hCount <= (displayWHpos + (10'd66 / WSCALE))))
 
-	               ||((vCount >= (wVPos + (10'd24 / WSCALE))) && (vCount <= (wVPos + (10'd29 / WSCALE))) && (hCount >= (wHPos + (10'd8 / WSCALE))) && (hCount <= (wHPos + (10'd67 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd27 / WSCALE))) && (vCount <= (wVPos + (10'd32 / WSCALE))) && (hCount >= (wHPos + (10'd7 / WSCALE))) && (hCount <= (wHPos + (10'd68 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd30 / WSCALE))) && (vCount <= (wVPos + (10'd35 / WSCALE))) && (hCount >= (wHPos + (10'd6 / WSCALE))) && (hCount <= (wHPos + (10'd69 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd33 / WSCALE))) && (vCount <= (wVPos + (10'd38 / WSCALE))) && (hCount >= (wHPos + (10'd5 / WSCALE))) && (hCount <= (wHPos + (10'd70 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd36 / WSCALE))) && (vCount <= (wVPos + (10'd41 / WSCALE))) && (hCount >= (wHPos + (10'd4 / WSCALE))) && (hCount <= (wHPos + (10'd71 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd39 / WSCALE))) && (vCount <= (wVPos + (10'd44 / WSCALE))) && (hCount >= (wHPos + (10'd3 / WSCALE))) && (hCount <= (wHPos + (10'd72 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd42 / WSCALE))) && (vCount <= (wVPos + (10'd47 / WSCALE))) && (hCount >= (wHPos + (10'd2 / WSCALE))) && (hCount <= (wHPos + (10'd73 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd45 / WSCALE))) && (vCount <= (wVPos + (10'd50 / WSCALE))) && (hCount >= (wHPos + (10'd1 / WSCALE))) && (hCount <= (wHPos + (10'd74 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd48 / WSCALE))) && (vCount <= (wVPos + (10'd53 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd24 / WSCALE))) && (vCount <= (displayWVpos + (10'd29 / WSCALE))) && (hCount >= (displayWHpos + (10'd8 / WSCALE))) && (hCount <= (displayWHpos + (10'd67 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd27 / WSCALE))) && (vCount <= (displayWVpos + (10'd32 / WSCALE))) && (hCount >= (displayWHpos + (10'd7 / WSCALE))) && (hCount <= (displayWHpos + (10'd68 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd30 / WSCALE))) && (vCount <= (displayWVpos + (10'd35 / WSCALE))) && (hCount >= (displayWHpos + (10'd6 / WSCALE))) && (hCount <= (displayWHpos + (10'd69 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd33 / WSCALE))) && (vCount <= (displayWVpos + (10'd38 / WSCALE))) && (hCount >= (displayWHpos + (10'd5 / WSCALE))) && (hCount <= (displayWHpos + (10'd70 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd36 / WSCALE))) && (vCount <= (displayWVpos + (10'd41 / WSCALE))) && (hCount >= (displayWHpos + (10'd4 / WSCALE))) && (hCount <= (displayWHpos + (10'd71 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd39 / WSCALE))) && (vCount <= (displayWVpos + (10'd44 / WSCALE))) && (hCount >= (displayWHpos + (10'd3 / WSCALE))) && (hCount <= (displayWHpos + (10'd72 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd42 / WSCALE))) && (vCount <= (displayWVpos + (10'd47 / WSCALE))) && (hCount >= (displayWHpos + (10'd2 / WSCALE))) && (hCount <= (displayWHpos + (10'd73 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd45 / WSCALE))) && (vCount <= (displayWVpos + (10'd50 / WSCALE))) && (hCount >= (displayWHpos + (10'd1 / WSCALE))) && (hCount <= (displayWHpos + (10'd74 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd48 / WSCALE))) && (vCount <= (displayWVpos + (10'd53 / WSCALE))) && (hCount >= displayWHpos) && (hCount <= (displayWHpos + (10'd75 / WSCALE))))
 	               
 	               
-	               ||((vCount >= (wVPos + (10'd51 / WSCALE))) && (vCount <= (wVPos + (10'd56 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd54 / WSCALE))) && (vCount <= (wVPos + (10'd59 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd57 / WSCALE))) && (vCount <= (wVPos + (10'd62 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd60 / WSCALE))) && (vCount <= (wVPos + (10'd65 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd63 / WSCALE))) && (vCount <= (wVPos + (10'd68 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd66 / WSCALE))) && (vCount <= (wVPos + (10'd71 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))	  
+	               ||((vCount >= (displayWVpos + (10'd51 / WSCALE))) && (vCount <= (displayWVpos + (10'd56 / WSCALE))) && (hCount >= displayWHpos) && (hCount <= (displayWHpos + (10'd75 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd54 / WSCALE))) && (vCount <= (displayWVpos + (10'd59 / WSCALE))) && (hCount >= displayWHpos) && (hCount <= (displayWHpos + (10'd75 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd57 / WSCALE))) && (vCount <= (displayWVpos + (10'd62 / WSCALE))) && (hCount >= displayWHpos) && (hCount <= (displayWHpos + (10'd75 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd60 / WSCALE))) && (vCount <= (displayWVpos + (10'd65 / WSCALE))) && (hCount >= displayWHpos) && (hCount <= (displayWHpos + (10'd75 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd63 / WSCALE))) && (vCount <= (displayWVpos + (10'd68 / WSCALE))) && (hCount >= displayWHpos) && (hCount <= (displayWHpos + (10'd75 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd66 / WSCALE))) && (vCount <= (displayWVpos + (10'd71 / WSCALE))) && (hCount >= displayWHpos) && (hCount <= (displayWHpos + (10'd75 / WSCALE))))	  
 	                         
-	               ||((vCount >= (wVPos + (10'd69 / WSCALE))) && (vCount <= (wVPos + (10'd74 / WSCALE))) && (hCount >= (wHPos + (10'd1 / WSCALE))) && (hCount <= (wHPos + (10'd74 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd72 / WSCALE))) && (vCount <= (wVPos + (10'd77 / WSCALE))) && (hCount >= (wHPos + (10'd2 / WSCALE))) && (hCount <= (wHPos + (10'd73 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd75 / WSCALE))) && (vCount <= (wVPos + (10'd80 / WSCALE))) && (hCount >= (wHPos + (10'd3 / WSCALE))) && (hCount <= (wHPos + (10'd72 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd78 / WSCALE))) && (vCount <= (wVPos + (10'd83 / WSCALE))) && (hCount >= (wHPos + (10'd4 / WSCALE))) && (hCount <= (wHPos + (10'd71 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd81 / WSCALE))) && (vCount <= (wVPos + (10'd86 / WSCALE))) && (hCount >= (wHPos + (10'd5 / WSCALE))) && (hCount <= (wHPos + (10'd70 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd84 / WSCALE))) && (vCount <= (wVPos + (10'd89 / WSCALE))) && (hCount >= (wHPos + (10'd6 / WSCALE))) && (hCount <= (wHPos + (10'd69 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd87 / WSCALE))) && (vCount <= (wVPos + (10'd92 / WSCALE))) && (hCount >= (wHPos + (10'd7 / WSCALE))) && (hCount <= (wHPos + (10'd68 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd90 / WSCALE))) && (vCount <= (wVPos + (10'd95 / WSCALE))) && (hCount >= (wHPos + (10'd8 / WSCALE))) && (hCount <= (wHPos + (10'd67 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd69 / WSCALE))) && (vCount <= (displayWVpos + (10'd74 / WSCALE))) && (hCount >= (displayWHpos + (10'd1 / WSCALE))) && (hCount <= (displayWHpos + (10'd74 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd72 / WSCALE))) && (vCount <= (displayWVpos + (10'd77 / WSCALE))) && (hCount >= (displayWHpos + (10'd2 / WSCALE))) && (hCount <= (displayWHpos + (10'd73 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd75 / WSCALE))) && (vCount <= (displayWVpos + (10'd80 / WSCALE))) && (hCount >= (displayWHpos + (10'd3 / WSCALE))) && (hCount <= (displayWHpos + (10'd72 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd78 / WSCALE))) && (vCount <= (displayWVpos + (10'd83 / WSCALE))) && (hCount >= (displayWHpos + (10'd4 / WSCALE))) && (hCount <= (displayWHpos + (10'd71 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd81 / WSCALE))) && (vCount <= (displayWVpos + (10'd86 / WSCALE))) && (hCount >= (displayWHpos + (10'd5 / WSCALE))) && (hCount <= (displayWHpos + (10'd70 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd84 / WSCALE))) && (vCount <= (displayWVpos + (10'd89 / WSCALE))) && (hCount >= (displayWHpos + (10'd6 / WSCALE))) && (hCount <= (displayWHpos + (10'd69 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd87 / WSCALE))) && (vCount <= (displayWVpos + (10'd92 / WSCALE))) && (hCount >= (displayWHpos + (10'd7 / WSCALE))) && (hCount <= (displayWHpos + (10'd68 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd90 / WSCALE))) && (vCount <= (displayWVpos + (10'd95 / WSCALE))) && (hCount >= (displayWHpos + (10'd8 / WSCALE))) && (hCount <= (displayWHpos + (10'd67 / WSCALE))))
 	               
-	               ||((vCount >= (wVPos + (10'd93 / WSCALE))) && (vCount <= (wVPos + (10'd98 / WSCALE))) && (hCount >= (wHPos + (10'd9 / WSCALE))) && (hCount <= (wHPos + (10'd66 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd96 / WSCALE))) && (vCount <= (wVPos + (10'd101 / WSCALE))) && (hCount >= (wHPos + (10'd11 / WSCALE))) && (hCount <= (wHPos + (10'd64 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd99 / WSCALE))) && (vCount <= (wVPos + (10'd104 / WSCALE))) && (hCount >= (wHPos + (10'd13 / WSCALE))) && (hCount <= (wHPos + (10'd62 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd102 / WSCALE))) && (vCount <= (wVPos + (10'd107 / WSCALE))) && (hCount >= (wHPos + (10'd15 / WSCALE))) && (hCount <= (wHPos + (10'd60 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd105 / WSCALE))) && (vCount <= (wVPos + (10'd110 / WSCALE))) && (hCount >= (wHPos + (10'd17 / WSCALE))) && (hCount <= (wHPos + (10'd58 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd108 / WSCALE))) && (vCount <= (wVPos + (10'd113 / WSCALE))) && (hCount >= (wHPos + (10'd19 / WSCALE))) && (hCount <= (wHPos + (10'd56 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd93 / WSCALE))) && (vCount <= (displayWVpos + (10'd98 / WSCALE))) && (hCount >= (displayWHpos + (10'd9 / WSCALE))) && (hCount <= (displayWHpos + (10'd66 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd96 / WSCALE))) && (vCount <= (displayWVpos + (10'd101 / WSCALE))) && (hCount >= (displayWHpos + (10'd11 / WSCALE))) && (hCount <= (displayWHpos + (10'd64 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd99 / WSCALE))) && (vCount <= (displayWVpos + (10'd104 / WSCALE))) && (hCount >= (displayWHpos + (10'd13 / WSCALE))) && (hCount <= (displayWHpos + (10'd62 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd102 / WSCALE))) && (vCount <= (displayWVpos + (10'd107 / WSCALE))) && (hCount >= (displayWHpos + (10'd15 / WSCALE))) && (hCount <= (displayWHpos + (10'd60 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd105 / WSCALE))) && (vCount <= (displayWVpos + (10'd110 / WSCALE))) && (hCount >= (displayWHpos + (10'd17 / WSCALE))) && (hCount <= (displayWHpos + (10'd58 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd108 / WSCALE))) && (vCount <= (displayWVpos + (10'd113 / WSCALE))) && (hCount >= (displayWHpos + (10'd19 / WSCALE))) && (hCount <= (displayWHpos + (10'd56 / WSCALE))))
 	               
-	               ||((vCount >= (wVPos + (10'd111 / WSCALE))) && (vCount <= (wVPos + (10'd116 / WSCALE))) && (hCount >= (wHPos + (10'd23 / WSCALE))) && (hCount <= (wHPos + (10'd52 / WSCALE))))
-	               ||((vCount >= (wVPos + (10'd114 / WSCALE))) && (vCount <= (wVPos + (10'd119 / WSCALE))) && (hCount >= (wHPos + (10'd27 / WSCALE))) && (hCount <= (wHPos + (10'd48 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd111 / WSCALE))) && (vCount <= (displayWVpos + (10'd116 / WSCALE))) && (hCount >= (displayWHpos + (10'd23 / WSCALE))) && (hCount <= (displayWHpos + (10'd52 / WSCALE))))
+	               ||((vCount >= (displayWVpos + (10'd114 / WSCALE))) && (vCount <= (displayWVpos + (10'd119 / WSCALE))) && (hCount >= (displayWHpos + (10'd27 / WSCALE))) && (hCount <= (displayWHpos + (10'd48 / WSCALE))))
+                    )
                    ) ? 1 : 0;
     
-    assign walnutWhite =   (
+    assign displayWalnutWhite =   (
                            ( 
-	                       ((vCount >= (wVPos + (10'd44 / WSCALE))) && (vCount <= (wVPos + (10'd70 / WSCALE))) && (hCount >= (wHPos + (10'd30 / WSCALE))) && (hCount <= (wHPos + (10'd47 / WSCALE))))
-	                       ||((vCount >= (wVPos + (10'd47 / WSCALE))) && (vCount <= (wVPos + (10'd65 / WSCALE))) && (hCount >= (wHPos + (10'd55 / WSCALE))) && (hCount <= (wHPos + (10'd69 / WSCALE))))
-                           ) && (blink == 1'd0)
+	                       ((vCount >= (displayWVpos + (10'd44 / WSCALE))) && (vCount <= (displayWVpos + (10'd70 / WSCALE))) && (hCount >= (displayWHpos + (10'd30 / WSCALE))) && (hCount <= (displayWHpos + (10'd47 / WSCALE))))
+	                       ||((vCount >= (displayWVpos + (10'd47 / WSCALE))) && (vCount <= (displayWVpos + (10'd65 / WSCALE))) && (hCount >= (displayWHpos + (10'd55 / WSCALE))) && (hCount <= (displayWHpos + (10'd69 / WSCALE))))
+                           ) 
                            ) ? 1 : 0;
   
-    assign walnutBlack = 
-                           (
+    assign displayWalnutBlack = 
                            ( 
-	                       (((vCount >= (wVPos + (10'd49 / WSCALE))) && (vCount <= (wVPos + (10'd65 / WSCALE))) && (hCount >= (wHPos + (10'd35 / WSCALE))) && (hCount <= (wHPos + (10'd45 / WSCALE))))
-	                       ||((vCount >= (wVPos + (10'd51 / WSCALE))) && (vCount <= (wVPos + (10'd63 / WSCALE))) && (hCount >= (wHPos + (10'd59 / WSCALE))) && (hCount <= (wHPos + (10'd67 / WSCALE)))))
-	                       && (blink == 1'd0)
+                            (
+                           ( 
+	                       (((vCount >= (displayWVpos + (10'd49 / WSCALE))) && (vCount <= (displayWVpos + (10'd65 / WSCALE))) && (hCount >= (displayWHpos + (10'd35 / WSCALE))) && (hCount <= (displayWHpos + (10'd45 / WSCALE))))
+	                       ||((vCount >= (displayWVpos + (10'd51 / WSCALE))) && (vCount <= (displayWVpos + (10'd63 / WSCALE))) && (hCount >= (displayWHpos + (10'd59 / WSCALE))) && (hCount <= (displayWHpos + (10'd67 / WSCALE)))))
+	                      
 	                       )
-	                       || ((vCount >= (wVPos + (10'd74 / WSCALE))) && (vCount <= (wVPos + (10'd79 / WSCALE))) && (hCount >= (wHPos + (10'd39 / WSCALE))) && (hCount <= (wHPos + (10'd44 / WSCALE))))
-	                       || ((vCount >= (wVPos + (10'd76 / WSCALE))) && (vCount <= (wVPos + (10'd81 / WSCALE))) && (hCount >= (wHPos + (10'd42 / WSCALE))) && (hCount <= (wHPos + (10'd59 / WSCALE))))
-	                       || ((vCount >= (wVPos + (10'd74 / WSCALE))) && (vCount <= (wVPos + (10'd79 / WSCALE))) && (hCount >= (wHPos + (10'd57 / WSCALE))) && (hCount <= wHPos + (10'd62 / WSCALE)))
+	                       || ((vCount >= (displayWVpos + (10'd74 / WSCALE))) && (vCount <= (displayWVpos + (10'd79 / WSCALE))) && (hCount >= (displayWHpos + (10'd39 / WSCALE))) && (hCount <= (displayWHpos + (10'd44 / WSCALE))))
+	                       || ((vCount >= (displayWVpos + (10'd76 / WSCALE))) && (vCount <= (displayWVpos + (10'd81 / WSCALE))) && (hCount >= (displayWHpos + (10'd42 / WSCALE))) && (hCount <= (displayWHpos + (10'd59 / WSCALE))))
+	                       || ((vCount >= (displayWVpos + (10'd74 / WSCALE))) && (vCount <= (displayWVpos + (10'd79 / WSCALE))) && (hCount >= (displayWHpos + (10'd57 / WSCALE))) && (hCount <= wHPos + (10'd62 / WSCALE)))
+                            )
                            ) ? 1 : 0;
-	 
+
+
+    parameter displaypsHpos = 10'd300;
+    parameter displaypsVPos = 10'd40;
+    parameter displaypsVPosTemp = 10'd40 + 10'd90;
+
+    assign displayPeashooterHead = ( 
+	                       (
+	                       ((vCount >= (displaypsVPos + 10'd60)) && (vCount <= (displaypsVPos + 10'd60 + (10'd5 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd27 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd48 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd3 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd8 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd23 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd52 / PSSCALE))))
+                           
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd6 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd11 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd19 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd56 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd9 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd14 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd17 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd58 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd12 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd17 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd15 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd60 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd15 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd20 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd13 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd62 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd18 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd23 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd11 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd64 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd21 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd26 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd9 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd66 / PSSCALE))))
+        
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd24 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd29 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd8 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd67 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd27 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd32 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd7 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd68 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd30 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd35 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd6 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd69 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd33 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd38 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd5 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd70 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd36 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd41 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd4 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd71 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd39 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd44 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd3 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd72 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd42 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd47 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd2 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd73 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd45 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd50 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd1 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd74 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd48 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd53 / PSSCALE))) && (hCount >= (displaypsHpos)) && (hCount <= (displaypsHpos + (10'd75 / PSSCALE))))
+                           
+                                     
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd51 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd56 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd1 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd74 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd54 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd59 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd2 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd73 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd57 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd62 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd3 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd72 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd60 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd65 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd4 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd71 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd63 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd68 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd5 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd70 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd66 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd71 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd6 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd69 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd69 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd74 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd7 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd68 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd72 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd77 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd8 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd67 / PSSCALE))))
+                           
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd75 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd80 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd9 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd66 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd78 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd83 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd11 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd64 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd81 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd86 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd13 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd62 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd84 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd89 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd15 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd60 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd87 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd92 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd17 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd58 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd90 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd95 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd19 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd56 / PSSCALE))))
+                           
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd93 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd98 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd23 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd52 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd96 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd101 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd27 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd48 / PSSCALE))))
+                           
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd35 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd65 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd68 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd119 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd30 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd70 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd78 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd119 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd25 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd75 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd88 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd119 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd20 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd80 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd98 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd119 / PSSCALE))))
+                           ||((vCount >= (displaypsVPos + 10'd60 + (10'd15 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd85 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd108 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd119 / PSSCALE))))
+	                        )) ? 1 : 0;
+	                       
+    assign displayPeashooterBlack = (  ((vCount >= (displaypsVPos + 10'd60 + (10'd35 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd50 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd45 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd60 / PSSCALE))))) ? 1 : 0;
 	
-	//sunflower visualization (to be made relative to the top left corner location, need to add stem + movement / WSCALE
-	assign sunflowerOuter = 
+	assign displayPeashooterStem = (
+	                           (
+                             ((vCount <= (displaypsVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd55 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd71 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd54 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd70 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd76 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd53 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd69 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd71 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd52 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd68 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd76 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd66 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd51 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd67 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd71 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd61 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd50 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd66 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd66 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd56 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd49 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd65 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd61 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd51 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd48 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd64 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd56 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd46 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd47 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd63 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd51 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd41 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd46 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd62 / PSSCALE))))
+                             
+                             ||((vCount <= (displaypsVPosTemp + (10'd6 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd0 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd37 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd53 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd11 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd1 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd38 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd54 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd16 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd6 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd39 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd55 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd21 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd11 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd40 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd56 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd26 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd16 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd41 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd57 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd31 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd21 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd42 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd58 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd36 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd26 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd43 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd59 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd41 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd31 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd44 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd60 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd46 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd36 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd45 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd61 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd51 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd41 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd46 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd62 / PSSCALE))))
+                             
+                             ||((vCount <= (displaypsVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd94 / PSSCALE))) && (hCount >= (displaypsHpos - (10'd4 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd60 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd95 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd93 / PSSCALE))) && (hCount >= (displaypsHpos - (10'd3 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd59 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd94 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd92 / PSSCALE))) && (hCount >= (displaypsHpos - (10'd2 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd58 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd93 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd91 / PSSCALE))) && (hCount >= (displaypsHpos - (10'd1 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd57 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd92 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd90 / PSSCALE))) && (hCount >= (displaypsHpos - (10'd0 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd56 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd89 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd1 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd55 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd90 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd88 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd2 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd54 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd89 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd87 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd3 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd53 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd88 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd4 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd52 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd87 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd85 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd5 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd51 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd84 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd6 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd50 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd85 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd83 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd7 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd49 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd84 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd82 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd8 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd48 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd83 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd9 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd47 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd82 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd80 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd10 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd46 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd79 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd11 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd45 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd80 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd78 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd12 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd44 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd79 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd77 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd13 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd43 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd78 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd76 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd14 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd42 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd77 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd75 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd15 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd41 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd76 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd74 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd16 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd40 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd75 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd73 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd17 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd39 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd74 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd72 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd18 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd38 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd73 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd71 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd19 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd37 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd72 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd70 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd20 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd36 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd71 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd69 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd21 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd35 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd70 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd68 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd22 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd34 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd69 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd67 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd23 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd33 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd68 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd66 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd24 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd32 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd67 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd65 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd25 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd31 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd66 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd64 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd26 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd30 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd65 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd63 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd27 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd29 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd64 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd62 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd28 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd28 / PSSCALE))))
+
+
+                             ||((vCount <= (displaypsVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd94 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd124 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd60 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd95 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd93 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd123 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd61 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd94 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd92 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd122 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd62 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd93 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd91 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd120 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd63 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd92 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd90 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd119 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd64 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd89 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd118 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd65 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd90 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd88 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd117 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd66 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd89 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd87 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd116 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd67 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd88 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd115 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd68 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd87 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd85 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd114 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd69 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd84 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd113 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd70 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd85 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd83 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd112 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd71 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd84 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd82 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd111 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd72 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd83 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd110 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd73 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd82 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd80 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd109 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd74 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd79 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd108 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd75 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd80 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd78 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd107 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd76 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd79 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd77 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd106 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd77 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd78 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd76 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd105 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd78 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd77 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd75 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd104 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd79 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd76 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd74 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd103 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd80 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd75 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd73 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd102 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd81 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd74 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd72 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd101 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd82 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd73 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd71 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd100 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd83 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd72 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd70 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd99 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd84 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd71 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd69 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd98 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd85 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd70 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd68 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd97 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd86 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd69 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd67 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd96 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd87 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd68 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd66 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd95 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd88 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd67 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd65 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd94 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd89 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd66 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd64 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd93 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd90 / PSSCALE))))
+                             ||((vCount <= (displaypsVPosTemp + (10'd65 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd63 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd92 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd91 / PSSCALE))))
+                             )) ? 1 : 0;
+    
+
+    parameter displaysfHpos = 10'd400;
+    parameter displaysfVPos = 10'd40;
+    parameter displaysfHeadHPos = displaysfHpos;
+    parameter displaysfHeadVPos = displaysfVPos;
+    parameter displaysfVPosTemp = displaysfVPos + 10'd154;
+    assign displaySunflowerOuter = 
 	                   ( 
-	                   ((vCount >= (sfHeadVPos - (10'd13 / SFSCALE)))&& (vCount <= (sfHeadVPos)) && (hCount >= (sfHeadHPos + (10'd24 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd101 / SFSCALE))))
-	                   || ((vCount >= (sfHeadVPos - (10'd32 / SFSCALE))) && (vCount <= (sfHeadVPos + (10'd14 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd18 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd107 / SFSCALE))))
+                        ( 
+	                   ((vCount >= (displaysfHeadVPos - (10'd13 / SFSCALE)))&& (vCount <= (displaysfHeadVPos)) && (hCount >= (displaysfHeadHPos + (10'd24 / SFSCALE))) && (hCount <= (displaysfHeadHPos + (10'd101 / SFSCALE))))
+	                   || ((vCount >= (displaysfHeadVPos - (10'd32 / SFSCALE))) && (vCount <= (displaysfHeadVPos + (10'd14 / SFSCALE))) && (hCount >= (displaysfHeadHPos + (10'd18 / SFSCALE))) && (hCount <= (displaysfHeadHPos + (10'd107 / SFSCALE))))
 	               
-	                   || ((vCount >= (sfHeadVPos - (10'd50 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd32 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd12 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd113 / SFSCALE))))
-	                   || ((vCount >= (sfHeadVPos - (10'd67 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd50 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd6 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd119 / SFSCALE))))
-	                   || ((vCount >= (sfHeadVPos - (10'd85 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd68 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd0 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd125 / SFSCALE))))
+	                   || ((vCount >= (displaysfHeadVPos - (10'd50 / SFSCALE))) && (vCount <= (displaysfHeadVPos - (10'd32 / SFSCALE))) && (hCount >= (displaysfHeadHPos + (10'd12 / SFSCALE))) && (hCount <= (displaysfHeadHPos + (10'd113 / SFSCALE))))
+	                   || ((vCount >= (displaysfHeadVPos - (10'd67 / SFSCALE))) && (vCount <= (displaysfHeadVPos - (10'd50 / SFSCALE))) && (hCount >= (displaysfHeadHPos + (10'd6 / SFSCALE))) && (hCount <= (displaysfHeadHPos + (10'd119 / SFSCALE))))
+	                   || ((vCount >= (displaysfHeadVPos - (10'd85 / SFSCALE))) && (vCount <= (displaysfHeadVPos - (10'd68 / SFSCALE))) && (hCount >= (displaysfHeadHPos + (10'd0 / SFSCALE))) && (hCount <= (displaysfHeadHPos + (10'd125 / SFSCALE))))
 	               
-	                   || ((vCount >= (sfHeadVPos - (10'd103 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd86 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd6 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd119 / SFSCALE))))
-	                   || ((vCount >= (sfHeadVPos - (10'd121 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd104 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd12 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd113 / SFSCALE))))
+	                   || ((vCount >= (displaysfHeadVPos - (10'd103 / SFSCALE))) && (vCount <= (displaysfHeadVPos - (10'd86 / SFSCALE))) && (hCount >= (displaysfHeadHPos + (10'd6 / SFSCALE))) && (hCount <= (displaysfHeadHPos + (10'd119 / SFSCALE))))
+	                   || ((vCount >= (displaysfHeadVPos - (10'd121 / SFSCALE))) && (vCount <= (displaysfHeadVPos - (10'd104 / SFSCALE))) && (hCount >= (displaysfHeadHPos + (10'd12 / SFSCALE))) && (hCount <= (displaysfHeadHPos + (10'd113 / SFSCALE))))
 	                   
-	                   || ((vCount >= (sfHeadVPos - (10'd139 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd122 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd18 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd107 / SFSCALE))))
-	                   || ((vCount >= (sfHeadVPos - (10'd154 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd140 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd24 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd101 / SFSCALE))))
+	                   || ((vCount >= (displaysfHeadVPos - (10'd139 / SFSCALE))) && (vCount <= (displaysfHeadVPos - (10'd122 / SFSCALE))) && (hCount >= (displaysfHeadHPos + (10'd18 / SFSCALE))) && (hCount <= (displaysfHeadHPos + (10'd107 / SFSCALE))))
+	                   || ((vCount >= (displaysfHeadVPos - (10'd154 / SFSCALE))) && (vCount <= (displaysfHeadVPos - (10'd140 / SFSCALE))) && (hCount >= (displaysfHeadHPos + (10'd24 / SFSCALE))) && (hCount <= (displaysfHeadHPos + (10'd101 / SFSCALE))))
+                        )
                        ) ? 1 : 0;
 	                       	                   
-	assign sunflowerInner = ( (vCount < (sfHeadVPos - (10'd24 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd124 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd25 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd100 / SFSCALE)))) ? 1 : 0;
+	assign displaySunflowerInner = ( ((vCount < (displaysfHeadVPos - (10'd24 / SFSCALE))) && (vCount > (displaysfHeadVPos - (10'd124 / SFSCALE))) && (hCount > (displaysfHeadHPos + (10'd25 / SFSCALE))) && (hCount < (displaysfHeadHPos + (10'd100 / SFSCALE))))) ? 1 : 0;
 
-    assign sunflowerFace = ( 
-                             ((vCount < (sfHeadVPos - (10'd89 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd104 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd45 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd55 / SFSCALE))))
-                           ||((vCount < (sfHeadVPos - (10'd89 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd104 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd70 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd80 / SFSCALE))))
+    assign displaySunflowerFace = ( 
+                            (
+                             ((vCount < (displaysfHeadVPos - (10'd89 / SFSCALE))) && (vCount > (displaysfHeadVPos - (10'd104 / SFSCALE))) && (hCount > (displaysfHeadHPos + (10'd45 / SFSCALE))) && (hCount < (displaysfHeadHPos + (10'd55 / SFSCALE))))
+                           ||((vCount < (displaysfHeadVPos - (10'd89 / SFSCALE))) && (vCount > (displaysfHeadVPos - (10'd104 / SFSCALE))) && (hCount > (displaysfHeadHPos + (10'd70 / SFSCALE))) && (hCount < (displaysfHeadHPos + (10'd80 / SFSCALE))))
                            
-                           ||((vCount < (sfHeadVPos - (10'd52 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd64 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd40 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd50 / SFSCALE))))
-                           ||((vCount < (sfHeadVPos - (10'd42 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd56 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd45 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd80 / SFSCALE))))
+                           ||((vCount < (displaysfHeadVPos - (10'd52 / SFSCALE))) && (vCount > (displaysfHeadVPos - (10'd64 / SFSCALE))) && (hCount > (displaysfHeadHPos + (10'd40 / SFSCALE))) && (hCount < (displaysfHeadHPos + (10'd50 / SFSCALE))))
+                           ||((vCount < (displaysfHeadVPos - (10'd42 / SFSCALE))) && (vCount > (displaysfHeadVPos - (10'd56 / SFSCALE))) && (hCount > (displaysfHeadHPos + (10'd45 / SFSCALE))) && (hCount < (displaysfHeadHPos + (10'd80 / SFSCALE))))
 //                           ||((vCount < (10'd340 / SFSCALE))) && (vCount > (10'd328 / SFSCALE))) && (hCount > (10'd280 / SFSCALE))) && (hCount < (10'd295 / SFSCALE))))
-//                           ||((vCount < (sfHeadVPos - (10'd42 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd56 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd55 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd65 / SFSCALE))))
-//                           ||((vCount < (sfHeadVPos - (10'd42 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd56 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd65 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd75 / SFSCALE))))
-                           ||((vCount < (sfHeadVPos - (10'd52 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd64 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd75 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd85 / SFSCALE))))
+//                           ||((vCount < (displaysfHeadVPos - (10'd42 / SFSCALE))) && (vCount > (displaysfHeadVPos - (10'd56 / SFSCALE))) && (hCount > (displaysfHeadHPos + (10'd55 / SFSCALE))) && (hCount < (displaysfHeadHPos + (10'd65 / SFSCALE))))
+//                           ||((vCount < (displaysfHeadVPos - (10'd42 / SFSCALE))) && (vCount > (displaysfHeadVPos - (10'd56 / SFSCALE))) && (hCount > (displaysfHeadHPos + (10'd65 / SFSCALE))) && (hCount < (displaysfHeadHPos + (10'd75 / SFSCALE))))
+                           ||((vCount < (displaysfHeadVPos - (10'd52 / SFSCALE))) && (vCount > (displaysfHeadVPos - (10'd64 / SFSCALE))) && (hCount > (displaysfHeadHPos + (10'd75 / SFSCALE))) && (hCount < (displaysfHeadHPos + (10'd85 / SFSCALE))))
+                            )
                            ) ? 1 : 0;
                      
-     assign sunflowerStem = (//374-425, 425-475
-                               ((vCount <= (sfVPosTemp + (10'd6 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd0 / SFSCALE))) && (hCount >= (sfHPos + (10'd55 / SFSCALE))) && (hCount <= (sfHPos + (10'd71  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd11 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd6 / SFSCALE))) && (hCount >= (sfHPos + (10'd54 / SFSCALE))) && (hCount <= (sfHPos + (10'd70  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd16 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd11 / SFSCALE))) && (hCount >= (sfHPos + (10'd53 / SFSCALE))) && (hCount <= (sfHPos + (10'd69  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd21 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd16 / SFSCALE))) && (hCount >= (sfHPos + (10'd52 / SFSCALE))) && (hCount <= (sfHPos + (10'd68  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd26 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd21 / SFSCALE))) && (hCount >= (sfHPos + (10'd51 / SFSCALE))) && (hCount <= (sfHPos + (10'd67  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd31 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd26 / SFSCALE))) && (hCount >= (sfHPos + (10'd50 / SFSCALE))) && (hCount <= (sfHPos + (10'd66  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd36 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd31 / SFSCALE))) && (hCount >= (sfHPos + (10'd49 / SFSCALE))) && (hCount <= (sfHPos + (10'd65  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd41 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd36 / SFSCALE))) && (hCount >= (sfHPos + (10'd48 / SFSCALE))) && (hCount <= (sfHPos + (10'd64  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd46 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd41 / SFSCALE))) && (hCount >= (sfHPos + (10'd47 / SFSCALE))) && (hCount <= (sfHPos + (10'd63  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd51 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd46 / SFSCALE))) && (hCount >= (sfHPos + (10'd46 / SFSCALE))) && (hCount <= (sfHPos + (10'd62  / SFSCALE))))
+     assign displaySunflowerStem = (
+                                (
+                               ((vCount <= (displaysfVPosTemp + (10'd6 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd0 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd55 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd71  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd11 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd6 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd54 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd70  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd16 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd11 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd53 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd69  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd21 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd16 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd52 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd68  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd26 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd21 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd51 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd67  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd31 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd26 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd50 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd66  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd36 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd31 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd49 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd65  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd41 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd36 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd48 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd64  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd46 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd41 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd47 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd63  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd51 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd46 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd46 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd62  / SFSCALE))))
                      
-                             ||((vCount <= (sfVPosTemp + (10'd96 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd91 / SFSCALE))) && (hCount >= (sfHPos + (10'd55 / SFSCALE))) && (hCount <= (sfHPos + (10'd71  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd91 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd86 / SFSCALE))) && (hCount >= (sfHPos + (10'd54 / SFSCALE))) && (hCount <= (sfHPos + (10'd70  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd86 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd81 / SFSCALE))) && (hCount >= (sfHPos + (10'd53 / SFSCALE))) && (hCount <= (sfHPos + (10'd69  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd81 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd76 / SFSCALE))) && (hCount >= (sfHPos + (10'd52 / SFSCALE))) && (hCount <= (sfHPos + (10'd68  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd76 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd71 / SFSCALE))) && (hCount >= (sfHPos + (10'd51 / SFSCALE))) && (hCount <= (sfHPos + (10'd67  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd71 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd66 / SFSCALE))) && (hCount >= (sfHPos + (10'd50 / SFSCALE))) && (hCount <= (sfHPos + (10'd66  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd66 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd61 / SFSCALE))) && (hCount >= (sfHPos + (10'd49 / SFSCALE))) && (hCount <= (sfHPos + (10'd65  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd61 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd56 / SFSCALE))) && (hCount >= (sfHPos + (10'd48 / SFSCALE))) && (hCount <= (sfHPos + (10'd64  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd56 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd51 / SFSCALE))) && (hCount >= (sfHPos + (10'd47 / SFSCALE))) && (hCount <= (sfHPos + (10'd63  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd51 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd46 / SFSCALE))) && (hCount >= (sfHPos + (10'd46 / SFSCALE))) && (hCount <= (sfHPos + (10'd62  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd96 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd91 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd55 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd71  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd91 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd86 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd54 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd70  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd86 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd81 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd53 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd69  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd81 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd76 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd52 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd68  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd76 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd71 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd51 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd67  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd71 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd66 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd50 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd66  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd66 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd61 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd49 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd65  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd61 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd56 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd48 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd64  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd56 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd51 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd47 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd63  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd51 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd46 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd46 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd62  / SFSCALE))))
                              
-                             ||((vCount <= (sfVPosTemp + (10'd96 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd94 / SFSCALE))) && (hCount >= (sfHPos - (10'd4 / SFSCALE))) && (hCount <= (sfHPos + (10'd60  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd95 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd93 / SFSCALE))) && (hCount >= (sfHPos - (10'd3 / SFSCALE))) && (hCount <= (sfHPos + (10'd59  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd94 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd92 / SFSCALE))) && (hCount >= (sfHPos - (10'd2 / SFSCALE))) && (hCount <= (sfHPos + (10'd58  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd93 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd91 / SFSCALE))) && (hCount >= (sfHPos - (10'd1 / SFSCALE))) && (hCount <= (sfHPos + (10'd57  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd92 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd90 / SFSCALE))) && (hCount >= (sfHPos - (10'd0 / SFSCALE))) && (hCount <= (sfHPos + (10'd56  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd91 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd89 / SFSCALE))) && (hCount >= (sfHPos + (10'd1 / SFSCALE))) && (hCount <= (sfHPos + (10'd55  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd90 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd88 / SFSCALE))) && (hCount >= (sfHPos + (10'd2 / SFSCALE))) && (hCount <= (sfHPos + (10'd54  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd89 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd87 / SFSCALE))) && (hCount >= (sfHPos + (10'd3 / SFSCALE))) && (hCount <= (sfHPos + (10'd53  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd88 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd86 / SFSCALE))) && (hCount >= (sfHPos + (10'd4 / SFSCALE))) && (hCount <= (sfHPos + (10'd52  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd87 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd85 / SFSCALE))) && (hCount >= (sfHPos + (10'd5 / SFSCALE))) && (hCount <= (sfHPos + (10'd51  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd86 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd84 / SFSCALE))) && (hCount >= (sfHPos + (10'd6 / SFSCALE))) && (hCount <= (sfHPos + (10'd50  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd85 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd83 / SFSCALE))) && (hCount >= (sfHPos + (10'd7 / SFSCALE))) && (hCount <= (sfHPos + (10'd49  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd84 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd82 / SFSCALE))) && (hCount >= (sfHPos + (10'd8 / SFSCALE))) && (hCount <= (sfHPos + (10'd48  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd83 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd81 / SFSCALE))) && (hCount >= (sfHPos + (10'd9 / SFSCALE))) && (hCount <= (sfHPos + (10'd47  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd82 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd80 / SFSCALE))) && (hCount >= (sfHPos + (10'd10 / SFSCALE))) && (hCount <= (sfHPos + (10'd46  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd81 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd79 / SFSCALE))) && (hCount >= (sfHPos + (10'd11 / SFSCALE))) && (hCount <= (sfHPos + (10'd45  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd80 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd78 / SFSCALE))) && (hCount >= (sfHPos + (10'd12 / SFSCALE))) && (hCount <= (sfHPos + (10'd44  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd79 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd77 / SFSCALE))) && (hCount >= (sfHPos + (10'd13 / SFSCALE))) && (hCount <= (sfHPos + (10'd43  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd78 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd76 / SFSCALE))) && (hCount >= (sfHPos + (10'd14 / SFSCALE))) && (hCount <= (sfHPos + (10'd42  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd77 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd75 / SFSCALE))) && (hCount >= (sfHPos + (10'd15 / SFSCALE))) && (hCount <= (sfHPos + (10'd41  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd76 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd74 / SFSCALE))) && (hCount >= (sfHPos + (10'd16 / SFSCALE))) && (hCount <= (sfHPos + (10'd40  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd75 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd73 / SFSCALE))) && (hCount >= (sfHPos + (10'd17 / SFSCALE))) && (hCount <= (sfHPos + (10'd39  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd74 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd72 / SFSCALE))) && (hCount >= (sfHPos + (10'd18 / SFSCALE))) && (hCount <= (sfHPos + (10'd38  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd73 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd71 / SFSCALE))) && (hCount >= (sfHPos + (10'd19 / SFSCALE))) && (hCount <= (sfHPos + (10'd37  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd72 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd70 / SFSCALE))) && (hCount >= (sfHPos + (10'd20 / SFSCALE))) && (hCount <= (sfHPos + (10'd36  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd71 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd69 / SFSCALE))) && (hCount >= (sfHPos + (10'd21 / SFSCALE))) && (hCount <= (sfHPos + (10'd35  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd70 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd68 / SFSCALE))) && (hCount >= (sfHPos + (10'd22 / SFSCALE))) && (hCount <= (sfHPos + (10'd34  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd69 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd67 / SFSCALE))) && (hCount >= (sfHPos + (10'd23 / SFSCALE))) && (hCount <= (sfHPos + (10'd33  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd68 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd66 / SFSCALE))) && (hCount >= (sfHPos + (10'd24 / SFSCALE))) && (hCount <= (sfHPos + (10'd32  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd67 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd65 / SFSCALE))) && (hCount >= (sfHPos + (10'd25 / SFSCALE))) && (hCount <= (sfHPos + (10'd31  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd66 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd64 / SFSCALE))) && (hCount >= (sfHPos + (10'd26 / SFSCALE))) && (hCount <= (sfHPos + (10'd30  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd65 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd63 / SFSCALE))) && (hCount >= (sfHPos + (10'd27 / SFSCALE))) && (hCount <= (sfHPos + (10'd29  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd64 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd62 / SFSCALE))) && (hCount >= (sfHPos + (10'd28 / SFSCALE))) && (hCount <= (sfHPos + (10'd28  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd96 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd94 / SFSCALE))) && (hCount >= (displaysfHpos - (10'd4 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd60  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd95 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd93 / SFSCALE))) && (hCount >= (displaysfHpos - (10'd3 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd59  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd94 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd92 / SFSCALE))) && (hCount >= (displaysfHpos - (10'd2 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd58  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd93 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd91 / SFSCALE))) && (hCount >= (displaysfHpos - (10'd1 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd57  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd92 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd90 / SFSCALE))) && (hCount >= (displaysfHpos - (10'd0 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd56  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd91 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd89 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd1 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd55  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd90 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd88 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd2 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd54  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd89 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd87 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd3 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd53  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd88 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd86 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd4 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd52  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd87 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd85 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd5 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd51  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd86 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd84 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd6 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd50  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd85 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd83 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd7 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd49  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd84 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd82 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd8 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd48  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd83 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd81 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd9 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd47  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd82 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd80 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd10 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd46  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd81 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd79 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd11 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd45  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd80 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd78 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd12 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd44  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd79 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd77 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd13 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd43  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd78 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd76 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd14 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd42  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd77 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd75 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd15 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd41  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd76 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd74 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd16 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd40  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd75 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd73 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd17 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd39  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd74 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd72 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd18 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd38  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd73 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd71 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd19 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd37  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd72 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd70 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd20 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd36  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd71 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd69 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd21 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd35  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd70 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd68 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd22 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd34  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd69 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd67 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd23 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd33  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd68 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd66 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd24 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd32  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd67 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd65 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd25 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd31  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd66 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd64 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd26 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd30  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd65 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd63 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd27 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd29  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd64 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd62 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd28 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd28  / SFSCALE))))
 
 
-                             ||((vCount <= (sfVPosTemp + (10'd96 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd94 / SFSCALE))) && (hCount <= (sfHPos + (10'd124 / SFSCALE))) && (hCount >= (sfHPos + (10'd60  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd95 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd93 / SFSCALE))) && (hCount <= (sfHPos + (10'd123 / SFSCALE))) && (hCount >= (sfHPos + (10'd61  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd94 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd92 / SFSCALE))) && (hCount <= (sfHPos + (10'd122 / SFSCALE))) && (hCount >= (sfHPos + (10'd62  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd93 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd91 / SFSCALE))) && (hCount <= (sfHPos + (10'd120 / SFSCALE))) && (hCount >= (sfHPos + (10'd63  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd92 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd90 / SFSCALE))) && (hCount <= (sfHPos + (10'd119 / SFSCALE))) && (hCount >= (sfHPos + (10'd64  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd91 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd89 / SFSCALE))) && (hCount <= (sfHPos + (10'd118 / SFSCALE))) && (hCount >= (sfHPos + (10'd65  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd90 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd88 / SFSCALE))) && (hCount <= (sfHPos + (10'd117 / SFSCALE))) && (hCount >= (sfHPos + (10'd66  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd89 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd87 / SFSCALE))) && (hCount <= (sfHPos + (10'd116 / SFSCALE))) && (hCount >= (sfHPos + (10'd67  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd88 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd86 / SFSCALE))) && (hCount <= (sfHPos + (10'd115 / SFSCALE))) && (hCount >= (sfHPos + (10'd68  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd87 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd85 / SFSCALE))) && (hCount <= (sfHPos + (10'd114 / SFSCALE))) && (hCount >= (sfHPos + (10'd69  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd86 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd84 / SFSCALE))) && (hCount <= (sfHPos + (10'd113 / SFSCALE))) && (hCount >= (sfHPos + (10'd70  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd85 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd83 / SFSCALE))) && (hCount <= (sfHPos + (10'd112 / SFSCALE))) && (hCount >= (sfHPos + (10'd71  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd84 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd82 / SFSCALE))) && (hCount <= (sfHPos + (10'd111 / SFSCALE))) && (hCount >= (sfHPos + (10'd72  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd83 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd81 / SFSCALE))) && (hCount <= (sfHPos + (10'd110 / SFSCALE))) && (hCount >= (sfHPos + (10'd73  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd82 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd80 / SFSCALE))) && (hCount <= (sfHPos + (10'd109 / SFSCALE))) && (hCount >= (sfHPos + (10'd74  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd81 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd79 / SFSCALE))) && (hCount <= (sfHPos + (10'd108 / SFSCALE))) && (hCount >= (sfHPos + (10'd75  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd80 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd78 / SFSCALE))) && (hCount <= (sfHPos + (10'd107 / SFSCALE))) && (hCount >= (sfHPos + (10'd76  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd79 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd77 / SFSCALE))) && (hCount <= (sfHPos + (10'd106 / SFSCALE))) && (hCount >= (sfHPos + (10'd77  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd78 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd76 / SFSCALE))) && (hCount <= (sfHPos + (10'd105 / SFSCALE))) && (hCount >= (sfHPos + (10'd78  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd77 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd75 / SFSCALE))) && (hCount <= (sfHPos + (10'd104 / SFSCALE))) && (hCount >= (sfHPos + (10'd79  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd76 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd74 / SFSCALE))) && (hCount <= (sfHPos + (10'd103 / SFSCALE))) && (hCount >= (sfHPos + (10'd80  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd75 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd73 / SFSCALE))) && (hCount <= (sfHPos + (10'd102 / SFSCALE))) && (hCount >= (sfHPos + (10'd81  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd74 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd72 / SFSCALE))) && (hCount <= (sfHPos + (10'd101 / SFSCALE))) && (hCount >= (sfHPos + (10'd82  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd73 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd71 / SFSCALE))) && (hCount <= (sfHPos + (10'd100 / SFSCALE))) && (hCount >= (sfHPos + (10'd83  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd72 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd70 / SFSCALE))) && (hCount <= (sfHPos + (10'd99 / SFSCALE))) && (hCount >= (sfHPos + (10'd84  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd71 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd69 / SFSCALE))) && (hCount <= (sfHPos + (10'd98 / SFSCALE))) && (hCount >= (sfHPos + (10'd85  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd70 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd68 / SFSCALE))) && (hCount <= (sfHPos + (10'd97 / SFSCALE))) && (hCount >= (sfHPos + (10'd86  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd69 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd67 / SFSCALE))) && (hCount <= (sfHPos + (10'd96 / SFSCALE))) && (hCount >= (sfHPos + (10'd87  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd68 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd66 / SFSCALE))) && (hCount <= (sfHPos + (10'd95 / SFSCALE))) && (hCount >= (sfHPos + (10'd88  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd67 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd65 / SFSCALE))) && (hCount <= (sfHPos + (10'd94 / SFSCALE))) && (hCount >= (sfHPos + (10'd89  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd66 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd64 / SFSCALE))) && (hCount <= (sfHPos + (10'd93 / SFSCALE))) && (hCount >= (sfHPos + (10'd90  / SFSCALE))))
-                             ||((vCount <= (sfVPosTemp + (10'd65 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd63 / SFSCALE))) && (hCount <= (sfHPos + (10'd92 / SFSCALE))) && (hCount >= (sfHPos + (10'd91  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd96 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd94 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd124 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd60  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd95 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd93 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd123 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd61  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd94 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd92 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd122 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd62  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd93 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd91 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd120 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd63  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd92 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd90 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd119 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd64  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd91 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd89 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd118 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd65  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd90 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd88 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd117 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd66  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd89 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd87 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd116 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd67  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd88 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd86 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd115 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd68  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd87 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd85 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd114 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd69  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd86 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd84 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd113 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd70  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd85 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd83 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd112 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd71  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd84 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd82 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd111 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd72  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd83 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd81 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd110 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd73  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd82 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd80 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd109 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd74  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd81 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd79 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd108 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd75  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd80 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd78 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd107 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd76  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd79 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd77 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd106 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd77  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd78 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd76 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd105 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd78  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd77 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd75 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd104 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd79  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd76 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd74 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd103 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd80  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd75 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd73 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd102 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd81  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd74 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd72 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd101 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd82  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd73 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd71 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd100 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd83  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd72 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd70 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd99 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd84  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd71 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd69 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd98 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd85  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd70 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd68 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd97 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd86  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd69 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd67 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd96 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd87  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd68 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd66 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd95 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd88  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd67 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd65 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd94 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd89  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd66 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd64 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd93 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd90  / SFSCALE))))
+                             ||((vCount <= (displaysfVPosTemp + (10'd65 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd63 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd92 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd91  / SFSCALE))))
+                                )
                            ) ? 1 : 0;
-
 
 endmodule

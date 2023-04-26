@@ -41,16 +41,17 @@ module vga_top(
 	
 	output MemOE, MemWR, RamCS, QuadSpiFlashCS
 	);
-	wire q_I;
-	wire q_L1;
-	wire q_NL2;
-	wire q_L2;
-	wire q_NL3;
-	wire q_L3;
-	wire q_DoneL;
-	wire q_DoneW;
+	// wire q_I;
+	// wire q_L1;
+	// wire q_NL2;
+	// wire q_L2;
+	// wire q_NL3;
+	// wire q_L3;
+	// wire q_DoneL;
+	// wire q_DoneW;
 
-	assign state = {q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW};
+	// assign state = {q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW};
+	wire [7:0] state;
 	
 	//Local parameters for state
 	parameter I = 8'b1000_0000, L1 = 8'b0100_0000, NL2 = 8'b0010_0000, L2 = 8'b0001_0000, NL3 = 8'b0000_1000, L3 = 8'b0000_0100, DoneL = 8'b0000_0010, DoneW = 8'b0000_0001;
@@ -81,9 +82,13 @@ module vga_top(
 	doneL_bitchange vbc(.clk(ClkPort), .bright(bright),  
 		.hCount(hc), .vCount(vc), .rgb(temp_donel_rgb));
 
-	vga_bitchange vb(.clk(ClkPort), .bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), 
+	// vga_bitchange vb(.clk(ClkPort), .bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), 
+	// .selectButton(Select_Button_Pulse), .hCount(hc), .vCount(vc), .rgb(temp_vga_rgb), .zombies_killed(zombiesKilled), .switches(switches),
+	// .q_I(q_I), .q_L1(q_L1), .q_NL2(q_NL2), .q_L2(q_L2), .q_NL3(q_NL3), .q_L3(q_L3), .q_DoneL(q_DoneL), .q_DoneW(q_DoneW));
+
+	vga_bitchange vb(.clk(ClkPort), .bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR),
 	.selectButton(Select_Button_Pulse), .hCount(hc), .vCount(vc), .rgb(temp_vga_rgb), .zombies_killed(zombiesKilled), .switches(switches),
-	.q_I(q_I), .q_L1(q_L1), .q_NL2(q_NL2), .q_L2(q_L2), .q_NL3(q_NL3), .q_L3(q_L3), .q_DoneL(q_DoneL), .q_DoneW(q_DoneW));
+	.state(state));
     
 	// if(~bright)
 	// begin
