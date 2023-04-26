@@ -267,32 +267,31 @@ module vga_bitchange(
 	wire selectedPlantBoxOutline;
 	wire GRID;
 
-	 reg pen0;
-    reg pen1;
-    reg pen2;
-    reg pen3;
-    reg pen4;
-    reg pen5;
-    reg pen6;
-    reg pen7;
-    reg pen8;
-    reg pen9;
-    reg pen10;
-    reg pen11;
-    reg pen12;
-    reg pen13;
-    reg pen14;
-    reg pen15;
-    reg pen16;
-    reg pen17;
-    reg pen18;
-    reg pen19;
-    reg pen20;
-    reg pen21;
-    reg pen22;
-    reg pen23;
-    reg pen24;
-
+	assign pen0 = (peaShot0X == zombie0X) ? 1 : 0;
+    assign pen1 = (peaShot1X == zombie0X) ? 1 : 0;
+    assign pen2 = (peaShot2X == zombie0X) ? 1 : 0;
+    assign pen3 = (peaShot3X == zombie0X) ? 1 : 0;
+    assign pen4 = (peaShot4X == zombie0X) ? 1 : 0;
+    assign pen5 = (peaShot5X == zombie0X) ? 1 : 0;
+    assign pen6 = (peaShot6X == zombie0X) ? 1 : 0;
+    assign pen7 = (peaShot7X == zombie0X) ? 1 : 0;
+    assign pen8 = (peaShot8X == zombie0X) ? 1 : 0;
+    assign pen9 = (peaShot9X == zombie0X) ? 1 : 0;
+    assign pen10 = (peaShot10X == zombie0X) ? 1 : 0;
+    assign pen11 = (peaShot11X == zombie0X) ? 1 : 0;
+    assign pen12 = (peaShot12X == zombie0X) ? 1 : 0;
+    assign pen13 = (peaShot13X == zombie0X) ? 1 : 0;
+    assign pen14 = (peaShot14X == zombie0X) ? 1 : 0;
+    assign pen15 = (peaShot15X == zombie0X) ? 1 : 0;
+    assign pen16 = (peaShot16X == zombie0X) ? 1 : 0;
+    assign pen17 = (peaShot17X == zombie0X) ? 1 : 0;
+    assign pen18 = (peaShot18X == zombie0X) ? 1 : 0;
+    assign pen19 = (peaShot19X == zombie0X) ? 1 : 0;
+    assign pen20 = (peaShot20X == zombie0X) ? 1 : 0;
+    assign pen21 = (peaShot21X == zombie0X) ? 1 : 0;
+    assign pen22 = (peaShot22X == zombie0X) ? 1 : 0;
+    assign pen23 = (peaShot23X == zombie0X) ? 1 : 0;
+    assign pen24 = (peaShot24X == zombie0X) ? 1 : 0;
 
 	//Wire to hold current selected plant box
 	// reg selectedPlantBox;
@@ -392,31 +391,31 @@ module vga_bitchange(
 		plant16Placed = 1'd1;
 		plant16Type = SUNFLOWER;
 		
-		pen0 = 1'd1;
-        pen1 = 1'd1;
-        pen2 = 1'd1;
-        pen3 = 1'd1;
-        pen4 = 1'd1;
-        pen5 = 1'd1;
-        pen6 = 1'd1;
-        pen7 = 1'd1;
-        pen8 = 1'd1;
-        pen9 = 1'd1;
-        pen10 = 1'd1;
-        pen11 = 1'd1;
-        pen12 = 1'd1;
-        pen13 = 1'd1;
-        pen14 = 1'd1;
-        pen15 = 1'd1;
-        pen16 = 1'd1;
-        pen17 = 1'd1;
-        pen18 = 1'd1;
-        pen19 = 1'd1;
-        pen20 = 1'd1;
-        pen21 = 1'd1;
-        pen22 = 1'd1;
-        pen23 = 1'd1;
-        pen24 = 1'd1;
+//		pen0 = 1'd1;
+//        pen1 = 1'd1;
+//        pen2 = 1'd1;
+//        pen3 = 1'd1;
+//        pen4 = 1'd1;
+//        pen5 = 1'd1;
+//        pen6 = 1'd1;
+//        pen7 = 1'd1;
+//        pen8 = 1'd1;
+//        pen9 = 1'd1;
+//        pen10 = 1'd1;
+//        pen11 = 1'd1;
+//        pen12 = 1'd1;
+//        pen13 = 1'd1;
+//        pen14 = 1'd1;
+//        pen15 = 1'd1;
+//        pen16 = 1'd1;
+//        pen17 = 1'd1;
+//        pen18 = 1'd1;
+//        pen19 = 1'd1;
+//        pen20 = 1'd1;
+//        pen21 = 1'd1;
+//        pen22 = 1'd1;
+//        pen23 = 1'd1;
+//        pen24 = 1'd1;
 	end
 
 	//TODO: define the zombie colors here
@@ -524,6 +523,18 @@ module vga_bitchange(
     reg[9:0] HPOS23 = 10'd600;
     reg[9:0] VPOS24 = 10'd435;
     reg[9:0] HPOS24 = 10'd700;
+    
+    //With respect to the grid
+    parameter FIRST_COL_MIDDLE_X = 10'd350;
+    parameter SECOND_COL_MIDDLE_X = 10'd450;
+    parameter THIRD_COL_MIDDLE_X = 10'd550;
+    parameter FOURTH_COL_MIDDLE_X = 10'd650;
+    parameter FIFTH_COL_MIDDLE_X = 10'd750;
+    parameter FIRST_ROW_MIDDLE_Y = 10'd130;
+    parameter SECOND_ROW_MIDDLE_Y = 10'd217;
+    parameter THIRD_ROW_MIDDLE_Y = 10'd304;
+    parameter FOURTH_ROW_MIDDLE_Y = 10'd391;
+    parameter FIFTH_ROW_MIDDLE_Y = 10'd478;
 
     assign psen0 = ((plant0Placed == 1'd1) && (plant0Type == PEASHOOTER)) ? 1 : 0;
     assign psen1 = ((plant1Placed == 1'd1) && (plant1Type == PEASHOOTER)) ? 1 : 0;
@@ -613,19 +624,19 @@ module vga_bitchange(
 	 begin
          case (row0Placed)
             5'b1XXXX: begin
-                plant0X = HPOS4;
+                plant0X = FIFTH_COL_MIDDLE_X;
                     end
             5'b01XXX: begin
-                plant0X = HPOS3;
+                plant0X = FOURTH_COL_MIDDLE_X;
                     end
             5'b001XX: begin
-                plant0X = HPOS2;
+                plant0X = THIRD_COL_MIDDLE_X;
                     end
             5'b0001X: begin
-                plant0X = HPOS1;
+                plant0X = SECOND_COL_MIDDLE_X;
                     end
             5'b00001: begin
-                plant0X = HPOS0;
+                plant0X = FIRST_COL_MIDDLE_X;
                     end
             5'b00000: begin
                 plant0X = END_OF_LAWN;
@@ -633,19 +644,19 @@ module vga_bitchange(
          endcase
          case (row1Placed)
             5'b1XXXX: begin
-                plant1X = HPOS4;
+                plant1X = FIFTH_COL_MIDDLE_X;
                     end
             5'b01XXX: begin
-                plant1X = HPOS3;
+                plant1X = FOURTH_COL_MIDDLE_X;
                     end
             5'b001XX: begin
-                plant1X = HPOS2;
+                plant1X = THIRD_COL_MIDDLE_X;
                     end
             5'b0001X: begin
-                plant1X = HPOS1;
+                plant1X = SECOND_COL_MIDDLE_X;
                     end
             5'b00001: begin
-                plant1X = HPOS0;
+                plant1X = FIRST_COL_MIDDLE_X;
                     end
             5'b00000: begin
                 plant1X = END_OF_LAWN;
@@ -653,19 +664,19 @@ module vga_bitchange(
          endcase
          case (row2Placed)
             5'b1XXXX: begin
-                plant2X = HPOS4;
+                plant2X = FIFTH_COL_MIDDLE_X;
                     end
             5'b01XXX: begin
-                plant2X = HPOS3;
+                plant2X = FOURTH_COL_MIDDLE_X;
                     end
             5'b001XX: begin
-                plant2X = HPOS2;
+                plant2X = THIRD_COL_MIDDLE_X;
                     end
             5'b0001X: begin
-                plant2X = HPOS1;
+                plant2X = SECOND_COL_MIDDLE_X;
                     end
             5'b00001: begin
-                plant2X = HPOS0;
+                plant2X = FIRST_COL_MIDDLE_X;
                     end
             5'b00000: begin
                 plant2X = END_OF_LAWN;
@@ -673,19 +684,19 @@ module vga_bitchange(
          endcase
          case (row3Placed)
             5'b1XXXX: begin
-                plant3X = HPOS4;
+                plant3X = FIFTH_COL_MIDDLE_X;
                     end
             5'b01XXX: begin
-                plant3X = HPOS3;
+                plant3X = FOURTH_COL_MIDDLE_X;
                     end
             5'b001XX: begin
-                plant3X = HPOS2;
+                plant3X = THIRD_COL_MIDDLE_X;
                     end
             5'b0001X: begin
-                plant3X = HPOS1;
+                plant3X = SECOND_COL_MIDDLE_X;
                     end
             5'b00001: begin
-                plant3X = HPOS0;
+                plant3X = FIRST_COL_MIDDLE_X;
                     end
             5'b00000: begin
                 plant3X = END_OF_LAWN;
@@ -693,19 +704,19 @@ module vga_bitchange(
          endcase
          case (row4Placed)
             5'b1XXXX: begin
-                plant4X = HPOS4;
+                plant4X = FIFTH_COL_MIDDLE_X;
                     end
             5'b01XXX: begin
-                plant4X = HPOS3;
+                plant4X = FOURTH_COL_MIDDLE_X;
                     end
             5'b001XX: begin
-                plant4X = HPOS2;
+                plant4X = THIRD_COL_MIDDLE_X;
                     end
             5'b0001X: begin
-                plant4X = HPOS1;
+                plant4X = SECOND_COL_MIDDLE_X;
                     end
             5'b00001: begin
-                plant4X = HPOS0;
+                plant4X = FIRST_COL_MIDDLE_X;
                     end
             5'b00000: begin
                 plant4X = END_OF_LAWN;
@@ -1104,126 +1115,126 @@ module vga_bitchange(
     ) ? 1 : 0;
 
         peashooter ps0(
-    .clk(clk), .psVPosGiven(VPOS0), .psHPosGiven(HPOS0), .hCount(hCount), .vCount(vCount), .enable(psen0), .penable(pen0),
+    .clk(clk), .psVPosGiven(VPOS0), .psHPosGiven(HPOS0), .hCount(hCount), .vCount(vCount), .enable(psen0), .hitZombie(pen0),
     .peashooterHead(peashooter0[0]), .peashooterBlack(peashooter0[1]), .peashooterStem(peashooter0[2]), .pea(peashooter0[3]), .peaX(peaShot0X)
     );
 
-    peashooter ps1(.clk(clk),.psVPosGiven(VPOS1),.psHPosGiven(HPOS1),.hCount(hCount), .vCount(vCount),.enable(psen1), .penable(pen1),
+    peashooter ps1(.clk(clk),.psVPosGiven(VPOS1),.psHPosGiven(HPOS1),.hCount(hCount), .vCount(vCount),.enable(psen1), .hitZombie(pen1),
     .peashooterHead(peashooter1[0]),.peashooterBlack(peashooter1[1]),.peashooterStem(peashooter1[2]),.pea(peashooter1[3]), .peaX(peaShot1X)
     );
     
     peashooter ps2(
-    .clk(clk), .psVPosGiven(VPOS2), .psHPosGiven(HPOS2), .hCount(hCount), .vCount(vCount), .enable(psen2), .penable(pen2),
+    .clk(clk), .psVPosGiven(VPOS2), .psHPosGiven(HPOS2), .hCount(hCount), .vCount(vCount), .enable(psen2), .hitZombie(pen2),
     .peashooterHead(peashooter2[0]), .peashooterBlack(peashooter2[1]), .peashooterStem(peashooter2[2]), .pea(peashooter2[3]), .peaX(peaShot2X)
     );
     
     peashooter ps3(
-    .clk(clk), .psVPosGiven(VPOS3), .psHPosGiven(HPOS3), .hCount(hCount), .vCount(vCount), .enable(psen3), .penable(pen3),
+    .clk(clk), .psVPosGiven(VPOS3), .psHPosGiven(HPOS3), .hCount(hCount), .vCount(vCount), .enable(psen3), .hitZombie(pen3),
     .peashooterHead(peashooter3[0]), .peashooterBlack(peashooter3[1]), .peashooterStem(peashooter3[2]), .pea(peashooter3[3]), .peaX(peaShot3X)
     );
 
     peashooter ps4(
-    .clk(clk), .psVPosGiven(VPOS4), .psHPosGiven(HPOS4), .hCount(hCount), .vCount(vCount), .enable(psen4), .penable(pen4),
+    .clk(clk), .psVPosGiven(VPOS4), .psHPosGiven(HPOS4), .hCount(hCount), .vCount(vCount), .enable(psen4), .hitZombie(pen4),
     .peashooterHead(peashooter4[0]), .peashooterBlack(peashooter4[1]), .peashooterStem(peashooter4[2]), .pea(peashooter4[3]), .peaX(peaShot4X)
     );
     
     peashooter ps5(
-    .clk(clk), .psVPosGiven(VPOS5), .psHPosGiven(HPOS5), .hCount(hCount), .vCount(vCount), .enable(psen5), .penable(pen5),
+    .clk(clk), .psVPosGiven(VPOS5), .psHPosGiven(HPOS5), .hCount(hCount), .vCount(vCount), .enable(psen5), .hitZombie(pen5),
     .peashooterHead(peashooter5[0]), .peashooterBlack(peashooter5[1]), .peashooterStem(peashooter5[2]), .pea(peashooter5[3]), .peaX(peaShot5X)
     );
     
     peashooter ps6(
-    .clk(clk), .psVPosGiven(VPOS6), .psHPosGiven(HPOS6), .hCount(hCount), .vCount(vCount), .enable(psen6), .penable(pen6),
+    .clk(clk), .psVPosGiven(VPOS6), .psHPosGiven(HPOS6), .hCount(hCount), .vCount(vCount), .enable(psen6), .hitZombie(pen6),
     .peashooterHead(peashooter6[0]), .peashooterBlack(peashooter6[1]), .peashooterStem(peashooter6[2]), .pea(peashooter6[3]), .peaX(peaShot6X)
     );
     
     peashooter ps7(
-    .clk(clk), .psVPosGiven(VPOS7), .psHPosGiven(HPOS7), .hCount(hCount), .vCount(vCount), .enable(psen7), .penable(pen7),
+    .clk(clk), .psVPosGiven(VPOS7), .psHPosGiven(HPOS7), .hCount(hCount), .vCount(vCount), .enable(psen7), .hitZombie(pen7),
     .peashooterHead(peashooter7[0]), .peashooterBlack(peashooter7[1]), .peashooterStem(peashooter7[2]), .pea(peashooter7[3]), .peaX(peaShot7X)
     );
     
     peashooter ps8(
-    .clk(clk), .psVPosGiven(VPOS8), .psHPosGiven(HPOS8), .hCount(hCount), .vCount(vCount), .enable(psen8), .penable(pen8),
+    .clk(clk), .psVPosGiven(VPOS8), .psHPosGiven(HPOS8), .hCount(hCount), .vCount(vCount), .enable(psen8), .hitZombie(pen8),
     .peashooterHead(peashooter8[0]), .peashooterBlack(peashooter8[1]), .peashooterStem(peashooter8[2]), .pea(peashooter8[3]), .peaX(peaShot8X)
     );
     
     peashooter ps9(
-    .clk(clk), .psVPosGiven(VPOS9), .psHPosGiven(HPOS9), .hCount(hCount), .vCount(vCount), .enable(psen9), .penable(pen9),
+    .clk(clk), .psVPosGiven(VPOS9), .psHPosGiven(HPOS9), .hCount(hCount), .vCount(vCount), .enable(psen9), .hitZombie(pen9),
     .peashooterHead(peashooter9[0]), .peashooterBlack(peashooter9[1]), .peashooterStem(peashooter9[2]), .pea(peashooter9[3]), .peaX(peaShot9X)
     );
     
     peashooter ps10(
-    .clk(clk), .psVPosGiven(VPOS10), .psHPosGiven(HPOS10), .hCount(hCount), .vCount(vCount), .enable(psen10), .penable(pen10),
+    .clk(clk), .psVPosGiven(VPOS10), .psHPosGiven(HPOS10), .hCount(hCount), .vCount(vCount), .enable(psen10), .hitZombie(pen10),
     .peashooterHead(peashooter10[0]), .peashooterBlack(peashooter10[1]), .peashooterStem(peashooter10[2]), .pea(peashooter10[3]), .peaX(peaShot10X)
     );
     
     peashooter ps11(
-    .clk(clk), .psVPosGiven(VPOS11), .psHPosGiven(HPOS11), .hCount(hCount), .vCount(vCount), .enable(psen11), .penable(pen11),
+    .clk(clk), .psVPosGiven(VPOS11), .psHPosGiven(HPOS11), .hCount(hCount), .vCount(vCount), .enable(psen11), .hitZombie(pen11),
     .peashooterHead(peashooter11[0]), .peashooterBlack(peashooter11[1]), .peashooterStem(peashooter11[2]), .pea(peashooter11[3]), .peaX(peaShot11X)
     );
     
     peashooter ps12(
-    .clk(clk), .psVPosGiven(VPOS12), .psHPosGiven(HPOS12), .hCount(hCount), .vCount(vCount), .enable(psen12), .penable(pen12),
+    .clk(clk), .psVPosGiven(VPOS12), .psHPosGiven(HPOS12), .hCount(hCount), .vCount(vCount), .enable(psen12), .hitZombie(pen12),
     .peashooterHead(peashooter12[0]), .peashooterBlack(peashooter12[1]), .peashooterStem(peashooter12[2]), .pea(peashooter12[3]), .peaX(peaShot12X)
     );
     
     peashooter ps13(
-    .clk(clk), .psVPosGiven(VPOS13), .psHPosGiven(HPOS13), .hCount(hCount), .vCount(vCount), .enable(psen13), .penable(pen13),
+    .clk(clk), .psVPosGiven(VPOS13), .psHPosGiven(HPOS13), .hCount(hCount), .vCount(vCount), .enable(psen13), .hitZombie(pen13),
     .peashooterHead(peashooter13[0]), .peashooterBlack(peashooter13[1]), .peashooterStem(peashooter13[2]), .pea(peashooter13[3]), .peaX(peaShot13X)
     );
 
     peashooter ps14(
-    .clk(clk), .psVPosGiven(VPOS14), .psHPosGiven(HPOS14), .hCount(hCount), .vCount(vCount), .enable(psen14), .penable(pen13),
+    .clk(clk), .psVPosGiven(VPOS14), .psHPosGiven(HPOS14), .hCount(hCount), .vCount(vCount), .enable(psen14), .hitZombie(pen13),
     .peashooterHead(peashooter14[0]), .peashooterBlack(peashooter14[1]), .peashooterStem(peashooter14[2]), .pea(peashooter14[3]), .peaX(peaShot14X)
     );
 
     peashooter ps15(
-    .clk(clk), .psVPosGiven(VPOS15), .psHPosGiven(HPOS15), .hCount(hCount), .vCount(vCount), .enable(psen15), .penable(pen14),
+    .clk(clk), .psVPosGiven(VPOS15), .psHPosGiven(HPOS15), .hCount(hCount), .vCount(vCount), .enable(psen15), .hitZombie(pen14),
     .peashooterHead(peashooter15[0]), .peashooterBlack(peashooter15[1]), .peashooterStem(peashooter15[2]), .pea(peashooter15[3]), .peaX(peaShot15X)
     );
 
     peashooter ps16(
-    .clk(clk), .psVPosGiven(VPOS16), .psHPosGiven(HPOS16), .hCount(hCount), .vCount(vCount), .enable(psen16), .penable(pen15),
+    .clk(clk), .psVPosGiven(VPOS16), .psHPosGiven(HPOS16), .hCount(hCount), .vCount(vCount), .enable(psen16), .hitZombie(pen15),
     .peashooterHead(peashooter16[0]), .peashooterBlack(peashooter16[1]), .peashooterStem(peashooter16[2]), .pea(peashooter16[3]), .peaX(peaShot16X)
     );
 
     peashooter ps17(
-    .clk(clk), .psVPosGiven(VPOS17), .psHPosGiven(HPOS17), .hCount(hCount), .vCount(vCount), .enable(psen17), .penable(pen16),
+    .clk(clk), .psVPosGiven(VPOS17), .psHPosGiven(HPOS17), .hCount(hCount), .vCount(vCount), .enable(psen17), .hitZombie(pen16),
     .peashooterHead(peashooter17[0]), .peashooterBlack(peashooter17[1]), .peashooterStem(peashooter17[2]), .pea(peashooter17[3]), .peaX(peaShot17X)
     );
 
     peashooter ps18(
-    .clk(clk), .psVPosGiven(VPOS18), .psHPosGiven(HPOS18), .hCount(hCount), .vCount(vCount), .enable(psen18), .penable(pen17),
+    .clk(clk), .psVPosGiven(VPOS18), .psHPosGiven(HPOS18), .hCount(hCount), .vCount(vCount), .enable(psen18), .hitZombie(pen17),
     .peashooterHead(peashooter18[0]), .peashooterBlack(peashooter18[1]), .peashooterStem(peashooter18[2]), .pea(peashooter18[3]), .peaX(peaShot18X)
     );
 
     peashooter ps19(
-    .clk(clk), .psVPosGiven(VPOS19), .psHPosGiven(HPOS19), .hCount(hCount), .vCount(vCount), .enable(psen19), .penable(pen18),
+    .clk(clk), .psVPosGiven(VPOS19), .psHPosGiven(HPOS19), .hCount(hCount), .vCount(vCount), .enable(psen19), .hitZombie(pen18),
     .peashooterHead(peashooter19[0]), .peashooterBlack(peashooter19[1]), .peashooterStem(peashooter19[2]), .pea(peashooter19[3]), .peaX(peaShot19X)
     );
 
     peashooter ps20(
-    .clk(clk), .psVPosGiven(VPOS20), .psHPosGiven(HPOS20), .hCount(hCount), .vCount(vCount), .enable(psen20), .penable(pen19),
+    .clk(clk), .psVPosGiven(VPOS20), .psHPosGiven(HPOS20), .hCount(hCount), .vCount(vCount), .enable(psen20), .hitZombie(pen19),
     .peashooterHead(peashooter20[0]), .peashooterBlack(peashooter20[1]), .peashooterStem(peashooter20[2]), .pea(peashooter20[3]), .peaX(peaShot20X)
     );
 
     peashooter ps21(
-    .clk(clk), .psVPosGiven(VPOS21), .psHPosGiven(HPOS21), .hCount(hCount), .vCount(vCount), .enable(psen21), .penable(pen20),
+    .clk(clk), .psVPosGiven(VPOS21), .psHPosGiven(HPOS21), .hCount(hCount), .vCount(vCount), .enable(psen21), .hitZombie(pen20),
     .peashooterHead(peashooter21[0]), .peashooterBlack(peashooter21[1]), .peashooterStem(peashooter21[2]), .pea(peashooter21[3]), .peaX(peaShot21X)
     );
 
     peashooter ps22(
-    .clk(clk), .psVPosGiven(VPOS22), .psHPosGiven(HPOS22), .hCount(hCount), .vCount(vCount), .enable(psen22), .penable(pen22),
+    .clk(clk), .psVPosGiven(VPOS22), .psHPosGiven(HPOS22), .hCount(hCount), .vCount(vCount), .enable(psen22), .hitZombie(pen22),
     .peashooterHead(peashooter22[0]), .peashooterBlack(peashooter22[1]), .peashooterStem(peashooter22[2]), .pea(peashooter22[3]), .peaX(peaShot22X)
     );
 
     peashooter ps23(
-    .clk(clk), .psVPosGiven(VPOS23), .psHPosGiven(HPOS23), .hCount(hCount), .vCount(vCount), .enable(psen23), .penable(pen23),
+    .clk(clk), .psVPosGiven(VPOS23), .psHPosGiven(HPOS23), .hCount(hCount), .vCount(vCount), .enable(psen23), .hitZombie(pen23),
     .peashooterHead(peashooter23[0]), .peashooterBlack(peashooter23[1]), .peashooterStem(peashooter23[2]), .pea(peashooter23[3]), .peaX(peaShot23X)
     );
 
     peashooter ps24(
-    .clk(clk), .psVPosGiven(VPOS24), .psHPosGiven(HPOS24), .hCount(hCount), .vCount(vCount), .enable(psen24), .penable(pen24),
+    .clk(clk), .psVPosGiven(VPOS24), .psHPosGiven(HPOS24), .hCount(hCount), .vCount(vCount), .enable(psen24), .hitZombie(pen24),
     .peashooterHead(peashooter24[0]), .peashooterBlack(peashooter24[1]), .peashooterStem(peashooter24[2]), .pea(peashooter24[3]), .peaX(peaShot24X)
     );
 
