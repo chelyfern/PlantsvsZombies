@@ -78,23 +78,23 @@ module vga_bitchange(
 	parameter END_OF_LAWN = 10'd124;
 	
 	
-    reg[9:0] sfVPos;
-    reg[9:0] sfHPos;
-    reg[9:0] sfVPosTemp;
-    reg[9:0] sfHeadHPos;
-    reg[9:0] sfHeadVPos;
-    reg[49:0] sfBounceSpeed;
-    reg sfHeadFlag;
+//    reg[9:0] sfVPos;
+//    reg[9:0] sfHPos;
+//    reg[9:0] sfVPosTemp;
+//    reg[9:0] sfHeadHPos;
+//    reg[9:0] sfHeadVPos;
+//    reg[49:0] sfBounceSpeed;
+//    reg sfHeadFlag;
     
-    reg[9:0] psVPos;
-    reg[9:0] psHPos;
-    reg[9:0] psVPosTemp;
-    reg[9:0] pVPos;
-    reg[9:0] pHPos;
-    reg[49:0] pSpeed;
+//    reg[9:0] psVPos;
+//    reg[9:0] psHPos;
+//    reg[9:0] psVPosTemp;
+//    reg[9:0] pVPos;
+//    reg[9:0] pHPos;
+//    reg[49:0] pSpeed;
     
-    reg[9:0] wVPos;
-    reg[9:0] wHPos;
+//    reg[9:0] wVPos;
+//    reg[9:0] wHPos;
 
 
 	//Register definitions
@@ -154,11 +154,31 @@ module vga_bitchange(
 	reg[2:0] plant2Type;
 	reg[2:0] plant3Type;
 	reg[2:0] plant4Type;
-	reg plant0Killed;
-	reg plant1Killed;
-	reg plant2Killed;
-	reg plant3Killed;
-	reg plant4Killed;
+    reg[2:0] plant5Type;
+	reg[2:0] plant6Type;
+	reg[2:0] plant7Type;
+	reg[2:0] plant8Type;
+	reg[2:0] plant9Type;
+	reg[2:0] plant10Type;
+	reg[2:0] plant11Type;
+	reg[2:0] plant12Type;
+	reg[2:0] plant13Type;
+	reg[2:0] plant14Type;
+	reg[2:0] plant15Type;
+	reg[2:0] plant16Type;
+	reg[2:0] plant17Type;
+	reg[2:0] plant18Type;
+	reg[2:0] plant19Type;
+	reg[2:0] plant20Type;
+	reg[2:0] plant21Type;
+	reg[2:0] plant22Type;
+	reg[2:0] plant23Type;
+	reg[2:0] plant24Type;
+	reg[2:0] plant0Killed;
+	reg[2:0] plant1Killed;
+	reg[2:0] plant2Killed;
+	reg[2:0] plant3Killed;
+	reg[2:0] plant4Killed;
 	//Registers to hold pea shot's X position. There are 25 pea shots
 	reg[9:0] peaShot0X;
 	reg[9:0] peaShot1X;
@@ -307,25 +327,43 @@ module vga_bitchange(
 		zombie3Killed = 1'b0;
 		zombie4Killed = 1'b0;
 		
-		sfVPos = 10'd220;
+//		sfVPos = 10'd220;
 		
-		sfVPosTemp = sfVPos + 10'd154;
-		sfHPos = 10'd500;//500
-		sfHeadHPos = sfHPos;
-		sfHeadVPos = sfVPosTemp;
-		sfHeadFlag = 1'd0;
+//		sfVPosTemp = sfVPos + 10'd154;
+//		sfHPos = 10'd500;//500
+//		sfHeadHPos = sfHPos;
+//		sfHeadVPos = sfVPosTemp;
+//		sfHeadFlag = 1'd0;
 		
-		psVPos = 10'd220;
-		psVPosTemp = psVPos + 10'd90; 
-		psHPos = 10'd225;//225
-		pVPos = psVPos + 10'd65;
-		pHPos = psHPos + 10'd115;
+//		psVPos = 10'd220;
+//		psVPosTemp = psVPos + 10'd90; 
+//		psHPos = 10'd225;//225
+//		pVPos = psVPos + 10'd65;
+//		pHPos = psHPos + 10'd115;
 		
-		wVPos = 10'd218;
-		wHPos = 10'd400;
+//		wVPos = 10'd218;
+//		wHPos = 10'd400;
 		
 		numSuns = 16'd50;
 		sunTimer = 50'd0;
+		
+		plant0Placed = 1'd1;
+		plant0Type = WALNUT;
+		
+		plant7Placed = 1'd1;
+		plant7Type = SUNFLOWER;
+		
+		plant6Placed = 1'd1;
+		plant6Type = WALNUT;
+				
+		plant21Placed = 1'd1;
+		plant21Type = PEASHOOTER;
+		
+		plant18Placed = 1'd1;
+		plant18Type = PEASHOOTER;
+		
+		plant16Placed = 1'd1;
+		plant16Type = SUNFLOWER;
 	end
 
 	//TODO: define the zombie colors here
@@ -379,58 +417,913 @@ module vga_bitchange(
         
     assign en = 1'd1;
     
-    wire peashooterHead;
-    wire peashooterBlack;
-    wire peashooterStem;
-    wire pea;
+    reg[9:0] VPOS0 = 10'd87;
+    reg[9:0] HPOS0 = 10'd300;
+    reg[9:0] VPOS1 = 10'd87;
+    reg[9:0] HPOS1 = 10'd400;
+    reg[9:0] VPOS2 = 10'd87;
+    reg[9:0] HPOS2 = 10'd500;
+    reg[9:0] VPOS3 = 10'd87;
+    reg[9:0] HPOS3 = 10'd600;
+    reg[9:0] VPOS4 = 10'd87;
+    reg[9:0] HPOS4 = 10'd700;
+
+    reg[9:0] VPOS5 = 10'd174;
+    reg[9:0] HPOS5 = 10'd300;
+    reg[9:0] VPOS6 = 10'd174;
+    reg[9:0] HPOS6 = 10'd400;
+    reg[9:0] VPOS7 = 10'd174;
+    reg[9:0] HPOS7 = 10'd500;
+    reg[9:0] VPOS8 = 10'd174;
+    reg[9:0] HPOS8 = 10'd600;
+    reg[9:0] VPOS9 = 10'd174;
+    reg[9:0] HPOS9 = 10'd700;
     
-    peashooter ps(
-    .clk(clk),
-	.psVPos(psVPos),
-    .psHPos(psHPos),
-    .hCount(hCount), .vCount(vCount),
-    .enable(en),
-    .peashooterHead(peashooterHead),
-    .peashooterBlack(peashooterBlack),
-    .peashooterStem(peashooterStem),
-    .pea(pea)
+    reg[9:0] VPOS10 = 10'd261;
+    reg[9:0] HPOS10 = 10'd300;
+    reg[9:0] VPOS11 = 10'd261;
+    reg[9:0] HPOS11 = 10'd400;
+    reg[9:0] VPOS12 = 10'd261;
+    reg[9:0] HPOS12 = 10'd500;
+    reg[9:0] VPOS13 = 10'd261;
+    reg[9:0] HPOS13 = 10'd600;
+    reg[9:0] VPOS14 = 10'd261;
+    reg[9:0] HPOS14 = 10'd700;
+
+    reg[9:0] VPOS15 = 10'd348;
+    reg[9:0] HPOS15 = 10'd300;
+    reg[9:0] VPOS16 = 10'd348;
+    reg[9:0] HPOS16 = 10'd400;
+    reg[9:0] VPOS17 = 10'd348;
+    reg[9:0] HPOS17 = 10'd500;
+    reg[9:0] VPOS18 = 10'd348;
+    reg[9:0] HPOS18 = 10'd600;
+    reg[9:0] VPOS19 = 10'd348;
+    reg[9:0] HPOS19 = 10'd700;
+    
+    reg[9:0] VPOS20 = 10'd435;
+    reg[9:0] HPOS20 = 10'd300;
+    reg[9:0] VPOS21 = 10'd435;
+    reg[9:0] HPOS21 = 10'd400;
+    reg[9:0] VPOS22 = 10'd435;
+    reg[9:0] HPOS22 = 10'd500;
+    reg[9:0] VPOS23 = 10'd435;
+    reg[9:0] HPOS23 = 10'd600;
+    reg[9:0] VPOS24 = 10'd435;
+    reg[9:0] HPOS24 = 10'd700;
+
+    assign psen0 = ((plant0Placed == 1'd1) && (plant0Type == PEASHOOTER)) ? 1 : 0;
+    assign psen1 = ((plant1Placed == 1'd1) && (plant1Type == PEASHOOTER)) ? 1 : 0;
+    assign psen2 = ((plant2Placed == 1'd1) && (plant2Type == PEASHOOTER)) ? 1 : 0;
+    assign psen3 = ((plant3Placed == 1'd1) && (plant3Type == PEASHOOTER)) ? 1 : 0;
+    assign psen4 = ((plant4Placed == 1'd1) && (plant4Type == PEASHOOTER)) ? 1 : 0;
+    assign psen5 = ((plant5Placed == 1'd1) && (plant5Type == PEASHOOTER)) ? 1 : 0;
+    assign psen6 = ((plant6Placed == 1'd1) && (plant6Type == PEASHOOTER)) ? 1 : 0;
+    assign psen7 = ((plant7Placed == 1'd1) && (plant7Type == PEASHOOTER)) ? 1 : 0;
+    assign psen8 = ((plant8Placed == 1'd1) && (plant8Type == PEASHOOTER)) ? 1 : 0;
+    assign psen9 = ((plant9Placed == 1'd1) && (plant9Type == PEASHOOTER)) ? 1 : 0;
+    assign psen10 = ((plant10Placed == 1'd1) && (plant10Type == PEASHOOTER)) ? 1 : 0;
+    assign psen11 = ((plant11Placed == 1'd1) && (plant11Type == PEASHOOTER)) ? 1 : 0;
+    assign psen12 = ((plant12Placed == 1'd1) && (plant12Type == PEASHOOTER)) ? 1 : 0;
+    assign psen13 = ((plant13Placed == 1'd1) && (plant13Type == PEASHOOTER)) ? 1 : 0;
+    assign psen14 = ((plant14Placed == 1'd1) && (plant14Type == PEASHOOTER)) ? 1 : 0;
+    assign psen15 = ((plant15Placed == 1'd1) && (plant15Type == PEASHOOTER)) ? 1 : 0;
+    assign psen16 = ((plant16Placed == 1'd1) && (plant16Type == PEASHOOTER)) ? 1 : 0;
+    assign psen17 = ((plant17Placed == 1'd1) && (plant17Type == PEASHOOTER)) ? 1 : 0;
+    assign psen18 = ((plant18Placed == 1'd1) && (plant18Type == PEASHOOTER)) ? 1 : 0;
+    assign psen19 = ((plant19Placed == 1'd1) && (plant19Type == PEASHOOTER)) ? 1 : 0;
+    assign psen20 = ((plant20Placed == 1'd1) && (plant20Type == PEASHOOTER)) ? 1 : 0;
+    assign psen21 = ((plant21Placed == 1'd1) && (plant21Type == PEASHOOTER)) ? 1 : 0;
+    assign psen22 = ((plant22Placed == 1'd1) && (plant22Type == PEASHOOTER)) ? 1 : 0;
+    assign psen23 = ((plant23Placed == 1'd1) && (plant23Type == PEASHOOTER)) ? 1 : 0;
+    assign psen24 = ((plant24Placed == 1'd1) && (plant24Type == PEASHOOTER)) ? 1 : 0;
+
+    assign wen0 = ((plant0Placed == 1'd1) && (plant0Type == WALNUT)) ? 1 : 0;
+    assign wen1 = ((plant1Placed == 1'd1) && (plant1Type == WALNUT)) ? 1 : 0;
+    assign wen2 = ((plant2Placed == 1'd1) && (plant2Type == WALNUT)) ? 1 : 0;
+    assign wen3 = ((plant3Placed == 1'd1) && (plant3Type == WALNUT)) ? 1 : 0;
+    assign wen4 = ((plant4Placed == 1'd1) && (plant4Type == WALNUT)) ? 1 : 0;
+    assign wen5 = ((plant5Placed == 1'd1) && (plant5Type == WALNUT)) ? 1 : 0;
+    assign wen6 = ((plant6Placed == 1'd1) && (plant6Type == WALNUT)) ? 1 : 0;
+    assign wen7 = ((plant7Placed == 1'd1) && (plant7Type == WALNUT)) ? 1 : 0;
+    assign wen8 = ((plant8Placed == 1'd1) && (plant8Type == WALNUT)) ? 1 : 0;
+    assign wen9 = ((plant9Placed == 1'd1) && (plant9Type == WALNUT)) ? 1 : 0;
+    assign wen10 = ((plant10Placed == 1'd1) && (plant10Type == WALNUT)) ? 1 : 0;
+    assign wen11 = ((plant11Placed == 1'd1) && (plant11Type == WALNUT)) ? 1 : 0;
+    assign wen12 = ((plant12Placed == 1'd1) && (plant12Type == WALNUT)) ? 1 : 0;
+    assign wen13 = ((plant13Placed == 1'd1) && (plant13Type == WALNUT)) ? 1 : 0;
+    assign wen14 = ((plant14Placed == 1'd1) && (plant14Type == WALNUT)) ? 1 : 0;
+    assign wen15 = ((plant15Placed == 1'd1) && (plant15Type == WALNUT)) ? 1 : 0;
+    assign wen16 = ((plant16Placed == 1'd1) && (plant16Type == WALNUT)) ? 1 : 0;
+    assign wen17 = ((plant17Placed == 1'd1) && (plant17Type == WALNUT)) ? 1 : 0;
+    assign wen18 = ((plant18Placed == 1'd1) && (plant18Type == WALNUT)) ? 1 : 0;
+    assign wen19 = ((plant19Placed == 1'd1) && (plant19Type == WALNUT)) ? 1 : 0;
+    assign wen20 = ((plant20Placed == 1'd1) && (plant20Type == WALNUT)) ? 1 : 0;
+    assign wen21 = ((plant21Placed == 1'd1) && (plant21Type == WALNUT)) ? 1 : 0;
+    assign wen22 = ((plant22Placed == 1'd1) && (plant22Type == WALNUT)) ? 1 : 0;
+    assign wen23 = ((plant23Placed == 1'd1) && (plant23Type == WALNUT)) ? 1 : 0;
+    assign wen24 = ((plant24Placed == 1'd1) && (plant24Type == WALNUT)) ? 1 : 0;
+    
+    assign sfen0 = ((plant0Placed == 1'd1) && (plant0Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen1 = ((plant1Placed == 1'd1) && (plant1Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen2 = ((plant2Placed == 1'd1) && (plant2Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen3 = ((plant3Placed == 1'd1) && (plant3Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen4 = ((plant4Placed == 1'd1) && (plant4Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen5 = ((plant5Placed == 1'd1) && (plant5Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen6 = ((plant6Placed == 1'd1) && (plant6Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen7 = ((plant7Placed == 1'd1) && (plant7Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen8 = ((plant8Placed == 1'd1) && (plant8Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen9 = ((plant9Placed == 1'd1) && (plant9Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen10 = ((plant10Placed == 1'd1) && (plant10Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen11 = ((plant11Placed == 1'd1) && (plant11Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen12 = ((plant12Placed == 1'd1) && (plant12Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen13 = ((plant13Placed == 1'd1) && (plant13Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen14 = ((plant14Placed == 1'd1) && (plant14Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen15 = ((plant15Placed == 1'd1) && (plant15Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen16 = ((plant16Placed == 1'd1) && (plant16Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen17 = ((plant17Placed == 1'd1) && (plant17Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen18 = ((plant18Placed == 1'd1) && (plant18Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen19 = ((plant19Placed == 1'd1) && (plant19Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen20 = ((plant20Placed == 1'd1) && (plant20Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen21 = ((plant21Placed == 1'd1) && (plant21Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen22 = ((plant22Placed == 1'd1) && (plant22Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen23 = ((plant23Placed == 1'd1) && (plant23Type == SUNFLOWER)) ? 1 : 0;
+    assign sfen24 = ((plant24Placed == 1'd1) && (plant24Type == SUNFLOWER)) ? 1 : 0;
+    
+    //25 possible peashooters
+    //ps[0] = head, ps[1] = black, ps[2] = steam, ps[3] = pea
+    wire [3:0] peashooter0;
+    wire [3:0] peashooter1;
+    wire [3:0] peashooter2;
+    wire [3:0] peashooter3;
+    wire [3:0] peashooter4;
+    wire [3:0] peashooter5;
+    wire [3:0] peashooter6;
+    wire [3:0] peashooter7;
+    wire [3:0] peashooter8;
+    wire [3:0] peashooter9;
+    wire [3:0] peashooter10;
+    wire [3:0] peashooter11;
+    wire [3:0] peashooter12;
+    wire [3:0] peashooter13;
+    wire [3:0] peashooter14;
+    wire [3:0] peashooter15;
+    wire [3:0] peashooter16;
+    wire [3:0] peashooter17;
+    wire [3:0] peashooter18;
+    wire [3:0] peashooter19;
+    wire [3:0] peashooter20;
+    wire [3:0] peashooter21;
+    wire [3:0] peashooter22;
+    wire [3:0] peashooter23;
+    wire [3:0] peashooter24;
+
+    assign pea = ( peashooter0[3]
+                    || peashooter1[3]
+                    || peashooter2[3]
+                    || peashooter3[3]
+                    || peashooter4[3]
+                    || peashooter5[3]
+                    || peashooter6[3]
+                    || peashooter7[3]
+                    || peashooter8[3]
+                    || peashooter9[3]
+                    || peashooter10[3]
+                    || peashooter11[3]
+                    || peashooter12[3]
+                    || peashooter13[3]
+                    || peashooter14[3]
+                    || peashooter15[3]
+                    || peashooter16[3]
+                    || peashooter17[3]
+                    || peashooter18[3]
+                    || peashooter19[3]
+                    || peashooter20[3]
+                    || peashooter21[3]
+                    || peashooter22[3]
+                    || peashooter23[3]
+                    || peashooter24[3]) ? 1 : 0;
+
+
+    assign peashooterBlack = ( peashooter0[1]
+                    || peashooter1[1]
+                    || peashooter2[1]
+                    || peashooter3[1]
+                    || peashooter4[1]
+                    || peashooter5[1]
+                    || peashooter6[1]
+                    || peashooter7[1]
+                    || peashooter8[1]
+                    || peashooter9[1]
+                    || peashooter10[1]
+                    || peashooter11[1]
+                    || peashooter12[1]
+                    || peashooter13[1]
+                    || peashooter14[1]
+                    || peashooter15[1]
+                    || peashooter16[1]
+                    || peashooter17[1]
+                    || peashooter18[1]
+                    || peashooter19[1]
+                    || peashooter20[1]
+                    || peashooter21[1]
+                    || peashooter22[1]
+                    || peashooter23[1]
+                    || peashooter24[1]) ? 1 : 0;
+
+                    
+
+    assign peashooterHead = ( peashooter0[0]
+                    || peashooter1[0]
+                    || peashooter2[0]
+                    || peashooter3[0]
+                    || peashooter4[0]
+                    || peashooter5[0]
+                    || peashooter6[0]
+                    || peashooter7[0]
+                    || peashooter8[0]
+                    || peashooter9[0]
+                    || peashooter10[0]
+                    || peashooter11[0]
+                    || peashooter12[0]
+                    || peashooter13[0]
+                    || peashooter14[0]
+                    || peashooter15[0]
+                    || peashooter16[0]
+                    || peashooter17[0]
+                    || peashooter18[0]
+                    || peashooter19[0]
+                    || peashooter20[0]
+                    || peashooter21[0]
+                    || peashooter22[0]
+                    || peashooter23[0]
+                    || peashooter24[0]) ? 1 : 0;
+
+                    
+
+    assign peashooterStem = ( peashooter0[2]
+                    || peashooter1[2]
+                    || peashooter2[2]
+                    || peashooter3[2]
+                    || peashooter4[2]
+                    || peashooter5[2]
+                    || peashooter6[2]
+                    || peashooter7[2]
+                    || peashooter8[2]
+                    || peashooter9[2]
+                    || peashooter10[2]
+                    || peashooter11[2]
+                    || peashooter12[2]
+                    || peashooter13[2]
+                    || peashooter14[2]
+                    || peashooter15[2]
+                    || peashooter16[2]
+                    || peashooter17[2]
+                    || peashooter18[2]
+                    || peashooter19[2]
+                    || peashooter20[2]
+                    || peashooter21[2]
+                    || peashooter22[2]
+                    || peashooter23[2]
+                    || peashooter24[2]) ? 1 : 0;
+
+    //25 possible sunflowers
+    //sf[0] = outer, sf[1] = inner, sf[2] = face, sf[3] = stem
+    wire [3:0] sunflower0;
+    wire [3:0] sunflower1;
+    wire [3:0] sunflower2;
+    wire [3:0] sunflower3;
+    wire [3:0] sunflower4;
+    wire [3:0] sunflower5;
+    wire [3:0] sunflower6;
+    wire [3:0] sunflower7;
+    wire [3:0] sunflower8;
+    wire [3:0] sunflower9;
+    wire [3:0] sunflower10;
+    wire [3:0] sunflower11;
+    wire [3:0] sunflower12;
+    wire [3:0] sunflower13;
+    wire [3:0] sunflower14;
+    wire [3:0] sunflower15;
+    wire [3:0] sunflower16;
+    wire [3:0] sunflower17;
+    wire [3:0] sunflower18;
+    wire [3:0] sunflower19;
+    wire [3:0] sunflower20;
+    wire [3:0] sunflower21;
+    wire [3:0] sunflower22;
+    wire [3:0] sunflower23;
+    wire [3:0] sunflower24;
+
+    assign sunflowerFace = ( sunflower0[2]
+                    || sunflower1[2]
+                    || sunflower2[2]
+                    || sunflower3[2]
+                    || sunflower4[2]
+                    || sunflower5[2]
+                    || sunflower6[2]
+                    || sunflower7[2]
+                    || sunflower8[2]
+                    || sunflower9[2]
+                    || sunflower10[2]
+                    || sunflower11[2]
+                    || sunflower12[2]
+                    || sunflower13[2]
+                    || sunflower14[2]
+                    || sunflower15[2]
+                    || sunflower16[2]
+                    || sunflower17[2]
+                    || sunflower18[2]
+                    || sunflower19[2]
+                    || sunflower20[2]
+                    || sunflower21[2]
+                    || sunflower22[2]
+                    || sunflower23[2]
+                    || sunflower24[2]) ? 1 : 0;
+    
+    
+    assign sunflowerInner = ( sunflower0[1]
+                    || sunflower1[1]
+                    || sunflower2[1]
+                    || sunflower3[1]
+                    || sunflower4[1]
+                    || sunflower5[1]
+                    || sunflower6[1]
+                    || sunflower7[1]
+                    || sunflower8[1]
+                    || sunflower9[1]
+                    || sunflower10[1]
+                    || sunflower11[1]
+                    || sunflower12[1]
+                    || sunflower13[1]
+                    || sunflower14[1]
+                    || sunflower15[1]
+                    || sunflower16[1]
+                    || sunflower17[1]
+                    || sunflower18[1]
+                    || sunflower19[1]
+                    || sunflower20[1]
+                    || sunflower21[1]
+                    || sunflower22[1]
+                    || sunflower23[1]
+                    || sunflower24[1]) ? 1 : 0;
+    
+    
+    assign sunflowerOuter = ( sunflower0[0]
+                    || sunflower1[0]
+                    || sunflower2[0]
+                    || sunflower3[0]
+                    || sunflower4[0]
+                    || sunflower5[0]
+                    || sunflower6[0]
+                    || sunflower7[0]
+                    || sunflower8[0]
+                    || sunflower9[0]
+                    || sunflower10[0]
+                    || sunflower11[0]
+                    || sunflower12[0]
+                    || sunflower13[0]
+                    || sunflower14[0]
+                    || sunflower15[0]
+                    || sunflower16[0]
+                    || sunflower17[0]
+                    || sunflower18[0]
+                    || sunflower19[0]
+                    || sunflower20[0]
+                    || sunflower21[0]
+                    || sunflower22[0]
+                    || sunflower23[0]
+                    || sunflower24[0]) ? 1 : 0;
+    
+
+    assign sunflowerStem = ( sunflower0[3]
+                    || sunflower1[3]
+                    || sunflower2[3]
+                    || sunflower3[3]
+                    || sunflower4[3]
+                    || sunflower5[3]
+                    || sunflower6[3]
+                    || sunflower7[3]
+                    || sunflower8[3]
+                    || sunflower9[3]
+                    || sunflower10[3]
+                    || sunflower11[3]
+                    || sunflower12[3]
+                    || sunflower13[3]
+                    || sunflower14[3]
+                    || sunflower15[3]
+                    || sunflower16[3]
+                    || sunflower17[3]
+                    || sunflower18[3]
+                    || sunflower19[3]
+                    || sunflower20[3]
+                    || sunflower21[3]
+                    || sunflower22[3]
+                    || sunflower23[3]
+                    || sunflower24[3]) ? 1 : 0;
+    
+
+
+
+    //25 possible walnuts
+    //w[0] = walnut, w[1] = black, w[2] = white
+    wire [2:0] walnut0;
+    wire [2:0] walnut1;
+    wire [2:0] walnut2;
+    wire [2:0] walnut3;
+    wire [2:0] walnut4;
+    wire [2:0] walnut5;
+    wire [2:0] walnut6;
+    wire [2:0] walnut7;
+    wire [2:0] walnut8;
+    wire [2:0] walnut9;
+    wire [2:0] walnut10;
+    wire [2:0] walnut11;
+    wire [2:0] walnut12;
+    wire [2:0] walnut13;
+    wire [2:0] walnut14;
+    wire [2:0] walnut15;
+    wire [2:0] walnut16;
+    wire [2:0] walnut17;
+    wire [2:0] walnut18;
+    wire [2:0] walnut19;
+    wire [2:0] walnut20;
+    wire [2:0] walnut21;
+    wire [2:0] walnut22;
+    wire [2:0] walnut23;
+    wire [2:0] walnut24;
+
+    assign walnutBlack = (
+              walnut0[1]
+            ||  walnut1[1]
+            ||  walnut2[1]
+            ||  walnut3[1]
+            ||  walnut4[1]
+            ||  walnut5[1]
+            ||  walnut6[1]
+            ||  walnut7[1]
+            ||  walnut8[1]
+            ||  walnut9[1]
+            ||  walnut10[1]
+            ||  walnut11[1]
+            ||  walnut12[1]
+            ||  walnut13[1]
+            ||  walnut14[1]
+            ||  walnut15[1]
+            ||  walnut16[1]
+            ||  walnut17[1]
+            ||  walnut18[1]
+            ||  walnut19[1]
+            ||  walnut20[1]
+            ||  walnut21[1]
+            ||  walnut22[1]
+            ||  walnut23[1]
+            ||  walnut24[1]
+    ) ? 1 : 0;
+
+    
+    assign walnutWhite = (
+              walnut0[2]
+            ||  walnut1[2]
+            ||  walnut2[2]
+            ||  walnut3[2]
+            ||  walnut4[2]
+            ||  walnut5[2]
+            ||  walnut6[2]
+            ||  walnut7[2]
+            ||  walnut8[2]
+            ||  walnut9[2]
+            ||  walnut10[2]
+            ||  walnut11[2]
+            ||  walnut12[2]
+            ||  walnut13[2]
+            ||  walnut14[2]
+            ||  walnut15[2]
+            ||  walnut16[2]
+            ||  walnut17[2]
+            ||  walnut18[2]
+            ||  walnut19[2]
+            ||  walnut20[2]
+            ||  walnut21[2]
+            ||  walnut22[2]
+            ||  walnut23[2]
+            ||  walnut24[2]
+    ) ? 1 : 0;
+
+    
+    assign walnut = (
+              walnut0[0]
+            ||  walnut1[0]
+            ||  walnut2[0]
+            ||  walnut3[0]
+            ||  walnut4[0]
+            ||  walnut5[0]
+            ||  walnut6[0]
+            ||  walnut7[0]
+            ||  walnut8[0]
+            ||  walnut9[0]
+            ||  walnut10[0]
+            ||  walnut11[0]
+            ||  walnut12[0]
+            ||  walnut13[0]
+            ||  walnut14[0]
+            ||  walnut15[0]
+            ||  walnut16[0]
+            ||  walnut17[0]
+            ||  walnut18[0]
+            ||  walnut19[0]
+            ||  walnut20[0]
+            ||  walnut21[0]
+            ||  walnut22[0]
+            ||  walnut23[0]
+            ||  walnut24[0]
+    ) ? 1 : 0;
+
+    
+    peashooter ps0(
+    .clk(clk), .psVPos(VPOS0), .psHPos(HPOS0), .hCount(hCount), .vCount(vCount), .enable(psen0),
+    .peashooterHead(peashooter0[0]), .peashooterBlack(peashooter0[1]), .peashooterStem(peashooter0[2]), .pea(peashooter0[3])
+    );
+
+    peashooter ps1(.clk(clk),.psVPos(VPOS1),.psHPos(HPOS1),.hCount(hCount), .vCount(vCount),.enable(psen1),
+    .peashooterHead(peashooter1[0]),.peashooterBlack(peashooter1[1]),.peashooterStem(peashooter1[2]),.pea(peashooter1[3])
     );
     
+    peashooter ps2(
+    .clk(clk), .psVPos(VPOS2), .psHPos(HPOS2), .hCount(hCount), .vCount(vCount), .enable(psen2),
+    .peashooterHead(peashooter2[0]), .peashooterBlack(peashooter2[1]), .peashooterStem(peashooter2[2]), .pea(peashooter2[3])
+    );
+    
+    peashooter ps3(
+    .clk(clk), .psVPos(VPOS3), .psHPos(HPOS3), .hCount(hCount), .vCount(vCount), .enable(psen3),
+    .peashooterHead(peashooter3[0]), .peashooterBlack(peashooter3[1]), .peashooterStem(peashooter3[2]), .pea(peashooter3[3])
+    );
+
+    peashooter ps4(
+    .clk(clk), .psVPos(VPOS4), .psHPos(HPOS4), .hCount(hCount), .vCount(vCount), .enable(psen4),
+    .peashooterHead(peashooter4[0]), .peashooterBlack(peashooter4[1]), .peashooterStem(peashooter4[2]), .pea(peashooter4[3])
+    );
+    
+    peashooter ps5(
+    .clk(clk), .psVPos(VPOS5), .psHPos(HPOS5), .hCount(hCount), .vCount(vCount), .enable(psen5),
+    .peashooterHead(peashooter5[0]), .peashooterBlack(peashooter5[1]), .peashooterStem(peashooter5[2]), .pea(peashooter5[3])
+    );
+    
+    peashooter ps6(
+    .clk(clk), .psVPos(VPOS6), .psHPos(HPOS6), .hCount(hCount), .vCount(vCount), .enable(psen6),
+    .peashooterHead(peashooter6[0]), .peashooterBlack(peashooter6[1]), .peashooterStem(peashooter6[2]), .pea(peashooter6[3])
+    );
+    
+    peashooter ps7(
+    .clk(clk), .psVPos(VPOS7), .psHPos(HPOS7), .hCount(hCount), .vCount(vCount), .enable(psen7),
+    .peashooterHead(peashooter7[0]), .peashooterBlack(peashooter7[1]), .peashooterStem(peashooter7[2]), .pea(peashooter7[3])
+    );
+    
+    peashooter ps8(
+    .clk(clk), .psVPos(VPOS8), .psHPos(HPOS8), .hCount(hCount), .vCount(vCount), .enable(psen8),
+    .peashooterHead(peashooter8[0]), .peashooterBlack(peashooter8[1]), .peashooterStem(peashooter8[2]), .pea(peashooter8[3])
+    );
+    
+    peashooter ps9(
+    .clk(clk), .psVPos(VPOS9), .psHPos(HPOS9), .hCount(hCount), .vCount(vCount), .enable(psen9),
+    .peashooterHead(peashooter9[0]), .peashooterBlack(peashooter9[1]), .peashooterStem(peashooter9[2]), .pea(peashooter9[3])
+    );
+    
+    peashooter ps10(
+    .clk(clk), .psVPos(VPOS10), .psHPos(HPOS10), .hCount(hCount), .vCount(vCount), .enable(psen10),
+    .peashooterHead(peashooter10[0]), .peashooterBlack(peashooter10[1]), .peashooterStem(peashooter10[2]), .pea(peashooter10[3])
+    );
+    
+    peashooter ps11(
+    .clk(clk), .psVPos(VPOS11), .psHPos(HPOS11), .hCount(hCount), .vCount(vCount), .enable(psen11),
+    .peashooterHead(peashooter11[0]), .peashooterBlack(peashooter11[1]), .peashooterStem(peashooter11[2]), .pea(peashooter11[3])
+    );
+    
+    peashooter ps12(
+    .clk(clk), .psVPos(VPOS12), .psHPos(HPOS12), .hCount(hCount), .vCount(vCount), .enable(psen12),
+    .peashooterHead(peashooter12[0]), .peashooterBlack(peashooter12[1]), .peashooterStem(peashooter12[2]), .pea(peashooter12[3])
+    );
+    
+    peashooter ps13(
+    .clk(clk), .psVPos(VPOS13), .psHPos(HPOS13), .hCount(hCount), .vCount(vCount), .enable(psen13),
+    .peashooterHead(peashooter13[0]), .peashooterBlack(peashooter13[1]), .peashooterStem(peashooter13[2]), .pea(peashooter13[3])
+    );
+
+    peashooter ps14(
+    .clk(clk), .psVPos(VPOS14), .psHPos(HPOS14), .hCount(hCount), .vCount(vCount), .enable(psen14),
+    .peashooterHead(peashooter14[0]), .peashooterBlack(peashooter14[1]), .peashooterStem(peashooter14[2]), .pea(peashooter14[3])
+    );
+
+    peashooter ps15(
+    .clk(clk), .psVPos(VPOS15), .psHPos(HPOS15), .hCount(hCount), .vCount(vCount), .enable(psen15),
+    .peashooterHead(peashooter15[0]), .peashooterBlack(peashooter15[1]), .peashooterStem(peashooter15[2]), .pea(peashooter15[3])
+    );
+
+    peashooter ps16(
+    .clk(clk), .psVPos(VPOS16), .psHPos(HPOS16), .hCount(hCount), .vCount(vCount), .enable(psen16),
+    .peashooterHead(peashooter16[0]), .peashooterBlack(peashooter16[1]), .peashooterStem(peashooter16[2]), .pea(peashooter5[3])
+    );
+
+    peashooter ps17(
+    .clk(clk), .psVPos(VPOS17), .psHPos(HPOS17), .hCount(hCount), .vCount(vCount), .enable(psen17),
+    .peashooterHead(peashooter17[0]), .peashooterBlack(peashooter17[1]), .peashooterStem(peashooter17[2]), .pea(peashooter17[3])
+    );
+
+    peashooter ps18(
+    .clk(clk), .psVPos(VPOS18), .psHPos(HPOS18), .hCount(hCount), .vCount(vCount), .enable(psen18),
+    .peashooterHead(peashooter18[0]), .peashooterBlack(peashooter18[1]), .peashooterStem(peashooter18[2]), .pea(peashooter18[3])
+    );
+
+    peashooter ps19(
+    .clk(clk), .psVPos(VPOS19), .psHPos(HPOS19), .hCount(hCount), .vCount(vCount), .enable(psen19),
+    .peashooterHead(peashooter19[0]), .peashooterBlack(peashooter19[1]), .peashooterStem(peashooter19[2]), .pea(peashooter19[3])
+    );
+
+    peashooter ps20(
+    .clk(clk), .psVPos(VPOS20), .psHPos(HPOS20), .hCount(hCount), .vCount(vCount), .enable(psen20),
+    .peashooterHead(peashooter20[0]), .peashooterBlack(peashooter20[1]), .peashooterStem(peashooter20[2]), .pea(peashooter20[3])
+    );
+
+    peashooter ps21(
+    .clk(clk), .psVPos(VPOS21), .psHPos(HPOS21), .hCount(hCount), .vCount(vCount), .enable(psen21),
+    .peashooterHead(peashooter21[0]), .peashooterBlack(peashooter21[1]), .peashooterStem(peashooter21[2]), .pea(peashooter21[3])
+    );
+
+    peashooter ps22(
+    .clk(clk), .psVPos(VPOS22), .psHPos(HPOS22), .hCount(hCount), .vCount(vCount), .enable(psen22),
+    .peashooterHead(peashooter22[0]), .peashooterBlack(peashooter22[1]), .peashooterStem(peashooter22[2]), .pea(peashooter22[3])
+    );
+
+    peashooter ps23(
+    .clk(clk), .psVPos(VPOS23), .psHPos(HPOS23), .hCount(hCount), .vCount(vCount), .enable(psen23),
+    .peashooterHead(peashooter23[0]), .peashooterBlack(peashooter23[1]), .peashooterStem(peashooter23[2]), .pea(peashooter23[3])
+    );
+
+    peashooter ps24(
+    .clk(clk), .psVPos(VPOS24), .psHPos(HPOS24), .hCount(hCount), .vCount(vCount), .enable(psen24),
+    .peashooterHead(peashooter24[0]), .peashooterBlack(peashooter24[1]), .peashooterStem(peashooter24[2]), .pea(peashooter24[3])
+    );
+
     wire sunflowerOuter;
     wire sunflowerInner;
     wire sunflowerFace;
     wire sunflowerStem; 
     wire blink;
     
-    sunflower sf(
-    .clk(clk),
-	.sfVPos(sfVPos),
-    .sfHPos(sfHPos),
-    .hCount(hCount), .vCount(vCount),
-    .enable(en),
-    .sunflowerOuter(sunflowerOuter),
-    .sunflowerInner(sunflowerInner),
-    .sunflowerFace(sunflowerFace), 
-    .sunflowerStem(sunflowerStem), 
-    .blink(blink)
+    sunflower sf0(
+    .clk(clk), .sfVPos(VPOS0), .sfHPos(HPOS0), .hCount(hCount), .vCount(vCount), .enable(sfen0),
+    .sunflowerOuter(sunflower0[0]), .sunflowerInner(sunflower0[1]), .sunflowerFace(sunflower0[2]), .sunflowerStem(sunflower0[3]), .blink(blink0)
     );
     
+    sunflower sf1(
+    .clk(clk), .sfVPos(VPOS1), .sfHPos(HPOS1), .hCount(hCount), .vCount(vCount), .enable(sfen1),
+    .sunflowerOuter(sunflower1[0]), .sunflowerInner(sunflower1[1]), .sunflowerFace(sunflower1[2]), .sunflowerStem(sunflower1[3]), .blink(blink1)
+    );
     
+    sunflower sf2(
+    .clk(clk), .sfVPos(VPOS2), .sfHPos(HPOS2), .hCount(hCount), .vCount(vCount), .enable(sfen2),
+    .sunflowerOuter(sunflower2[0]), .sunflowerInner(sunflower2[1]), .sunflowerFace(sunflower2[2]), .sunflowerStem(sunflower2[3]), .blink(blink2)
+    );
+    
+    sunflower sf3(
+    .clk(clk), .sfVPos(VPOS3), .sfHPos(HPOS3), .hCount(hCount), .vCount(vCount), .enable(sfen3),
+    .sunflowerOuter(sunflower3[0]), .sunflowerInner(sunflower3[1]), .sunflowerFace(sunflower3[2]), .sunflowerStem(sunflower3[3]), .blink(blink3)
+    );
+    
+    sunflower sf4(
+    .clk(clk), .sfVPos(VPOS4), .sfHPos(HPOS4), .hCount(hCount), .vCount(vCount), .enable(sfen4),
+    .sunflowerOuter(sunflower4[0]), .sunflowerInner(sunflower4[1]), .sunflowerFace(sunflower4[2]), .sunflowerStem(sunflower4[3]), .blink(blink4)
+    );
+    
+    sunflower sf5(
+    .clk(clk), .sfVPos(VPOS5), .sfHPos(HPOS5), .hCount(hCount), .vCount(vCount), .enable(sfen5),
+    .sunflowerOuter(sunflower5[0]), .sunflowerInner(sunflower5[1]), .sunflowerFace(sunflower5[2]), .sunflowerStem(sunflower5[3]), .blink(blink5)
+    );
+
+    sunflower sf6(
+    .clk(clk), .sfVPos(VPOS6), .sfHPos(HPOS6), .hCount(hCount), .vCount(vCount), .enable(sfen6),
+    .sunflowerOuter(sunflower6[0]), .sunflowerInner(sunflower6[1]), .sunflowerFace(sunflower6[2]), .sunflowerStem(sunflower6[3]), .blink(blink6)
+    );    
+    
+    sunflower sf7(
+    .clk(clk), .sfVPos(VPOS7), .sfHPos(HPOS7), .hCount(hCount), .vCount(vCount), .enable(sfen7),
+    .sunflowerOuter(sunflower7[0]), .sunflowerInner(sunflower7[1]), .sunflowerFace(sunflower7[2]), .sunflowerStem(sunflower7[3]), .blink(blink7)
+    );
+
+    sunflower sf8(
+    .clk(clk), .sfVPos(VPOS8), .sfHPos(HPOS8), .hCount(hCount), .vCount(vCount), .enable(sfen8),
+    .sunflowerOuter(sunflower8[0]), .sunflowerInner(sunflower8[1]), .sunflowerFace(sunflower8[2]), .sunflowerStem(sunflower8[3]), .blink(blink8)
+    );
+
+    sunflower sf9(
+    .clk(clk), .sfVPos(VPOS9), .sfHPos(HPOS9), .hCount(hCount), .vCount(vCount), .enable(sfen9),
+    .sunflowerOuter(sunflower9[0]), .sunflowerInner(sunflower9[1]), .sunflowerFace(sunflower9[2]), .sunflowerStem(sunflower9[3]), .blink(blink9)
+    );
+    
+    sunflower sf10(
+    .clk(clk), .sfVPos(VPOS10), .sfHPos(HPOS10), .hCount(hCount), .vCount(vCount), .enable(sfen10),
+    .sunflowerOuter(sunflower10[0]), .sunflowerInner(sunflower10[1]), .sunflowerFace(sunflower10[2]), .sunflowerStem(sunflower10[3]), .blink(blink10)
+    );
+
+    sunflower sf11(
+    .clk(clk), .sfVPos(VPOS11), .sfHPos(HPOS11), .hCount(hCount), .vCount(vCount), .enable(sfen11),
+    .sunflowerOuter(sunflower11[0]), .sunflowerInner(sunflower11[1]), .sunflowerFace(sunflower11[2]), .sunflowerStem(sunflower11[3]), .blink(blink11)
+    );
+
+    sunflower sf12(
+    .clk(clk), .sfVPos(VPOS12), .sfHPos(HPOS12), .hCount(hCount), .vCount(vCount), .enable(sfen12),
+    .sunflowerOuter(sunflower12[0]), .sunflowerInner(sunflower12[1]), .sunflowerFace(sunflower12[2]), .sunflowerStem(sunflower12[3]), .blink(blink12)
+    );
+    
+    sunflower sf13(
+    .clk(clk), .sfVPos(VPOS13), .sfHPos(HPOS13), .hCount(hCount), .vCount(vCount), .enable(sfen13),
+    .sunflowerOuter(sunflower13[0]), .sunflowerInner(sunflower13[1]), .sunflowerFace(sunflower13[2]), .sunflowerStem(sunflower13[3]), .blink(blink13)
+    );
+
+    sunflower sf14(
+    .clk(clk), .sfVPos(VPOS14), .sfHPos(HPOS14), .hCount(hCount), .vCount(vCount), .enable(sfen14),
+    .sunflowerOuter(sunflower14[0]), .sunflowerInner(sunflower14[1]), .sunflowerFace(sunflower14[2]), .sunflowerStem(sunflower14[3]), .blink(blink14)
+    );
+
+    sunflower sf15(
+    .clk(clk), .sfVPos(VPOS15), .sfHPos(HPOS15), .hCount(hCount), .vCount(vCount), .enable(sfen15),
+    .sunflowerOuter(sunflower15[0]), .sunflowerInner(sunflower15[1]), .sunflowerFace(sunflower15[2]), .sunflowerStem(sunflower15[3]), .blink(blink15)
+    );
+
+    sunflower sf16(
+    .clk(clk), .sfVPos(VPOS16), .sfHPos(HPOS16), .hCount(hCount), .vCount(vCount), .enable(sfen16),
+    .sunflowerOuter(sunflower16[0]), .sunflowerInner(sunflower16[1]), .sunflowerFace(sunflower16[2]), .sunflowerStem(sunflower16[3]), .blink(blink16)
+    );
+
+    sunflower sf17(
+    .clk(clk), .sfVPos(VPOS17), .sfHPos(HPOS17), .hCount(hCount), .vCount(vCount), .enable(sfen17),
+    .sunflowerOuter(sunflower17[0]), .sunflowerInner(sunflower17[1]), .sunflowerFace(sunflower17[2]), .sunflowerStem(sunflower17[3]), .blink(blink17)
+    );
+    
+    sunflower sf18(
+    .clk(clk), .sfVPos(VPOS18), .sfHPos(HPOS18), .hCount(hCount), .vCount(vCount), .enable(sfen18),
+    .sunflowerOuter(sunflower18[0]), .sunflowerInner(sunflower18[1]), .sunflowerFace(sunflower18[2]), .sunflowerStem(sunflower18[3]), .blink(blink18)
+    );
+
+    sunflower sf19(
+    .clk(clk), .sfVPos(VPOS19), .sfHPos(HPOS19), .hCount(hCount), .vCount(vCount), .enable(sfen19),
+    .sunflowerOuter(sunflower19[0]), .sunflowerInner(sunflower19[1]), .sunflowerFace(sunflower19[2]), .sunflowerStem(sunflower19[3]), .blink(blink19)
+    );
+
+    sunflower sf20(
+    .clk(clk), .sfVPos(VPOS20), .sfHPos(HPOS20), .hCount(hCount), .vCount(vCount), .enable(sfen20),
+    .sunflowerOuter(sunflower20[0]), .sunflowerInner(sunflower20[1]), .sunflowerFace(sunflower20[2]), .sunflowerStem(sunflower20[3]), .blink(blink20)
+    );
+
+    sunflower sf21(
+    .clk(clk), .sfVPos(VPOS21), .sfHPos(HPOS21), .hCount(hCount), .vCount(vCount), .enable(sfen21),
+    .sunflowerOuter(sunflower21[0]), .sunflowerInner(sunflower21[1]), .sunflowerFace(sunflower21[2]), .sunflowerStem(sunflower21[3]), .blink(blink21)
+    );
+
+    sunflower sf22(
+    .clk(clk), .sfVPos(VPOS22), .sfHPos(HPOS22), .hCount(hCount), .vCount(vCount), .enable(sfen22),
+    .sunflowerOuter(sunflower22[0]), .sunflowerInner(sunflower22[1]), .sunflowerFace(sunflower22[2]), .sunflowerStem(sunflower22[3]), .blink(blink22)
+    );
+
+    sunflower sf23(
+    .clk(clk), .sfVPos(VPOS23), .sfHPos(HPOS23), .hCount(hCount), .vCount(vCount), .enable(sfen23),
+    .sunflowerOuter(sunflower23[0]), .sunflowerInner(sunflower23[1]), .sunflowerFace(sunflower23[2]), .sunflowerStem(sunflower23[3]), .blink(blink23)
+    );
+
+    sunflower sf24(
+    .clk(clk), .sfVPos(VPOS24), .sfHPos(HPOS24), .hCount(hCount), .vCount(vCount), .enable(sfen24),
+    .sunflowerOuter(sunflower24[0]), .sunflowerInner(sunflower24[1]), .sunflowerFace(sunflower24[2]), .sunflowerStem(sunflower24[3]), .blink(blink24)
+    );
+
     wire walnut;
     wire walnutBlack;
     wire walnutWhite;
     
-    walnut w(
-	.wVPos(wVPos),
-    .wHPos(wHPos),
-    .hCount(hCount), .vCount(vCount),
-    .blink(blink),
-    .enable(en),
-    .walnut(walnut),
-    .walnutBlack(walnutBlack),
-    .walnutWhite(walnutWhite)
+    walnut w0(
+	.wVPos(VPOS0), .wHPos(HPOS0), .hCount(hCount), .vCount(vCount), .blink(blink0),
+    .enable(wen0), .walnut(walnut0[0]), .walnutBlack(walnut0[1]), .walnutWhite(walnut0[2])
     );
     
+    walnut w1(
+	.wVPos(VPOS1), .wHPos(HPOS1), .hCount(hCount), .vCount(vCount), .blink(blink1),
+    .enable(wen1), .walnut(walnut1[0]), .walnutBlack(walnut1[1]), .walnutWhite(walnut1[2])
+    );
+    
+    walnut w2(
+	.wVPos(VPOS2), .wHPos(HPOS2), .hCount(hCount), .vCount(vCount), .blink(blink2),
+    .enable(wen2), .walnut(walnut2[0]), .walnutBlack(walnut2[1]), .walnutWhite(walnut2[2])
+    );
+    
+    walnut w3(
+	.wVPos(VPOS3), .wHPos(HPOS3), .hCount(hCount), .vCount(vCount), .blink(blink3),
+    .enable(wen3), .walnut(walnut3[0]), .walnutBlack(walnut3[1]), .walnutWhite(walnut3[2])
+    );
+    
+    walnut w4(
+	.wVPos(VPOS4), .wHPos(HPOS4), .hCount(hCount), .vCount(vCount), .blink(blink4),
+    .enable(wen4), .walnut(walnut4[0]), .walnutBlack(walnut4[1]), .walnutWhite(walnut4[2])
+    );
+    
+    walnut w5(
+	.wVPos(VPOS5), .wHPos(HPOS5), .hCount(hCount), .vCount(vCount), .blink(blink5),
+    .enable(wen5), .walnut(walnut5[0]), .walnutBlack(walnut5[1]), .walnutWhite(walnut5[2])
+    );
+    
+    walnut w6(
+	.wVPos(VPOS6), .wHPos(HPOS6), .hCount(hCount), .vCount(vCount), .blink(blink6),
+    .enable(wen6), .walnut(walnut6[0]), .walnutBlack(walnut6[1]), .walnutWhite(walnut6[2])
+    );
+    
+    walnut w7(
+	.wVPos(VPOS7), .wHPos(HPOS7), .hCount(hCount), .vCount(vCount), .blink(blink7),
+    .enable(wen7), .walnut(walnut7[0]), .walnutBlack(walnut7[1]), .walnutWhite(walnut7[2])
+    );
+    
+    walnut w8(
+	.wVPos(VPOS8), .wHPos(HPOS8), .hCount(hCount), .vCount(vCount), .blink(blink8),
+    .enable(wen8), .walnut(walnut8[0]), .walnutBlack(walnut8[1]), .walnutWhite(walnut8[2])
+    );
+    
+    walnut w9(
+	.wVPos(VPOS9), .wHPos(HPOS9), .hCount(hCount), .vCount(vCount), .blink(blink9),
+    .enable(wen9), .walnut(walnut9[0]), .walnutBlack(walnut9[1]), .walnutWhite(walnut9[2])
+    );
+    
+    walnut w10(
+	.wVPos(VPOS10), .wHPos(HPOS10), .hCount(hCount), .vCount(vCount), .blink(blink10),
+    .enable(wen10), .walnut(walnut10[0]), .walnutBlack(walnut10[1]), .walnutWhite(walnut10[2])
+    );
+    
+    walnut w11(
+	.wVPos(VPOS11), .wHPos(HPOS11), .hCount(hCount), .vCount(vCount), .blink(blink11),
+    .enable(wen11), .walnut(walnut11[0]), .walnutBlack(walnut11[1]), .walnutWhite(walnut11[2])
+    );
+    
+    walnut w12(
+	.wVPos(VPOS12), .wHPos(HPOS12), .hCount(hCount), .vCount(vCount), .blink(blink12),
+    .enable(wen12), .walnut(walnut12[0]), .walnutBlack(walnut12[1]), .walnutWhite(walnut12[2])
+    );
+    
+    walnut w13(
+	.wVPos(VPOS13), .wHPos(HPOS13), .hCount(hCount), .vCount(vCount), .blink(blink13),
+    .enable(wen13), .walnut(walnut13[0]), .walnutBlack(walnut13[1]), .walnutWhite(walnut13[2])
+    );
+    
+    walnut w14(
+	.wVPos(VPOS14), .wHPos(HPOS14), .hCount(hCount), .vCount(vCount), .blink(blink14),
+    .enable(wen14), .walnut(walnut14[0]), .walnutBlack(walnut14[1]), .walnutWhite(walnut14[2])
+    );
+    
+    walnut w15(
+	.wVPos(VPOS15), .wHPos(HPOS15), .hCount(hCount), .vCount(vCount), .blink(blink15),
+    .enable(wen15), .walnut(walnut15[0]), .walnutBlack(walnut15[1]), .walnutWhite(walnut15[2])
+    );
+    
+    walnut w16(
+	.wVPos(VPOS16), .wHPos(HPOS16), .hCount(hCount), .vCount(vCount), .blink(blink16),
+    .enable(wen16), .walnut(walnut16[0]), .walnutBlack(walnut16[1]), .walnutWhite(walnut16[2])
+    );
+    
+    walnut w17(
+	.wVPos(VPOS17), .wHPos(HPOS17), .hCount(hCount), .vCount(vCount), .blink(blink17),
+    .enable(wen17), .walnut(walnut17[0]), .walnutBlack(walnut17[1]), .walnutWhite(walnut17[2])
+    );
+    
+    walnut w18(
+	.wVPos(VPOS18), .wHPos(HPOS18), .hCount(hCount), .vCount(vCount), .blink(blink18),
+    .enable(wen18), .walnut(walnut18[0]), .walnutBlack(walnut18[1]), .walnutWhite(walnut18[2])
+    );
+    
+    walnut w19(
+	.wVPos(VPOS19), .wHPos(HPOS19), .hCount(hCount), .vCount(vCount), .blink(blink19),
+    .enable(wen19), .walnut(walnut19[0]), .walnutBlack(walnut19[1]), .walnutWhite(walnut19[2])
+    );
+    
+    walnut w20(
+	.wVPos(VPOS20), .wHPos(HPOS20), .hCount(hCount), .vCount(vCount), .blink(blink20),
+    .enable(wen20), .walnut(walnut20[0]), .walnutBlack(walnut20[1]), .walnutWhite(walnut20[2])
+    );
+    
+    walnut w21(
+	.wVPos(VPOS21), .wHPos(HPOS21), .hCount(hCount), .vCount(vCount), .blink(blink21),
+    .enable(wen21), .walnut(walnut21[0]), .walnutBlack(walnut21[1]), .walnutWhite(walnut21[2])
+    );
+    
+    walnut w22(
+	.wVPos(VPOS22), .wHPos(HPOS22), .hCount(hCount), .vCount(vCount), .blink(blink22),
+    .enable(wen22), .walnut(walnut22[0]), .walnutBlack(walnut22[1]), .walnutWhite(walnut22[2])
+    );
+    
+    walnut w23(
+	.wVPos(VPOS23), .wHPos(HPOS23), .hCount(hCount), .vCount(vCount), .blink(blink23),
+    .enable(wen23), .walnut(walnut23[0]), .walnutBlack(walnut23[1]), .walnutWhite(walnut23[2])
+    );
+    
+    walnut w24(
+	.wVPos(VPOS24), .wHPos(HPOS24), .hCount(hCount), .vCount(vCount), .blink(blink24),
+    .enable(wen24), .walnut(walnut24[0]), .walnutBlack(walnut24[1]), .walnutWhite(walnut24[2])
+    );
+
     always@ (posedge clk)
         begin
             sunTimer = sunTimer + 1'd1;
@@ -1047,342 +1940,5 @@ module vga_bitchange(
 
 	//Create (for now) square zombie heads
 	
-	 
-//    //PLANTS
-//	assign pea = ((vCount >= pVPos) && (vCount <= pVPos + 10'd14) && (hCount >= pHPos) && (hCount <= pHPos + 10'd14)) ? 1 : 0;
-	
-
-//	assign peashooterHead = (((vCount >= (psVPos + 10'd60)) && (vCount <= (psVPos + 10'd60 + (10'd5 / PSSCALE))) && (hCount >= (psHPos + (10'd27 / PSSCALE))) && (hCount <= (psHPos + (10'd48 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd3 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd8 / PSSCALE))) && (hCount >= (psHPos + (10'd23 / PSSCALE))) && (hCount <= (psHPos + (10'd52 / PSSCALE))))
-                           
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd6 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd11 / PSSCALE))) && (hCount >= (psHPos + (10'd19 / PSSCALE))) && (hCount <= (psHPos + (10'd56 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd9 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd14 / PSSCALE))) && (hCount >= (psHPos + (10'd17 / PSSCALE))) && (hCount <= (psHPos + (10'd58 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd12 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd17 / PSSCALE))) && (hCount >= (psHPos + (10'd15 / PSSCALE))) && (hCount <= (psHPos + (10'd60 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd15 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd20 / PSSCALE))) && (hCount >= (psHPos + (10'd13 / PSSCALE))) && (hCount <= (psHPos + (10'd62 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd18 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd23 / PSSCALE))) && (hCount >= (psHPos + (10'd11 / PSSCALE))) && (hCount <= (psHPos + (10'd64 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd21 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd26 / PSSCALE))) && (hCount >= (psHPos + (10'd9 / PSSCALE))) && (hCount <= (psHPos + (10'd66 / PSSCALE))))
-        
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd24 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd29 / PSSCALE))) && (hCount >= (psHPos + (10'd8 / PSSCALE))) && (hCount <= (psHPos + (10'd67 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd27 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd32 / PSSCALE))) && (hCount >= (psHPos + (10'd7 / PSSCALE))) && (hCount <= (psHPos + (10'd68 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd30 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd35 / PSSCALE))) && (hCount >= (psHPos + (10'd6 / PSSCALE))) && (hCount <= (psHPos + (10'd69 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd33 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd38 / PSSCALE))) && (hCount >= (psHPos + (10'd5 / PSSCALE))) && (hCount <= (psHPos + (10'd70 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd36 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd41 / PSSCALE))) && (hCount >= (psHPos + (10'd4 / PSSCALE))) && (hCount <= (psHPos + (10'd71 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd39 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd44 / PSSCALE))) && (hCount >= (psHPos + (10'd3 / PSSCALE))) && (hCount <= (psHPos + (10'd72 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd42 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd47 / PSSCALE))) && (hCount >= (psHPos + (10'd2 / PSSCALE))) && (hCount <= (psHPos + (10'd73 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd45 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd50 / PSSCALE))) && (hCount >= (psHPos + (10'd1 / PSSCALE))) && (hCount <= (psHPos + (10'd74 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd48 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd53 / PSSCALE))) && (hCount >= (psHPos)) && (hCount <= (psHPos + (10'd75 / PSSCALE))))
-                           
-                                     
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd51 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd56 / PSSCALE))) && (hCount >= (psHPos + (10'd1 / PSSCALE))) && (hCount <= (psHPos + (10'd74 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd54 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd59 / PSSCALE))) && (hCount >= (psHPos + (10'd2 / PSSCALE))) && (hCount <= (psHPos + (10'd73 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd57 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd62 / PSSCALE))) && (hCount >= (psHPos + (10'd3 / PSSCALE))) && (hCount <= (psHPos + (10'd72 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd60 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd65 / PSSCALE))) && (hCount >= (psHPos + (10'd4 / PSSCALE))) && (hCount <= (psHPos + (10'd71 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd63 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd68 / PSSCALE))) && (hCount >= (psHPos + (10'd5 / PSSCALE))) && (hCount <= (psHPos + (10'd70 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd66 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd71 / PSSCALE))) && (hCount >= (psHPos + (10'd6 / PSSCALE))) && (hCount <= (psHPos + (10'd69 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd69 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd74 / PSSCALE))) && (hCount >= (psHPos + (10'd7 / PSSCALE))) && (hCount <= (psHPos + (10'd68 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd72 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd77 / PSSCALE))) && (hCount >= (psHPos + (10'd8 / PSSCALE))) && (hCount <= (psHPos + (10'd67 / PSSCALE))))
-                           
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd75 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd80 / PSSCALE))) && (hCount >= (psHPos + (10'd9 / PSSCALE))) && (hCount <= (psHPos + (10'd66 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd78 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd83 / PSSCALE))) && (hCount >= (psHPos + (10'd11 / PSSCALE))) && (hCount <= (psHPos + (10'd64 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd81 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd86 / PSSCALE))) && (hCount >= (psHPos + (10'd13 / PSSCALE))) && (hCount <= (psHPos + (10'd62 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd84 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd89 / PSSCALE))) && (hCount >= (psHPos + (10'd15 / PSSCALE))) && (hCount <= (psHPos + (10'd60 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd87 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd92 / PSSCALE))) && (hCount >= (psHPos + (10'd17 / PSSCALE))) && (hCount <= (psHPos + (10'd58 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd90 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd95 / PSSCALE))) && (hCount >= (psHPos + (10'd19 / PSSCALE))) && (hCount <= (psHPos + (10'd56 / PSSCALE))))
-                           
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd93 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd98 / PSSCALE))) && (hCount >= (psHPos + (10'd23 / PSSCALE))) && (hCount <= (psHPos + (10'd52 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd96 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd101 / PSSCALE))) && (hCount >= (psHPos + (10'd27 / PSSCALE))) && (hCount <= (psHPos + (10'd48 / PSSCALE))))
-                           
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd35 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd65 / PSSCALE))) && (hCount >= (psHPos + (10'd68 / PSSCALE))) && (hCount <= (psHPos + (10'd119 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd30 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd70 / PSSCALE))) && (hCount >= (psHPos + (10'd78 / PSSCALE))) && (hCount <= (psHPos + (10'd119 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd25 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd75 / PSSCALE))) && (hCount >= (psHPos + (10'd88 / PSSCALE))) && (hCount <= (psHPos + (10'd119 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd20 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd80 / PSSCALE))) && (hCount >= (psHPos + (10'd98 / PSSCALE))) && (hCount <= (psHPos + (10'd119 / PSSCALE))))
-//                           ||((vCount >= (psVPos + 10'd60 + (10'd15 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd85 / PSSCALE))) && (hCount >= (psHPos + (10'd108 / PSSCALE))) && (hCount <= (psHPos + (10'd119 / PSSCALE))))
-//	                        ) ? 1 : 0;
-	                       
-//    assign peashooterBlack = ((vCount >= (psVPos + 10'd60 + (10'd35 / PSSCALE))) && (vCount <= (psVPos + 10'd60 + (10'd50 / PSSCALE))) && (hCount >= (psHPos + (10'd45 / PSSCALE))) && (hCount <= (psHPos + (10'd60 / PSSCALE)))) ? 1 : 0;
-	
-//	assign peashooterStem = (
-//                             ((vCount <= (psVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd86 / PSSCALE))) && (hCount >= (psHPos + (10'd55 / PSSCALE))) && (hCount <= (psHPos + (10'd71 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd81 / PSSCALE))) && (hCount >= (psHPos + (10'd54 / PSSCALE))) && (hCount <= (psHPos + (10'd70 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd86 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd76 / PSSCALE))) && (hCount >= (psHPos + (10'd53 / PSSCALE))) && (hCount <= (psHPos + (10'd69 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd81 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd71 / PSSCALE))) && (hCount >= (psHPos + (10'd52 / PSSCALE))) && (hCount <= (psHPos + (10'd68 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd76 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd66 / PSSCALE))) && (hCount >= (psHPos + (10'd51 / PSSCALE))) && (hCount <= (psHPos + (10'd67 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd71 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd61 / PSSCALE))) && (hCount >= (psHPos + (10'd50 / PSSCALE))) && (hCount <= (psHPos + (10'd66 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd66 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd56 / PSSCALE))) && (hCount >= (psHPos + (10'd49 / PSSCALE))) && (hCount <= (psHPos + (10'd65 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd61 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd51 / PSSCALE))) && (hCount >= (psHPos + (10'd48 / PSSCALE))) && (hCount <= (psHPos + (10'd64 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd56 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd46 / PSSCALE))) && (hCount >= (psHPos + (10'd47 / PSSCALE))) && (hCount <= (psHPos + (10'd63 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd51 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd41 / PSSCALE))) && (hCount >= (psHPos + (10'd46 / PSSCALE))) && (hCount <= (psHPos + (10'd62 / PSSCALE))))
-                             
-//                             ||((vCount <= (psVPosTemp + (10'd6 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd0 / PSSCALE))) && (hCount >= (psHPos + (10'd37 / PSSCALE))) && (hCount <= (psHPos + (10'd53 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd11 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd1 / PSSCALE))) && (hCount >= (psHPos + (10'd38 / PSSCALE))) && (hCount <= (psHPos + (10'd54 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd16 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd6 / PSSCALE))) && (hCount >= (psHPos + (10'd39 / PSSCALE))) && (hCount <= (psHPos + (10'd55 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd21 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd11 / PSSCALE))) && (hCount >= (psHPos + (10'd40 / PSSCALE))) && (hCount <= (psHPos + (10'd56 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd26 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd16 / PSSCALE))) && (hCount >= (psHPos + (10'd41 / PSSCALE))) && (hCount <= (psHPos + (10'd57 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd31 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd21 / PSSCALE))) && (hCount >= (psHPos + (10'd42 / PSSCALE))) && (hCount <= (psHPos + (10'd58 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd36 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd26 / PSSCALE))) && (hCount >= (psHPos + (10'd43 / PSSCALE))) && (hCount <= (psHPos + (10'd59 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd41 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd31 / PSSCALE))) && (hCount >= (psHPos + (10'd44 / PSSCALE))) && (hCount <= (psHPos + (10'd60 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd46 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd36 / PSSCALE))) && (hCount >= (psHPos + (10'd45 / PSSCALE))) && (hCount <= (psHPos + (10'd61 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd51 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd41 / PSSCALE))) && (hCount >= (psHPos + (10'd46 / PSSCALE))) && (hCount <= (psHPos + (10'd62 / PSSCALE))))
-                             
-//                             ||((vCount <= (psVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd94 / PSSCALE))) && (hCount >= (psHPos - (10'd4 / PSSCALE))) && (hCount <= (psHPos + (10'd60 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd95 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd93 / PSSCALE))) && (hCount >= (psHPos - (10'd3 / PSSCALE))) && (hCount <= (psHPos + (10'd59 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd94 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd92 / PSSCALE))) && (hCount >= (psHPos - (10'd2 / PSSCALE))) && (hCount <= (psHPos + (10'd58 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd93 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd91 / PSSCALE))) && (hCount >= (psHPos - (10'd1 / PSSCALE))) && (hCount <= (psHPos + (10'd57 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd92 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd90 / PSSCALE))) && (hCount >= (psHPos - (10'd0 / PSSCALE))) && (hCount <= (psHPos + (10'd56 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd89 / PSSCALE))) && (hCount >= (psHPos + (10'd1 / PSSCALE))) && (hCount <= (psHPos + (10'd55 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd90 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd88 / PSSCALE))) && (hCount >= (psHPos + (10'd2 / PSSCALE))) && (hCount <= (psHPos + (10'd54 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd89 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd87 / PSSCALE))) && (hCount >= (psHPos + (10'd3 / PSSCALE))) && (hCount <= (psHPos + (10'd53 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd88 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd86 / PSSCALE))) && (hCount >= (psHPos + (10'd4 / PSSCALE))) && (hCount <= (psHPos + (10'd52 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd87 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd85 / PSSCALE))) && (hCount >= (psHPos + (10'd5 / PSSCALE))) && (hCount <= (psHPos + (10'd51 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd86 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd84 / PSSCALE))) && (hCount >= (psHPos + (10'd6 / PSSCALE))) && (hCount <= (psHPos + (10'd50 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd85 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd83 / PSSCALE))) && (hCount >= (psHPos + (10'd7 / PSSCALE))) && (hCount <= (psHPos + (10'd49 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd84 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd82 / PSSCALE))) && (hCount >= (psHPos + (10'd8 / PSSCALE))) && (hCount <= (psHPos + (10'd48 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd83 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd81 / PSSCALE))) && (hCount >= (psHPos + (10'd9 / PSSCALE))) && (hCount <= (psHPos + (10'd47 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd82 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd80 / PSSCALE))) && (hCount >= (psHPos + (10'd10 / PSSCALE))) && (hCount <= (psHPos + (10'd46 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd81 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd79 / PSSCALE))) && (hCount >= (psHPos + (10'd11 / PSSCALE))) && (hCount <= (psHPos + (10'd45 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd80 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd78 / PSSCALE))) && (hCount >= (psHPos + (10'd12 / PSSCALE))) && (hCount <= (psHPos + (10'd44 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd79 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd77 / PSSCALE))) && (hCount >= (psHPos + (10'd13 / PSSCALE))) && (hCount <= (psHPos + (10'd43 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd78 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd76 / PSSCALE))) && (hCount >= (psHPos + (10'd14 / PSSCALE))) && (hCount <= (psHPos + (10'd42 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd77 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd75 / PSSCALE))) && (hCount >= (psHPos + (10'd15 / PSSCALE))) && (hCount <= (psHPos + (10'd41 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd76 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd74 / PSSCALE))) && (hCount >= (psHPos + (10'd16 / PSSCALE))) && (hCount <= (psHPos + (10'd40 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd75 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd73 / PSSCALE))) && (hCount >= (psHPos + (10'd17 / PSSCALE))) && (hCount <= (psHPos + (10'd39 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd74 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd72 / PSSCALE))) && (hCount >= (psHPos + (10'd18 / PSSCALE))) && (hCount <= (psHPos + (10'd38 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd73 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd71 / PSSCALE))) && (hCount >= (psHPos + (10'd19 / PSSCALE))) && (hCount <= (psHPos + (10'd37 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd72 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd70 / PSSCALE))) && (hCount >= (psHPos + (10'd20 / PSSCALE))) && (hCount <= (psHPos + (10'd36 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd71 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd69 / PSSCALE))) && (hCount >= (psHPos + (10'd21 / PSSCALE))) && (hCount <= (psHPos + (10'd35 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd70 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd68 / PSSCALE))) && (hCount >= (psHPos + (10'd22 / PSSCALE))) && (hCount <= (psHPos + (10'd34 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd69 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd67 / PSSCALE))) && (hCount >= (psHPos + (10'd23 / PSSCALE))) && (hCount <= (psHPos + (10'd33 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd68 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd66 / PSSCALE))) && (hCount >= (psHPos + (10'd24 / PSSCALE))) && (hCount <= (psHPos + (10'd32 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd67 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd65 / PSSCALE))) && (hCount >= (psHPos + (10'd25 / PSSCALE))) && (hCount <= (psHPos + (10'd31 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd66 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd64 / PSSCALE))) && (hCount >= (psHPos + (10'd26 / PSSCALE))) && (hCount <= (psHPos + (10'd30 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd65 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd63 / PSSCALE))) && (hCount >= (psHPos + (10'd27 / PSSCALE))) && (hCount <= (psHPos + (10'd29 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd64 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd62 / PSSCALE))) && (hCount >= (psHPos + (10'd28 / PSSCALE))) && (hCount <= (psHPos + (10'd28 / PSSCALE))))
-
-
-//                             ||((vCount <= (psVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd94 / PSSCALE))) && (hCount <= (psHPos + (10'd124 / PSSCALE))) && (hCount >= (psHPos + (10'd60 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd95 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd93 / PSSCALE))) && (hCount <= (psHPos + (10'd123 / PSSCALE))) && (hCount >= (psHPos + (10'd61 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd94 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd92 / PSSCALE))) && (hCount <= (psHPos + (10'd122 / PSSCALE))) && (hCount >= (psHPos + (10'd62 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd93 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd91 / PSSCALE))) && (hCount <= (psHPos + (10'd120 / PSSCALE))) && (hCount >= (psHPos + (10'd63 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd92 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd90 / PSSCALE))) && (hCount <= (psHPos + (10'd119 / PSSCALE))) && (hCount >= (psHPos + (10'd64 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd89 / PSSCALE))) && (hCount <= (psHPos + (10'd118 / PSSCALE))) && (hCount >= (psHPos + (10'd65 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd90 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd88 / PSSCALE))) && (hCount <= (psHPos + (10'd117 / PSSCALE))) && (hCount >= (psHPos + (10'd66 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd89 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd87 / PSSCALE))) && (hCount <= (psHPos + (10'd116 / PSSCALE))) && (hCount >= (psHPos + (10'd67 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd88 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd86 / PSSCALE))) && (hCount <= (psHPos + (10'd115 / PSSCALE))) && (hCount >= (psHPos + (10'd68 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd87 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd85 / PSSCALE))) && (hCount <= (psHPos + (10'd114 / PSSCALE))) && (hCount >= (psHPos + (10'd69 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd86 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd84 / PSSCALE))) && (hCount <= (psHPos + (10'd113 / PSSCALE))) && (hCount >= (psHPos + (10'd70 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd85 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd83 / PSSCALE))) && (hCount <= (psHPos + (10'd112 / PSSCALE))) && (hCount >= (psHPos + (10'd71 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd84 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd82 / PSSCALE))) && (hCount <= (psHPos + (10'd111 / PSSCALE))) && (hCount >= (psHPos + (10'd72 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd83 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd81 / PSSCALE))) && (hCount <= (psHPos + (10'd110 / PSSCALE))) && (hCount >= (psHPos + (10'd73 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd82 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd80 / PSSCALE))) && (hCount <= (psHPos + (10'd109 / PSSCALE))) && (hCount >= (psHPos + (10'd74 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd81 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd79 / PSSCALE))) && (hCount <= (psHPos + (10'd108 / PSSCALE))) && (hCount >= (psHPos + (10'd75 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd80 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd78 / PSSCALE))) && (hCount <= (psHPos + (10'd107 / PSSCALE))) && (hCount >= (psHPos + (10'd76 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd79 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd77 / PSSCALE))) && (hCount <= (psHPos + (10'd106 / PSSCALE))) && (hCount >= (psHPos + (10'd77 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd78 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd76 / PSSCALE))) && (hCount <= (psHPos + (10'd105 / PSSCALE))) && (hCount >= (psHPos + (10'd78 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd77 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd75 / PSSCALE))) && (hCount <= (psHPos + (10'd104 / PSSCALE))) && (hCount >= (psHPos + (10'd79 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd76 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd74 / PSSCALE))) && (hCount <= (psHPos + (10'd103 / PSSCALE))) && (hCount >= (psHPos + (10'd80 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd75 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd73 / PSSCALE))) && (hCount <= (psHPos + (10'd102 / PSSCALE))) && (hCount >= (psHPos + (10'd81 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd74 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd72 / PSSCALE))) && (hCount <= (psHPos + (10'd101 / PSSCALE))) && (hCount >= (psHPos + (10'd82 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd73 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd71 / PSSCALE))) && (hCount <= (psHPos + (10'd100 / PSSCALE))) && (hCount >= (psHPos + (10'd83 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd72 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd70 / PSSCALE))) && (hCount <= (psHPos + (10'd99 / PSSCALE))) && (hCount >= (psHPos + (10'd84 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd71 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd69 / PSSCALE))) && (hCount <= (psHPos + (10'd98 / PSSCALE))) && (hCount >= (psHPos + (10'd85 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd70 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd68 / PSSCALE))) && (hCount <= (psHPos + (10'd97 / PSSCALE))) && (hCount >= (psHPos + (10'd86 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd69 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd67 / PSSCALE))) && (hCount <= (psHPos + (10'd96 / PSSCALE))) && (hCount >= (psHPos + (10'd87 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd68 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd66 / PSSCALE))) && (hCount <= (psHPos + (10'd95 / PSSCALE))) && (hCount >= (psHPos + (10'd88 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd67 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd65 / PSSCALE))) && (hCount <= (psHPos + (10'd94 / PSSCALE))) && (hCount >= (psHPos + (10'd89 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd66 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd64 / PSSCALE))) && (hCount <= (psHPos + (10'd93 / PSSCALE))) && (hCount >= (psHPos + (10'd90 / PSSCALE))))
-//                             ||((vCount <= (psVPosTemp + (10'd65 / PSSCALE))) && (vCount >= (psVPosTemp + (10'd63 / PSSCALE))) && (hCount <= (psHPos + (10'd92 / PSSCALE))) && (hCount >= (psHPos + (10'd91 / PSSCALE))))
-//                             ) ? 1 : 0;	
-//	assign walnut = 
-//	               (
-//	               ((vCount >= wVPos) && (vCount <= (wVPos + (10'd5 / WSCALE))) && (hCount >= (wHPos + (10'd27 / WSCALE))) && (hCount <= (wHPos + (10'd48 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd3 / WSCALE))) && (vCount <= (wVPos + (10'd8 / WSCALE))) && (hCount >= (wHPos + (10'd23 / WSCALE))) && (hCount <= (wHPos + (10'd52 / WSCALE) / WSCALE)))
-	               
-//	               ||((vCount >= (wVPos + (10'd6 / WSCALE))) && (vCount <= (wVPos + (10'd11 / WSCALE))) && (hCount >= (wHPos + (10'd19 / WSCALE))) && (hCount <= (wHPos + (10'd56 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd9 / WSCALE))) && (vCount <= (wVPos + (10'd14 / WSCALE))) && (hCount >= (wHPos + (10'd17 / WSCALE))) && (hCount <= (wHPos + (10'd58 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd12 / WSCALE))) && (vCount <= (wVPos + (10'd17 / WSCALE))) && (hCount >= (wHPos + (10'd15 / WSCALE))) && (hCount <= (wHPos + (10'd60 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd15 / WSCALE))) && (vCount <= (wVPos + (10'd20 / WSCALE))) && (hCount >= (wHPos + (10'd13 / WSCALE))) && (hCount <= (wHPos + (10'd62 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd18 / WSCALE))) && (vCount <= (wVPos + (10'd23 / WSCALE))) && (hCount >= (wHPos + (10'd11 / WSCALE))) && (hCount <= (wHPos + (10'd64 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd21 / WSCALE))) && (vCount <= (wVPos + (10'd26 / WSCALE))) && (hCount >= (wHPos + (10'd9 / WSCALE))) && (hCount <= (wHPos + (10'd66 / WSCALE))))
-
-//	               ||((vCount >= (wVPos + (10'd24 / WSCALE))) && (vCount <= (wVPos + (10'd29 / WSCALE))) && (hCount >= (wHPos + (10'd8 / WSCALE))) && (hCount <= (wHPos + (10'd67 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd27 / WSCALE))) && (vCount <= (wVPos + (10'd32 / WSCALE))) && (hCount >= (wHPos + (10'd7 / WSCALE))) && (hCount <= (wHPos + (10'd68 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd30 / WSCALE))) && (vCount <= (wVPos + (10'd35 / WSCALE))) && (hCount >= (wHPos + (10'd6 / WSCALE))) && (hCount <= (wHPos + (10'd69 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd33 / WSCALE))) && (vCount <= (wVPos + (10'd38 / WSCALE))) && (hCount >= (wHPos + (10'd5 / WSCALE))) && (hCount <= (wHPos + (10'd70 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd36 / WSCALE))) && (vCount <= (wVPos + (10'd41 / WSCALE))) && (hCount >= (wHPos + (10'd4 / WSCALE))) && (hCount <= (wHPos + (10'd71 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd39 / WSCALE))) && (vCount <= (wVPos + (10'd44 / WSCALE))) && (hCount >= (wHPos + (10'd3 / WSCALE))) && (hCount <= (wHPos + (10'd72 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd42 / WSCALE))) && (vCount <= (wVPos + (10'd47 / WSCALE))) && (hCount >= (wHPos + (10'd2 / WSCALE))) && (hCount <= (wHPos + (10'd73 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd45 / WSCALE))) && (vCount <= (wVPos + (10'd50 / WSCALE))) && (hCount >= (wHPos + (10'd1 / WSCALE))) && (hCount <= (wHPos + (10'd74 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd48 / WSCALE))) && (vCount <= (wVPos + (10'd53 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))
-	               
-	               
-//	               ||((vCount >= (wVPos + (10'd51 / WSCALE))) && (vCount <= (wVPos + (10'd56 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd54 / WSCALE))) && (vCount <= (wVPos + (10'd59 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd57 / WSCALE))) && (vCount <= (wVPos + (10'd62 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd60 / WSCALE))) && (vCount <= (wVPos + (10'd65 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd63 / WSCALE))) && (vCount <= (wVPos + (10'd68 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd66 / WSCALE))) && (vCount <= (wVPos + (10'd71 / WSCALE))) && (hCount >= wHPos) && (hCount <= (wHPos + (10'd75 / WSCALE))))	  
-	                         
-//	               ||((vCount >= (wVPos + (10'd69 / WSCALE))) && (vCount <= (wVPos + (10'd74 / WSCALE))) && (hCount >= (wHPos + (10'd1 / WSCALE))) && (hCount <= (wHPos + (10'd74 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd72 / WSCALE))) && (vCount <= (wVPos + (10'd77 / WSCALE))) && (hCount >= (wHPos + (10'd2 / WSCALE))) && (hCount <= (wHPos + (10'd73 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd75 / WSCALE))) && (vCount <= (wVPos + (10'd80 / WSCALE))) && (hCount >= (wHPos + (10'd3 / WSCALE))) && (hCount <= (wHPos + (10'd72 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd78 / WSCALE))) && (vCount <= (wVPos + (10'd83 / WSCALE))) && (hCount >= (wHPos + (10'd4 / WSCALE))) && (hCount <= (wHPos + (10'd71 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd81 / WSCALE))) && (vCount <= (wVPos + (10'd86 / WSCALE))) && (hCount >= (wHPos + (10'd5 / WSCALE))) && (hCount <= (wHPos + (10'd70 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd84 / WSCALE))) && (vCount <= (wVPos + (10'd89 / WSCALE))) && (hCount >= (wHPos + (10'd6 / WSCALE))) && (hCount <= (wHPos + (10'd69 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd87 / WSCALE))) && (vCount <= (wVPos + (10'd92 / WSCALE))) && (hCount >= (wHPos + (10'd7 / WSCALE))) && (hCount <= (wHPos + (10'd68 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd90 / WSCALE))) && (vCount <= (wVPos + (10'd95 / WSCALE))) && (hCount >= (wHPos + (10'd8 / WSCALE))) && (hCount <= (wHPos + (10'd67 / WSCALE))))
-	               
-//	               ||((vCount >= (wVPos + (10'd93 / WSCALE))) && (vCount <= (wVPos + (10'd98 / WSCALE))) && (hCount >= (wHPos + (10'd9 / WSCALE))) && (hCount <= (wHPos + (10'd66 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd96 / WSCALE))) && (vCount <= (wVPos + (10'd101 / WSCALE))) && (hCount >= (wHPos + (10'd11 / WSCALE))) && (hCount <= (wHPos + (10'd64 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd99 / WSCALE))) && (vCount <= (wVPos + (10'd104 / WSCALE))) && (hCount >= (wHPos + (10'd13 / WSCALE))) && (hCount <= (wHPos + (10'd62 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd102 / WSCALE))) && (vCount <= (wVPos + (10'd107 / WSCALE))) && (hCount >= (wHPos + (10'd15 / WSCALE))) && (hCount <= (wHPos + (10'd60 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd105 / WSCALE))) && (vCount <= (wVPos + (10'd110 / WSCALE))) && (hCount >= (wHPos + (10'd17 / WSCALE))) && (hCount <= (wHPos + (10'd58 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd108 / WSCALE))) && (vCount <= (wVPos + (10'd113 / WSCALE))) && (hCount >= (wHPos + (10'd19 / WSCALE))) && (hCount <= (wHPos + (10'd56 / WSCALE))))
-	               
-//	               ||((vCount >= (wVPos + (10'd111 / WSCALE))) && (vCount <= (wVPos + (10'd116 / WSCALE))) && (hCount >= (wHPos + (10'd23 / WSCALE))) && (hCount <= (wHPos + (10'd52 / WSCALE))))
-//	               ||((vCount >= (wVPos + (10'd114 / WSCALE))) && (vCount <= (wVPos + (10'd119 / WSCALE))) && (hCount >= (wHPos + (10'd27 / WSCALE))) && (hCount <= (wHPos + (10'd48 / WSCALE))))
-//                   ) ? 1 : 0;
-    
-//    assign walnutWhite =   (
-//                           ( 
-//	                       ((vCount >= (wVPos + (10'd44 / WSCALE))) && (vCount <= (wVPos + (10'd70 / WSCALE))) && (hCount >= (wHPos + (10'd30 / WSCALE))) && (hCount <= (wHPos + (10'd47 / WSCALE))))
-//	                       ||((vCount >= (wVPos + (10'd47 / WSCALE))) && (vCount <= (wVPos + (10'd65 / WSCALE))) && (hCount >= (wHPos + (10'd55 / WSCALE))) && (hCount <= (wHPos + (10'd69 / WSCALE))))
-//                           ) && (blink == 1'd0)
-//                           ) ? 1 : 0;
-  
-//    assign walnutBlack = 
-//                           (
-//                           ( 
-//	                       (((vCount >= (wVPos + (10'd49 / WSCALE))) && (vCount <= (wVPos + (10'd65 / WSCALE))) && (hCount >= (wHPos + (10'd35 / WSCALE))) && (hCount <= (wHPos + (10'd45 / WSCALE))))
-//	                       ||((vCount >= (wVPos + (10'd51 / WSCALE))) && (vCount <= (wVPos + (10'd63 / WSCALE))) && (hCount >= (wHPos + (10'd59 / WSCALE))) && (hCount <= (wHPos + (10'd67 / WSCALE)))))
-//	                       && (blink == 1'd0)
-//	                       )
-//	                       || ((vCount >= (wVPos + (10'd74 / WSCALE))) && (vCount <= (wVPos + (10'd79 / WSCALE))) && (hCount >= (wHPos + (10'd39 / WSCALE))) && (hCount <= (wHPos + (10'd44 / WSCALE))))
-//	                       || ((vCount >= (wVPos + (10'd76 / WSCALE))) && (vCount <= (wVPos + (10'd81 / WSCALE))) && (hCount >= (wHPos + (10'd42 / WSCALE))) && (hCount <= (wHPos + (10'd59 / WSCALE))))
-//	                       || ((vCount >= (wVPos + (10'd74 / WSCALE))) && (vCount <= (wVPos + (10'd79 / WSCALE))) && (hCount >= (wHPos + (10'd57 / WSCALE))) && (hCount <= wHPos + (10'd62 / WSCALE)))
-//                           ) ? 1 : 0;
-	 
-	
-//	//sunflower visualization (to be made relative to the top left corner location, need to add stem + movement / WSCALE
-//	assign sunflowerOuter = 
-//	                   ( 
-//	                   ((vCount >= (sfHeadVPos - (10'd13 / SFSCALE)))&& (vCount <= (sfHeadVPos)) && (hCount >= (sfHeadHPos + (10'd24 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd101 / SFSCALE))))
-//	                   || ((vCount >= (sfHeadVPos - (10'd32 / SFSCALE))) && (vCount <= (sfHeadVPos + (10'd14 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd18 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd107 / SFSCALE))))
-	               
-//	                   || ((vCount >= (sfHeadVPos - (10'd50 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd32 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd12 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd113 / SFSCALE))))
-//	                   || ((vCount >= (sfHeadVPos - (10'd67 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd50 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd6 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd119 / SFSCALE))))
-//	                   || ((vCount >= (sfHeadVPos - (10'd85 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd68 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd0 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd125 / SFSCALE))))
-	               
-//	                   || ((vCount >= (sfHeadVPos - (10'd103 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd86 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd6 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd119 / SFSCALE))))
-//	                   || ((vCount >= (sfHeadVPos - (10'd121 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd104 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd12 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd113 / SFSCALE))))
-	                   
-//	                   || ((vCount >= (sfHeadVPos - (10'd139 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd122 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd18 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd107 / SFSCALE))))
-//	                   || ((vCount >= (sfHeadVPos - (10'd154 / SFSCALE))) && (vCount <= (sfHeadVPos - (10'd140 / SFSCALE))) && (hCount >= (sfHeadHPos + (10'd24 / SFSCALE))) && (hCount <= (sfHeadHPos + (10'd101 / SFSCALE))))
-//                       ) ? 1 : 0;
-	                       	                   
-//	assign sunflowerInner = ( (vCount < (sfHeadVPos - (10'd24 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd124 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd25 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd100 / SFSCALE)))) ? 1 : 0;
-
-//    assign sunflowerFace = ( 
-//                             ((vCount < (sfHeadVPos - (10'd89 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd104 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd45 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd55 / SFSCALE))))
-//                           ||((vCount < (sfHeadVPos - (10'd89 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd104 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd70 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd80 / SFSCALE))))
-                           
-//                           ||((vCount < (sfHeadVPos - (10'd52 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd64 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd40 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd50 / SFSCALE))))
-//                           ||((vCount < (sfHeadVPos - (10'd42 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd56 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd45 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd80 / SFSCALE))))
-////                           ||((vCount < (10'd340 / SFSCALE))) && (vCount > (10'd328 / SFSCALE))) && (hCount > (10'd280 / SFSCALE))) && (hCount < (10'd295 / SFSCALE))))
-////                           ||((vCount < (sfHeadVPos - (10'd42 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd56 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd55 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd65 / SFSCALE))))
-////                           ||((vCount < (sfHeadVPos - (10'd42 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd56 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd65 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd75 / SFSCALE))))
-//                           ||((vCount < (sfHeadVPos - (10'd52 / SFSCALE))) && (vCount > (sfHeadVPos - (10'd64 / SFSCALE))) && (hCount > (sfHeadHPos + (10'd75 / SFSCALE))) && (hCount < (sfHeadHPos + (10'd85 / SFSCALE))))
-//                           ) ? 1 : 0;
-                     
-//     assign sunflowerStem = (//374-425, 425-475
-//                               ((vCount <= (sfVPosTemp + (10'd6 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd0 / SFSCALE))) && (hCount >= (sfHPos + (10'd55 / SFSCALE))) && (hCount <= (sfHPos + (10'd71  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd11 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd6 / SFSCALE))) && (hCount >= (sfHPos + (10'd54 / SFSCALE))) && (hCount <= (sfHPos + (10'd70  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd16 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd11 / SFSCALE))) && (hCount >= (sfHPos + (10'd53 / SFSCALE))) && (hCount <= (sfHPos + (10'd69  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd21 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd16 / SFSCALE))) && (hCount >= (sfHPos + (10'd52 / SFSCALE))) && (hCount <= (sfHPos + (10'd68  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd26 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd21 / SFSCALE))) && (hCount >= (sfHPos + (10'd51 / SFSCALE))) && (hCount <= (sfHPos + (10'd67  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd31 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd26 / SFSCALE))) && (hCount >= (sfHPos + (10'd50 / SFSCALE))) && (hCount <= (sfHPos + (10'd66  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd36 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd31 / SFSCALE))) && (hCount >= (sfHPos + (10'd49 / SFSCALE))) && (hCount <= (sfHPos + (10'd65  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd41 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd36 / SFSCALE))) && (hCount >= (sfHPos + (10'd48 / SFSCALE))) && (hCount <= (sfHPos + (10'd64  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd46 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd41 / SFSCALE))) && (hCount >= (sfHPos + (10'd47 / SFSCALE))) && (hCount <= (sfHPos + (10'd63  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd51 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd46 / SFSCALE))) && (hCount >= (sfHPos + (10'd46 / SFSCALE))) && (hCount <= (sfHPos + (10'd62  / SFSCALE))))
-                     
-//                             ||((vCount <= (sfVPosTemp + (10'd96 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd91 / SFSCALE))) && (hCount >= (sfHPos + (10'd55 / SFSCALE))) && (hCount <= (sfHPos + (10'd71  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd91 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd86 / SFSCALE))) && (hCount >= (sfHPos + (10'd54 / SFSCALE))) && (hCount <= (sfHPos + (10'd70  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd86 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd81 / SFSCALE))) && (hCount >= (sfHPos + (10'd53 / SFSCALE))) && (hCount <= (sfHPos + (10'd69  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd81 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd76 / SFSCALE))) && (hCount >= (sfHPos + (10'd52 / SFSCALE))) && (hCount <= (sfHPos + (10'd68  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd76 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd71 / SFSCALE))) && (hCount >= (sfHPos + (10'd51 / SFSCALE))) && (hCount <= (sfHPos + (10'd67  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd71 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd66 / SFSCALE))) && (hCount >= (sfHPos + (10'd50 / SFSCALE))) && (hCount <= (sfHPos + (10'd66  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd66 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd61 / SFSCALE))) && (hCount >= (sfHPos + (10'd49 / SFSCALE))) && (hCount <= (sfHPos + (10'd65  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd61 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd56 / SFSCALE))) && (hCount >= (sfHPos + (10'd48 / SFSCALE))) && (hCount <= (sfHPos + (10'd64  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd56 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd51 / SFSCALE))) && (hCount >= (sfHPos + (10'd47 / SFSCALE))) && (hCount <= (sfHPos + (10'd63  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd51 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd46 / SFSCALE))) && (hCount >= (sfHPos + (10'd46 / SFSCALE))) && (hCount <= (sfHPos + (10'd62  / SFSCALE))))
-                             
-//                             ||((vCount <= (sfVPosTemp + (10'd96 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd94 / SFSCALE))) && (hCount >= (sfHPos - (10'd4 / SFSCALE))) && (hCount <= (sfHPos + (10'd60  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd95 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd93 / SFSCALE))) && (hCount >= (sfHPos - (10'd3 / SFSCALE))) && (hCount <= (sfHPos + (10'd59  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd94 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd92 / SFSCALE))) && (hCount >= (sfHPos - (10'd2 / SFSCALE))) && (hCount <= (sfHPos + (10'd58  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd93 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd91 / SFSCALE))) && (hCount >= (sfHPos - (10'd1 / SFSCALE))) && (hCount <= (sfHPos + (10'd57  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd92 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd90 / SFSCALE))) && (hCount >= (sfHPos - (10'd0 / SFSCALE))) && (hCount <= (sfHPos + (10'd56  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd91 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd89 / SFSCALE))) && (hCount >= (sfHPos + (10'd1 / SFSCALE))) && (hCount <= (sfHPos + (10'd55  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd90 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd88 / SFSCALE))) && (hCount >= (sfHPos + (10'd2 / SFSCALE))) && (hCount <= (sfHPos + (10'd54  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd89 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd87 / SFSCALE))) && (hCount >= (sfHPos + (10'd3 / SFSCALE))) && (hCount <= (sfHPos + (10'd53  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd88 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd86 / SFSCALE))) && (hCount >= (sfHPos + (10'd4 / SFSCALE))) && (hCount <= (sfHPos + (10'd52  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd87 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd85 / SFSCALE))) && (hCount >= (sfHPos + (10'd5 / SFSCALE))) && (hCount <= (sfHPos + (10'd51  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd86 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd84 / SFSCALE))) && (hCount >= (sfHPos + (10'd6 / SFSCALE))) && (hCount <= (sfHPos + (10'd50  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd85 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd83 / SFSCALE))) && (hCount >= (sfHPos + (10'd7 / SFSCALE))) && (hCount <= (sfHPos + (10'd49  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd84 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd82 / SFSCALE))) && (hCount >= (sfHPos + (10'd8 / SFSCALE))) && (hCount <= (sfHPos + (10'd48  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd83 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd81 / SFSCALE))) && (hCount >= (sfHPos + (10'd9 / SFSCALE))) && (hCount <= (sfHPos + (10'd47  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd82 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd80 / SFSCALE))) && (hCount >= (sfHPos + (10'd10 / SFSCALE))) && (hCount <= (sfHPos + (10'd46  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd81 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd79 / SFSCALE))) && (hCount >= (sfHPos + (10'd11 / SFSCALE))) && (hCount <= (sfHPos + (10'd45  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd80 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd78 / SFSCALE))) && (hCount >= (sfHPos + (10'd12 / SFSCALE))) && (hCount <= (sfHPos + (10'd44  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd79 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd77 / SFSCALE))) && (hCount >= (sfHPos + (10'd13 / SFSCALE))) && (hCount <= (sfHPos + (10'd43  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd78 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd76 / SFSCALE))) && (hCount >= (sfHPos + (10'd14 / SFSCALE))) && (hCount <= (sfHPos + (10'd42  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd77 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd75 / SFSCALE))) && (hCount >= (sfHPos + (10'd15 / SFSCALE))) && (hCount <= (sfHPos + (10'd41  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd76 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd74 / SFSCALE))) && (hCount >= (sfHPos + (10'd16 / SFSCALE))) && (hCount <= (sfHPos + (10'd40  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd75 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd73 / SFSCALE))) && (hCount >= (sfHPos + (10'd17 / SFSCALE))) && (hCount <= (sfHPos + (10'd39  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd74 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd72 / SFSCALE))) && (hCount >= (sfHPos + (10'd18 / SFSCALE))) && (hCount <= (sfHPos + (10'd38  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd73 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd71 / SFSCALE))) && (hCount >= (sfHPos + (10'd19 / SFSCALE))) && (hCount <= (sfHPos + (10'd37  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd72 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd70 / SFSCALE))) && (hCount >= (sfHPos + (10'd20 / SFSCALE))) && (hCount <= (sfHPos + (10'd36  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd71 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd69 / SFSCALE))) && (hCount >= (sfHPos + (10'd21 / SFSCALE))) && (hCount <= (sfHPos + (10'd35  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd70 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd68 / SFSCALE))) && (hCount >= (sfHPos + (10'd22 / SFSCALE))) && (hCount <= (sfHPos + (10'd34  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd69 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd67 / SFSCALE))) && (hCount >= (sfHPos + (10'd23 / SFSCALE))) && (hCount <= (sfHPos + (10'd33  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd68 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd66 / SFSCALE))) && (hCount >= (sfHPos + (10'd24 / SFSCALE))) && (hCount <= (sfHPos + (10'd32  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd67 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd65 / SFSCALE))) && (hCount >= (sfHPos + (10'd25 / SFSCALE))) && (hCount <= (sfHPos + (10'd31  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd66 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd64 / SFSCALE))) && (hCount >= (sfHPos + (10'd26 / SFSCALE))) && (hCount <= (sfHPos + (10'd30  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd65 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd63 / SFSCALE))) && (hCount >= (sfHPos + (10'd27 / SFSCALE))) && (hCount <= (sfHPos + (10'd29  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd64 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd62 / SFSCALE))) && (hCount >= (sfHPos + (10'd28 / SFSCALE))) && (hCount <= (sfHPos + (10'd28  / SFSCALE))))
-
-
-//                             ||((vCount <= (sfVPosTemp + (10'd96 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd94 / SFSCALE))) && (hCount <= (sfHPos + (10'd124 / SFSCALE))) && (hCount >= (sfHPos + (10'd60  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd95 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd93 / SFSCALE))) && (hCount <= (sfHPos + (10'd123 / SFSCALE))) && (hCount >= (sfHPos + (10'd61  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd94 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd92 / SFSCALE))) && (hCount <= (sfHPos + (10'd122 / SFSCALE))) && (hCount >= (sfHPos + (10'd62  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd93 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd91 / SFSCALE))) && (hCount <= (sfHPos + (10'd120 / SFSCALE))) && (hCount >= (sfHPos + (10'd63  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd92 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd90 / SFSCALE))) && (hCount <= (sfHPos + (10'd119 / SFSCALE))) && (hCount >= (sfHPos + (10'd64  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd91 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd89 / SFSCALE))) && (hCount <= (sfHPos + (10'd118 / SFSCALE))) && (hCount >= (sfHPos + (10'd65  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd90 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd88 / SFSCALE))) && (hCount <= (sfHPos + (10'd117 / SFSCALE))) && (hCount >= (sfHPos + (10'd66  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd89 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd87 / SFSCALE))) && (hCount <= (sfHPos + (10'd116 / SFSCALE))) && (hCount >= (sfHPos + (10'd67  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd88 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd86 / SFSCALE))) && (hCount <= (sfHPos + (10'd115 / SFSCALE))) && (hCount >= (sfHPos + (10'd68  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd87 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd85 / SFSCALE))) && (hCount <= (sfHPos + (10'd114 / SFSCALE))) && (hCount >= (sfHPos + (10'd69  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd86 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd84 / SFSCALE))) && (hCount <= (sfHPos + (10'd113 / SFSCALE))) && (hCount >= (sfHPos + (10'd70  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd85 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd83 / SFSCALE))) && (hCount <= (sfHPos + (10'd112 / SFSCALE))) && (hCount >= (sfHPos + (10'd71  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd84 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd82 / SFSCALE))) && (hCount <= (sfHPos + (10'd111 / SFSCALE))) && (hCount >= (sfHPos + (10'd72  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd83 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd81 / SFSCALE))) && (hCount <= (sfHPos + (10'd110 / SFSCALE))) && (hCount >= (sfHPos + (10'd73  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd82 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd80 / SFSCALE))) && (hCount <= (sfHPos + (10'd109 / SFSCALE))) && (hCount >= (sfHPos + (10'd74  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd81 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd79 / SFSCALE))) && (hCount <= (sfHPos + (10'd108 / SFSCALE))) && (hCount >= (sfHPos + (10'd75  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd80 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd78 / SFSCALE))) && (hCount <= (sfHPos + (10'd107 / SFSCALE))) && (hCount >= (sfHPos + (10'd76  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd79 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd77 / SFSCALE))) && (hCount <= (sfHPos + (10'd106 / SFSCALE))) && (hCount >= (sfHPos + (10'd77  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd78 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd76 / SFSCALE))) && (hCount <= (sfHPos + (10'd105 / SFSCALE))) && (hCount >= (sfHPos + (10'd78  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd77 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd75 / SFSCALE))) && (hCount <= (sfHPos + (10'd104 / SFSCALE))) && (hCount >= (sfHPos + (10'd79  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd76 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd74 / SFSCALE))) && (hCount <= (sfHPos + (10'd103 / SFSCALE))) && (hCount >= (sfHPos + (10'd80  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd75 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd73 / SFSCALE))) && (hCount <= (sfHPos + (10'd102 / SFSCALE))) && (hCount >= (sfHPos + (10'd81  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd74 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd72 / SFSCALE))) && (hCount <= (sfHPos + (10'd101 / SFSCALE))) && (hCount >= (sfHPos + (10'd82  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd73 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd71 / SFSCALE))) && (hCount <= (sfHPos + (10'd100 / SFSCALE))) && (hCount >= (sfHPos + (10'd83  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd72 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd70 / SFSCALE))) && (hCount <= (sfHPos + (10'd99 / SFSCALE))) && (hCount >= (sfHPos + (10'd84  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd71 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd69 / SFSCALE))) && (hCount <= (sfHPos + (10'd98 / SFSCALE))) && (hCount >= (sfHPos + (10'd85  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd70 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd68 / SFSCALE))) && (hCount <= (sfHPos + (10'd97 / SFSCALE))) && (hCount >= (sfHPos + (10'd86  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd69 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd67 / SFSCALE))) && (hCount <= (sfHPos + (10'd96 / SFSCALE))) && (hCount >= (sfHPos + (10'd87  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd68 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd66 / SFSCALE))) && (hCount <= (sfHPos + (10'd95 / SFSCALE))) && (hCount >= (sfHPos + (10'd88  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd67 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd65 / SFSCALE))) && (hCount <= (sfHPos + (10'd94 / SFSCALE))) && (hCount >= (sfHPos + (10'd89  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd66 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd64 / SFSCALE))) && (hCount <= (sfHPos + (10'd93 / SFSCALE))) && (hCount >= (sfHPos + (10'd90  / SFSCALE))))
-//                             ||((vCount <= (sfVPosTemp + (10'd65 / SFSCALE))) && (vCount >= (sfVPosTemp + (10'd63 / SFSCALE))) && (hCount <= (sfHPos + (10'd92 / SFSCALE))) && (hCount >= (sfHPos + (10'd91  / SFSCALE))))
-//                           ) ? 1 : 0;
 
 endmodule
