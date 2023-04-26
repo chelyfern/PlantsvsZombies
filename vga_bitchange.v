@@ -54,6 +54,9 @@ module vga_bitchange(
 	parameter ZOMBIE_HEAD_SCALE = 10'd2;
 	parameter ZOMBIE_EYE_SCALE = 10'd3;
 
+	parameter ZOMBIE_SLOW_SPEED = 50'd50000000;
+	parameter ZOMBIE_FAST_SPEED = 50'd15000000;
+
 
     //Column and row widths
     parameter COLUMN_WIDTH = 10'd100;
@@ -326,10 +329,10 @@ module vga_bitchange(
 	//Store the current state
 //	output q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW;
 	reg [7:0] state;
-	assign {q_I, q_L1, q_NL2, q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW} = state;
+	assign {q_I, q_L1, q_NL2, q_L2, q_NL3, q_L3, q_DoneL, q_DoneW} = state;
 	
 	//Local parameters for state
-	parameter I = 8'b0000_0001, L1 = 8'b0000_0010, NL2 = 8'b0000_0100, L2 = 8'b0000_1000, NL3 = 8'b0001_0000, L3 = 8'b0010_0000, DoneL = 8'b0100_0000, DoneW = 8'b1000_0000;
+	parameter I = 8'b1000_0000, L1 = 8'b0100_0000, NL2 = 8'b0010_0000, L2 = 8'b0001_0000, NL3 = 8'b0000_1000, L3 = 8'b0000_0100, DoneL = 8'b0000_0010, DoneW = 8'b0000_0001;
 
     
     //sun logic
@@ -415,9 +418,9 @@ module vga_bitchange(
 	//TODO: define the zombie colors here
 	//Define the color scheme
 	always@ (*)
-    // if (~bright)
-    //     rgb = BLACK;
-	if (selectedPlantBoxOutline == 1 && isSelectingPlantBox == 1)
+    if (~bright)
+        rgb = BLACK;
+	else if (selectedPlantBoxOutline == 1 && isSelectingPlantBox == 1)
 		rgb = RED;
 	else if (selectedLawnPositionOutline == 1 && isSelectingLawnPosition == 1)
 		rgb = RED;
@@ -463,7 +466,7 @@ module vga_bitchange(
 	//At every clock, move the zombies to the right by increasnig the zombie "speed"
 	always @(posedge clk) begin
     zombieSpeed = zombieSpeed + 50'd1;
-    if (zombieSpeed >= 50'd50000000) begin
+    if (zombieSpeed >= ZOMBIE_FAST_SPEED) begin
         if (zombie1X <= 50'd600 && ~zombie0Stopped) // Move zombie0 after zombie1 has moved 200 pixels across the screen
 		begin
             zombie0X = zombie0X - 10'd1;
@@ -583,7 +586,7 @@ module vga_bitchange(
 			//If all zombies are killed, go to the next state
 			if(zombies_killed == 15'd5 && state == L1)
 				begin
-					state = NL2;
+					state = DoneW;
 					reset = 1'b1;
 				end
 			end
@@ -1364,23 +1367,23 @@ module vga_bitchange(
 
 	//Using the zombie body width, create the zombie body in the lower part of the row
 	assign zombieBody0 = ((vCount >= ZOMBIE_0_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_0_ROW_BOTTOM)
-		&& (hCount >= zombie0X) && (hCount <= zombie0X + ZOMBIE_BODY_WIDTH)
+		&& (hCount >= zombie0X + 4'd10) && (hCount <= zombie0X + ZOMBIE_BODY_WIDTH + 4'd10)
 		) ? 1 : 0;
 
 	assign zombieBody1 = ((vCount >= ZOMBIE_1_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_1_ROW_BOTTOM)
-		&& (hCount >= zombie1X) && (hCount <= zombie1X + ZOMBIE_BODY_WIDTH)
+		&& (hCount >= zombie1X + 4'd10) && (hCount <= zombie1X + ZOMBIE_BODY_WIDTH + 4'd10)
 		) ? 1 : 0;
 
 	assign zombieBody2 = ((vCount >= ZOMBIE_2_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_2_ROW_BOTTOM)
-		&& (hCount >= zombie2X) && (hCount <= zombie2X + ZOMBIE_BODY_WIDTH)
+		&& (hCount >= zombie2X + 4'd10) && (hCount <= zombie2X + ZOMBIE_BODY_WIDTH + 4'd10)
 		) ? 1 : 0;
 
 	assign zombieBody3 = ((vCount >= ZOMBIE_3_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_3_ROW_BOTTOM)
-		&& (hCount >= zombie3X) && (hCount <= zombie3X + ZOMBIE_BODY_WIDTH)
+		&& (hCount >= zombie3X + 4'd10) && (hCount <= zombie3X + ZOMBIE_BODY_WIDTH + 4'd10)
 		) ? 1 : 0;
 
 	assign zombieBody4 = ((vCount >= ZOMBIE_4_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_4_ROW_BOTTOM)
-		&& (hCount >= zombie4X) && (hCount <= zombie4X + ZOMBIE_BODY_WIDTH)
+		&& (hCount >= zombie4X + 4'd10) && (hCount <= zombie4X + ZOMBIE_BODY_WIDTH + 4'd10)
 		) ? 1 : 0;
 
 	//Create zombie heads using zombie_face module
