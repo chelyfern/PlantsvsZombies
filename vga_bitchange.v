@@ -399,23 +399,23 @@ module vga_bitchange(
 		numSuns = 16'd50;
 		sunTimer = 50'd0;
 		
-		plant0Placed = 1'd1;
-		plant0Type = WALNUT;
+//		plant0Placed = 1'd1;
+//		plant0Type = WALNUT;
 		
-		plant7Placed = 1'd1;
-		plant7Type = SUNFLOWER;
+//		plant7Placed = 1'd1;
+//		plant7Type = SUNFLOWER;
 		
-		plant6Placed = 1'd1;
-		plant6Type = WALNUT;
+//		plant6Placed = 1'd1;
+//		plant6Type = WALNUT;
 				
-		plant21Placed = 1'd1;
-		plant21Type = PEASHOOTER;
+//		plant21Placed = 1'd1;
+//		plant21Type = PEASHOOTER;
 		
-		plant17Placed = 1'd1;
-		plant17Type = PEASHOOTER;
+//		plant17Placed = 1'd1;
+//		plant17Type = PEASHOOTER;
 		
-		plant16Placed = 1'd1;
-		plant16Type = SUNFLOWER;
+//		plant16Placed = 1'd1;
+//		plant16Type = SUNFLOWER;
 	end
 
 	//TODO: define the zombie colors here
@@ -1984,12 +1984,26 @@ module vga_bitchange(
 		begin
 			selectButtonCounter = selectButtonCounter + 4'd1;
 		end
+		
+		if (selectButtonCounter == 4'd0)
+            begin
+                //Reset the selected grid box
+				selectedGridBoxX = 10'd350;
+				selectedGridBoxY = 10'd130;
+				selectedPlantBoxX = FIRST_COL_MIDDLE_X;
+//                selectedGridBoxX = FIRST_COL_MIDDLE_X;
+//                selectedGridBoxY = 10'd130; //May need to change 87 to 86
+				
+				//Reset the selection flag
+				isSelectingLawnPosition = 1'b0;
+				selectButtonCounter = 4'd0;
+            end
 		// if((selectButton == 1'b1) && (isSelectingPlantBox == 1'b0) && (isSelectingLawnPosition == 1'b0))
-		if(selectButtonCounter == 4'd1)
+		else if(selectButtonCounter == 4'd1)
 			begin
 				isSelectingPlantBox = 1'b1;
 				//Assign the X coordinate of the selected plant box to the middle of the upper left square
-				selectedPlantBoxX = FIRST_COL_MIDDLE_X;
+//				selectedPlantBoxX = FIRST_COL_MIDDLE_X;
 
 				if(switches == 10'd0)
                     begin
@@ -2024,9 +2038,9 @@ module vga_bitchange(
 					end
 				isSelectingPlantBox = 1'b0;
 				isSelectingLawnPosition = 1'b1;
-				selectedPlantBoxX = FIRST_COL_MIDDLE_X;
-                selectedGridBoxX = FIRST_COL_MIDDLE_X;
-                selectedGridBoxY = 10'd130; //May need to change 87 to 86
+//				selectedPlantBoxX = FIRST_COL_MIDDLE_X;
+//                selectedGridBoxX = FIRST_COL_MIDDLE_X;
+//                selectedGridBoxY = 10'd130; //May need to change 87 to 86
 			
 		
                 //Map the switches to the X and Y coordinates of the selected lawn position
@@ -2321,6 +2335,9 @@ module vga_bitchange(
 				//Reset the selected grid box
 				selectedGridBoxX = 10'd350;
 				selectedGridBoxY = 10'd130;
+				selectedPlantBoxX = FIRST_COL_MIDDLE_X;
+//                selectedGridBoxX = FIRST_COL_MIDDLE_X;
+//                selectedGridBoxY = 10'd130; //May need to change 87 to 86
 				
 				//Reset the selection flag
 				isSelectingLawnPosition = 1'b0;
