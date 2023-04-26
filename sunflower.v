@@ -22,8 +22,8 @@
 
 module sunflower(
     input clk,
-	input [9:0] sfVPos,
-    input [9:0] sfHPos,
+	input [9:0] sfVPosGiven,
+    input [9:0] sfHPosGiven,
     input [9:0] hCount, vCount,
     input enable,
     output sunflowerOuter,
@@ -37,10 +37,18 @@ module sunflower(
     
     reg [9:0] sfHeadVPos;
     reg [9:0] sfHeadHPos;
+    reg [9:0] sfVPos;
+    reg [9:0] sfHPos;
     
     reg[49:0] sfBounceSpeed;
     reg sfHeadFlag;
     reg [1:0] cnt = 2'd00;
+    
+    always@ (*)
+    begin
+        sfVPos = sfVPosGiven - 10'd100;
+        sfHPos = sfHPosGiven + 10'd35;
+    end
     
     always@ (*)
     begin

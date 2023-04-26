@@ -21,14 +21,23 @@
 
 
 module walnut(
-	input [9:0] wVPos,
-    input [9:0] wHPos,
+	input [9:0] wVPosGiven,
+    input [9:0] wHPosGiven,
     input [9:0] hCount, vCount,
     input blink,
     input enable,
     output walnut,
     output walnutBlack,
     output walnutWhite);
+
+    reg [9:0] wVPos; 
+    reg [9:0] wHPos;
+    
+    always@ (*)
+    begin
+        wVPos = wVPosGiven + 10'd19;
+        wHPos = wHPosGiven + 10'd30;
+    end
 
     parameter WSCALE = 10'd2;
     assign walnut = 

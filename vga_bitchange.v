@@ -941,126 +941,126 @@ module vga_bitchange(
 
     
     peashooter ps0(
-    .clk(clk), .psVPos(VPOS0), .psHPos(HPOS0), .hCount(hCount), .vCount(vCount), .enable(psen0),
+    .clk(clk), .psVPosGiven(VPOS0), .psHPosGiven(HPOS0), .hCount(hCount), .vCount(vCount), .enable(psen0),
     .peashooterHead(peashooter0[0]), .peashooterBlack(peashooter0[1]), .peashooterStem(peashooter0[2]), .pea(peashooter0[3])
     );
 
-    peashooter ps1(.clk(clk),.psVPos(VPOS1),.psHPos(HPOS1),.hCount(hCount), .vCount(vCount),.enable(psen1),
+    peashooter ps1(.clk(clk),.psVPosGiven(VPOS1),.psHPosGiven(HPOS1),.hCount(hCount), .vCount(vCount),.enable(psen1),
     .peashooterHead(peashooter1[0]),.peashooterBlack(peashooter1[1]),.peashooterStem(peashooter1[2]),.pea(peashooter1[3])
     );
     
     peashooter ps2(
-    .clk(clk), .psVPos(VPOS2), .psHPos(HPOS2), .hCount(hCount), .vCount(vCount), .enable(psen2),
+    .clk(clk), .psVPosGiven(VPOS2), .psHPosGiven(HPOS2), .hCount(hCount), .vCount(vCount), .enable(psen2),
     .peashooterHead(peashooter2[0]), .peashooterBlack(peashooter2[1]), .peashooterStem(peashooter2[2]), .pea(peashooter2[3])
     );
     
     peashooter ps3(
-    .clk(clk), .psVPos(VPOS3), .psHPos(HPOS3), .hCount(hCount), .vCount(vCount), .enable(psen3),
+    .clk(clk), .psVPosGiven(VPOS3), .psHPosGiven(HPOS3), .hCount(hCount), .vCount(vCount), .enable(psen3),
     .peashooterHead(peashooter3[0]), .peashooterBlack(peashooter3[1]), .peashooterStem(peashooter3[2]), .pea(peashooter3[3])
     );
 
     peashooter ps4(
-    .clk(clk), .psVPos(VPOS4), .psHPos(HPOS4), .hCount(hCount), .vCount(vCount), .enable(psen4),
+    .clk(clk), .psVPosGiven(VPOS4), .psHPosGiven(HPOS4), .hCount(hCount), .vCount(vCount), .enable(psen4),
     .peashooterHead(peashooter4[0]), .peashooterBlack(peashooter4[1]), .peashooterStem(peashooter4[2]), .pea(peashooter4[3])
     );
     
     peashooter ps5(
-    .clk(clk), .psVPos(VPOS5), .psHPos(HPOS5), .hCount(hCount), .vCount(vCount), .enable(psen5),
+    .clk(clk), .psVPosGiven(VPOS5), .psHPosGiven(HPOS5), .hCount(hCount), .vCount(vCount), .enable(psen5),
     .peashooterHead(peashooter5[0]), .peashooterBlack(peashooter5[1]), .peashooterStem(peashooter5[2]), .pea(peashooter5[3])
     );
     
     peashooter ps6(
-    .clk(clk), .psVPos(VPOS6), .psHPos(HPOS6), .hCount(hCount), .vCount(vCount), .enable(psen6),
+    .clk(clk), .psVPosGiven(VPOS6), .psHPosGiven(HPOS6), .hCount(hCount), .vCount(vCount), .enable(psen6),
     .peashooterHead(peashooter6[0]), .peashooterBlack(peashooter6[1]), .peashooterStem(peashooter6[2]), .pea(peashooter6[3])
     );
     
     peashooter ps7(
-    .clk(clk), .psVPos(VPOS7), .psHPos(HPOS7), .hCount(hCount), .vCount(vCount), .enable(psen7),
+    .clk(clk), .psVPosGiven(VPOS7), .psHPosGiven(HPOS7), .hCount(hCount), .vCount(vCount), .enable(psen7),
     .peashooterHead(peashooter7[0]), .peashooterBlack(peashooter7[1]), .peashooterStem(peashooter7[2]), .pea(peashooter7[3])
     );
     
     peashooter ps8(
-    .clk(clk), .psVPos(VPOS8), .psHPos(HPOS8), .hCount(hCount), .vCount(vCount), .enable(psen8),
+    .clk(clk), .psVPosGiven(VPOS8), .psHPosGiven(HPOS8), .hCount(hCount), .vCount(vCount), .enable(psen8),
     .peashooterHead(peashooter8[0]), .peashooterBlack(peashooter8[1]), .peashooterStem(peashooter8[2]), .pea(peashooter8[3])
     );
     
     peashooter ps9(
-    .clk(clk), .psVPos(VPOS9), .psHPos(HPOS9), .hCount(hCount), .vCount(vCount), .enable(psen9),
+    .clk(clk), .psVPosGiven(VPOS9), .psHPosGiven(HPOS9), .hCount(hCount), .vCount(vCount), .enable(psen9),
     .peashooterHead(peashooter9[0]), .peashooterBlack(peashooter9[1]), .peashooterStem(peashooter9[2]), .pea(peashooter9[3])
     );
     
     peashooter ps10(
-    .clk(clk), .psVPos(VPOS10), .psHPos(HPOS10), .hCount(hCount), .vCount(vCount), .enable(psen10),
+    .clk(clk), .psVPosGiven(VPOS10), .psHPosGiven(HPOS10), .hCount(hCount), .vCount(vCount), .enable(psen10),
     .peashooterHead(peashooter10[0]), .peashooterBlack(peashooter10[1]), .peashooterStem(peashooter10[2]), .pea(peashooter10[3])
     );
     
     peashooter ps11(
-    .clk(clk), .psVPos(VPOS11), .psHPos(HPOS11), .hCount(hCount), .vCount(vCount), .enable(psen11),
+    .clk(clk), .psVPosGiven(VPOS11), .psHPosGiven(HPOS11), .hCount(hCount), .vCount(vCount), .enable(psen11),
     .peashooterHead(peashooter11[0]), .peashooterBlack(peashooter11[1]), .peashooterStem(peashooter11[2]), .pea(peashooter11[3])
     );
     
     peashooter ps12(
-    .clk(clk), .psVPos(VPOS12), .psHPos(HPOS12), .hCount(hCount), .vCount(vCount), .enable(psen12),
+    .clk(clk), .psVPosGiven(VPOS12), .psHPosGiven(HPOS12), .hCount(hCount), .vCount(vCount), .enable(psen12),
     .peashooterHead(peashooter12[0]), .peashooterBlack(peashooter12[1]), .peashooterStem(peashooter12[2]), .pea(peashooter12[3])
     );
     
     peashooter ps13(
-    .clk(clk), .psVPos(VPOS13), .psHPos(HPOS13), .hCount(hCount), .vCount(vCount), .enable(psen13),
+    .clk(clk), .psVPosGiven(VPOS13), .psHPosGiven(HPOS13), .hCount(hCount), .vCount(vCount), .enable(psen13),
     .peashooterHead(peashooter13[0]), .peashooterBlack(peashooter13[1]), .peashooterStem(peashooter13[2]), .pea(peashooter13[3])
     );
 
     peashooter ps14(
-    .clk(clk), .psVPos(VPOS14), .psHPos(HPOS14), .hCount(hCount), .vCount(vCount), .enable(psen14),
+    .clk(clk), .psVPosGiven(VPOS14), .psHPosGiven(HPOS14), .hCount(hCount), .vCount(vCount), .enable(psen14),
     .peashooterHead(peashooter14[0]), .peashooterBlack(peashooter14[1]), .peashooterStem(peashooter14[2]), .pea(peashooter14[3])
     );
 
     peashooter ps15(
-    .clk(clk), .psVPos(VPOS15), .psHPos(HPOS15), .hCount(hCount), .vCount(vCount), .enable(psen15),
+    .clk(clk), .psVPosGiven(VPOS15), .psHPosGiven(HPOS15), .hCount(hCount), .vCount(vCount), .enable(psen15),
     .peashooterHead(peashooter15[0]), .peashooterBlack(peashooter15[1]), .peashooterStem(peashooter15[2]), .pea(peashooter15[3])
     );
 
     peashooter ps16(
-    .clk(clk), .psVPos(VPOS16), .psHPos(HPOS16), .hCount(hCount), .vCount(vCount), .enable(psen16),
-    .peashooterHead(peashooter16[0]), .peashooterBlack(peashooter16[1]), .peashooterStem(peashooter16[2]), .pea(peashooter5[3])
+    .clk(clk), .psVPosGiven(VPOS16), .psHPosGiven(HPOS16), .hCount(hCount), .vCount(vCount), .enable(psen16),
+    .peashooterHead(peashooter16[0]), .peashooterBlack(peashooter16[1]), .peashooterStem(peashooter16[2]), .pea(peashooter16[3])
     );
 
     peashooter ps17(
-    .clk(clk), .psVPos(VPOS17), .psHPos(HPOS17), .hCount(hCount), .vCount(vCount), .enable(psen17),
+    .clk(clk), .psVPosGiven(VPOS17), .psHPosGiven(HPOS17), .hCount(hCount), .vCount(vCount), .enable(psen17),
     .peashooterHead(peashooter17[0]), .peashooterBlack(peashooter17[1]), .peashooterStem(peashooter17[2]), .pea(peashooter17[3])
     );
 
     peashooter ps18(
-    .clk(clk), .psVPos(VPOS18), .psHPos(HPOS18), .hCount(hCount), .vCount(vCount), .enable(psen18),
+    .clk(clk), .psVPosGiven(VPOS18), .psHPosGiven(HPOS18), .hCount(hCount), .vCount(vCount), .enable(psen18),
     .peashooterHead(peashooter18[0]), .peashooterBlack(peashooter18[1]), .peashooterStem(peashooter18[2]), .pea(peashooter18[3])
     );
 
     peashooter ps19(
-    .clk(clk), .psVPos(VPOS19), .psHPos(HPOS19), .hCount(hCount), .vCount(vCount), .enable(psen19),
+    .clk(clk), .psVPosGiven(VPOS19), .psHPosGiven(HPOS19), .hCount(hCount), .vCount(vCount), .enable(psen19),
     .peashooterHead(peashooter19[0]), .peashooterBlack(peashooter19[1]), .peashooterStem(peashooter19[2]), .pea(peashooter19[3])
     );
 
     peashooter ps20(
-    .clk(clk), .psVPos(VPOS20), .psHPos(HPOS20), .hCount(hCount), .vCount(vCount), .enable(psen20),
+    .clk(clk), .psVPosGiven(VPOS20), .psHPosGiven(HPOS20), .hCount(hCount), .vCount(vCount), .enable(psen20),
     .peashooterHead(peashooter20[0]), .peashooterBlack(peashooter20[1]), .peashooterStem(peashooter20[2]), .pea(peashooter20[3])
     );
 
     peashooter ps21(
-    .clk(clk), .psVPos(VPOS21), .psHPos(HPOS21), .hCount(hCount), .vCount(vCount), .enable(psen21),
+    .clk(clk), .psVPosGiven(VPOS21), .psHPosGiven(HPOS21), .hCount(hCount), .vCount(vCount), .enable(psen21),
     .peashooterHead(peashooter21[0]), .peashooterBlack(peashooter21[1]), .peashooterStem(peashooter21[2]), .pea(peashooter21[3])
     );
 
     peashooter ps22(
-    .clk(clk), .psVPos(VPOS22), .psHPos(HPOS22), .hCount(hCount), .vCount(vCount), .enable(psen22),
+    .clk(clk), .psVPosGiven(VPOS22), .psHPosGiven(HPOS22), .hCount(hCount), .vCount(vCount), .enable(psen22),
     .peashooterHead(peashooter22[0]), .peashooterBlack(peashooter22[1]), .peashooterStem(peashooter22[2]), .pea(peashooter22[3])
     );
 
     peashooter ps23(
-    .clk(clk), .psVPos(VPOS23), .psHPos(HPOS23), .hCount(hCount), .vCount(vCount), .enable(psen23),
+    .clk(clk), .psVPosGiven(VPOS23), .psHPosGiven(HPOS23), .hCount(hCount), .vCount(vCount), .enable(psen23),
     .peashooterHead(peashooter23[0]), .peashooterBlack(peashooter23[1]), .peashooterStem(peashooter23[2]), .pea(peashooter23[3])
     );
 
     peashooter ps24(
-    .clk(clk), .psVPos(VPOS24), .psHPos(HPOS24), .hCount(hCount), .vCount(vCount), .enable(psen24),
+    .clk(clk), .psVPosGiven(VPOS24), .psHPosGiven(HPOS24), .hCount(hCount), .vCount(vCount), .enable(psen24),
     .peashooterHead(peashooter24[0]), .peashooterBlack(peashooter24[1]), .peashooterStem(peashooter24[2]), .pea(peashooter24[3])
     );
 
@@ -1071,127 +1071,127 @@ module vga_bitchange(
     wire blink;
     
     sunflower sf0(
-    .clk(clk), .sfVPos(VPOS0), .sfHPos(HPOS0), .hCount(hCount), .vCount(vCount), .enable(sfen0),
+    .clk(clk), .sfVPosGiven(VPOS0), .sfHPosGiven(HPOS0), .hCount(hCount), .vCount(vCount), .enable(sfen0),
     .sunflowerOuter(sunflower0[0]), .sunflowerInner(sunflower0[1]), .sunflowerFace(sunflower0[2]), .sunflowerStem(sunflower0[3]), .blink(blink0)
     );
     
     sunflower sf1(
-    .clk(clk), .sfVPos(VPOS1), .sfHPos(HPOS1), .hCount(hCount), .vCount(vCount), .enable(sfen1),
+    .clk(clk), .sfVPosGiven(VPOS1), .sfHPosGiven(HPOS1), .hCount(hCount), .vCount(vCount), .enable(sfen1),
     .sunflowerOuter(sunflower1[0]), .sunflowerInner(sunflower1[1]), .sunflowerFace(sunflower1[2]), .sunflowerStem(sunflower1[3]), .blink(blink1)
     );
     
     sunflower sf2(
-    .clk(clk), .sfVPos(VPOS2), .sfHPos(HPOS2), .hCount(hCount), .vCount(vCount), .enable(sfen2),
+    .clk(clk), .sfVPosGiven(VPOS2), .sfHPosGiven(HPOS2), .hCount(hCount), .vCount(vCount), .enable(sfen2),
     .sunflowerOuter(sunflower2[0]), .sunflowerInner(sunflower2[1]), .sunflowerFace(sunflower2[2]), .sunflowerStem(sunflower2[3]), .blink(blink2)
     );
     
     sunflower sf3(
-    .clk(clk), .sfVPos(VPOS3), .sfHPos(HPOS3), .hCount(hCount), .vCount(vCount), .enable(sfen3),
+    .clk(clk), .sfVPosGiven(VPOS3), .sfHPosGiven(HPOS3), .hCount(hCount), .vCount(vCount), .enable(sfen3),
     .sunflowerOuter(sunflower3[0]), .sunflowerInner(sunflower3[1]), .sunflowerFace(sunflower3[2]), .sunflowerStem(sunflower3[3]), .blink(blink3)
     );
     
     sunflower sf4(
-    .clk(clk), .sfVPos(VPOS4), .sfHPos(HPOS4), .hCount(hCount), .vCount(vCount), .enable(sfen4),
+    .clk(clk), .sfVPosGiven(VPOS4), .sfHPosGiven(HPOS4), .hCount(hCount), .vCount(vCount), .enable(sfen4),
     .sunflowerOuter(sunflower4[0]), .sunflowerInner(sunflower4[1]), .sunflowerFace(sunflower4[2]), .sunflowerStem(sunflower4[3]), .blink(blink4)
     );
     
     sunflower sf5(
-    .clk(clk), .sfVPos(VPOS5), .sfHPos(HPOS5), .hCount(hCount), .vCount(vCount), .enable(sfen5),
+    .clk(clk), .sfVPosGiven(VPOS5), .sfHPosGiven(HPOS5), .hCount(hCount), .vCount(vCount), .enable(sfen5),
     .sunflowerOuter(sunflower5[0]), .sunflowerInner(sunflower5[1]), .sunflowerFace(sunflower5[2]), .sunflowerStem(sunflower5[3]), .blink(blink5)
     );
 
     sunflower sf6(
-    .clk(clk), .sfVPos(VPOS6), .sfHPos(HPOS6), .hCount(hCount), .vCount(vCount), .enable(sfen6),
+    .clk(clk), .sfVPosGiven(VPOS6), .sfHPosGiven(HPOS6), .hCount(hCount), .vCount(vCount), .enable(sfen6),
     .sunflowerOuter(sunflower6[0]), .sunflowerInner(sunflower6[1]), .sunflowerFace(sunflower6[2]), .sunflowerStem(sunflower6[3]), .blink(blink6)
     );    
     
     sunflower sf7(
-    .clk(clk), .sfVPos(VPOS7), .sfHPos(HPOS7), .hCount(hCount), .vCount(vCount), .enable(sfen7),
+    .clk(clk), .sfVPosGiven(VPOS7), .sfHPosGiven(HPOS7), .hCount(hCount), .vCount(vCount), .enable(sfen7),
     .sunflowerOuter(sunflower7[0]), .sunflowerInner(sunflower7[1]), .sunflowerFace(sunflower7[2]), .sunflowerStem(sunflower7[3]), .blink(blink7)
     );
 
     sunflower sf8(
-    .clk(clk), .sfVPos(VPOS8), .sfHPos(HPOS8), .hCount(hCount), .vCount(vCount), .enable(sfen8),
+    .clk(clk), .sfVPosGiven(VPOS8), .sfHPosGiven(HPOS8), .hCount(hCount), .vCount(vCount), .enable(sfen8),
     .sunflowerOuter(sunflower8[0]), .sunflowerInner(sunflower8[1]), .sunflowerFace(sunflower8[2]), .sunflowerStem(sunflower8[3]), .blink(blink8)
     );
 
     sunflower sf9(
-    .clk(clk), .sfVPos(VPOS9), .sfHPos(HPOS9), .hCount(hCount), .vCount(vCount), .enable(sfen9),
+    .clk(clk), .sfVPosGiven(VPOS9), .sfHPosGiven(HPOS9), .hCount(hCount), .vCount(vCount), .enable(sfen9),
     .sunflowerOuter(sunflower9[0]), .sunflowerInner(sunflower9[1]), .sunflowerFace(sunflower9[2]), .sunflowerStem(sunflower9[3]), .blink(blink9)
     );
     
     sunflower sf10(
-    .clk(clk), .sfVPos(VPOS10), .sfHPos(HPOS10), .hCount(hCount), .vCount(vCount), .enable(sfen10),
+    .clk(clk), .sfVPosGiven(VPOS10), .sfHPosGiven(HPOS10), .hCount(hCount), .vCount(vCount), .enable(sfen10),
     .sunflowerOuter(sunflower10[0]), .sunflowerInner(sunflower10[1]), .sunflowerFace(sunflower10[2]), .sunflowerStem(sunflower10[3]), .blink(blink10)
     );
 
     sunflower sf11(
-    .clk(clk), .sfVPos(VPOS11), .sfHPos(HPOS11), .hCount(hCount), .vCount(vCount), .enable(sfen11),
+    .clk(clk), .sfVPosGiven(VPOS11), .sfHPosGiven(HPOS11), .hCount(hCount), .vCount(vCount), .enable(sfen11),
     .sunflowerOuter(sunflower11[0]), .sunflowerInner(sunflower11[1]), .sunflowerFace(sunflower11[2]), .sunflowerStem(sunflower11[3]), .blink(blink11)
     );
 
     sunflower sf12(
-    .clk(clk), .sfVPos(VPOS12), .sfHPos(HPOS12), .hCount(hCount), .vCount(vCount), .enable(sfen12),
+    .clk(clk), .sfVPosGiven(VPOS12), .sfHPosGiven(HPOS12), .hCount(hCount), .vCount(vCount), .enable(sfen12),
     .sunflowerOuter(sunflower12[0]), .sunflowerInner(sunflower12[1]), .sunflowerFace(sunflower12[2]), .sunflowerStem(sunflower12[3]), .blink(blink12)
     );
     
     sunflower sf13(
-    .clk(clk), .sfVPos(VPOS13), .sfHPos(HPOS13), .hCount(hCount), .vCount(vCount), .enable(sfen13),
+    .clk(clk), .sfVPosGiven(VPOS13), .sfHPosGiven(HPOS13), .hCount(hCount), .vCount(vCount), .enable(sfen13),
     .sunflowerOuter(sunflower13[0]), .sunflowerInner(sunflower13[1]), .sunflowerFace(sunflower13[2]), .sunflowerStem(sunflower13[3]), .blink(blink13)
     );
 
     sunflower sf14(
-    .clk(clk), .sfVPos(VPOS14), .sfHPos(HPOS14), .hCount(hCount), .vCount(vCount), .enable(sfen14),
+    .clk(clk), .sfVPosGiven(VPOS14), .sfHPosGiven(HPOS14), .hCount(hCount), .vCount(vCount), .enable(sfen14),
     .sunflowerOuter(sunflower14[0]), .sunflowerInner(sunflower14[1]), .sunflowerFace(sunflower14[2]), .sunflowerStem(sunflower14[3]), .blink(blink14)
     );
 
     sunflower sf15(
-    .clk(clk), .sfVPos(VPOS15), .sfHPos(HPOS15), .hCount(hCount), .vCount(vCount), .enable(sfen15),
+    .clk(clk), .sfVPosGiven(VPOS15), .sfHPosGiven(HPOS15), .hCount(hCount), .vCount(vCount), .enable(sfen15),
     .sunflowerOuter(sunflower15[0]), .sunflowerInner(sunflower15[1]), .sunflowerFace(sunflower15[2]), .sunflowerStem(sunflower15[3]), .blink(blink15)
     );
 
     sunflower sf16(
-    .clk(clk), .sfVPos(VPOS16), .sfHPos(HPOS16), .hCount(hCount), .vCount(vCount), .enable(sfen16),
+    .clk(clk), .sfVPosGiven(VPOS16), .sfHPosGiven(HPOS16), .hCount(hCount), .vCount(vCount), .enable(sfen16),
     .sunflowerOuter(sunflower16[0]), .sunflowerInner(sunflower16[1]), .sunflowerFace(sunflower16[2]), .sunflowerStem(sunflower16[3]), .blink(blink16)
     );
 
     sunflower sf17(
-    .clk(clk), .sfVPos(VPOS17), .sfHPos(HPOS17), .hCount(hCount), .vCount(vCount), .enable(sfen17),
+    .clk(clk), .sfVPosGiven(VPOS17), .sfHPosGiven(HPOS17), .hCount(hCount), .vCount(vCount), .enable(sfen17),
     .sunflowerOuter(sunflower17[0]), .sunflowerInner(sunflower17[1]), .sunflowerFace(sunflower17[2]), .sunflowerStem(sunflower17[3]), .blink(blink17)
     );
     
     sunflower sf18(
-    .clk(clk), .sfVPos(VPOS18), .sfHPos(HPOS18), .hCount(hCount), .vCount(vCount), .enable(sfen18),
+    .clk(clk), .sfVPosGiven(VPOS18), .sfHPosGiven(HPOS18), .hCount(hCount), .vCount(vCount), .enable(sfen18),
     .sunflowerOuter(sunflower18[0]), .sunflowerInner(sunflower18[1]), .sunflowerFace(sunflower18[2]), .sunflowerStem(sunflower18[3]), .blink(blink18)
     );
 
     sunflower sf19(
-    .clk(clk), .sfVPos(VPOS19), .sfHPos(HPOS19), .hCount(hCount), .vCount(vCount), .enable(sfen19),
+    .clk(clk), .sfVPosGiven(VPOS19), .sfHPosGiven(HPOS19), .hCount(hCount), .vCount(vCount), .enable(sfen19),
     .sunflowerOuter(sunflower19[0]), .sunflowerInner(sunflower19[1]), .sunflowerFace(sunflower19[2]), .sunflowerStem(sunflower19[3]), .blink(blink19)
     );
 
     sunflower sf20(
-    .clk(clk), .sfVPos(VPOS20), .sfHPos(HPOS20), .hCount(hCount), .vCount(vCount), .enable(sfen20),
+    .clk(clk), .sfVPosGiven(VPOS20), .sfHPosGiven(HPOS20), .hCount(hCount), .vCount(vCount), .enable(sfen20),
     .sunflowerOuter(sunflower20[0]), .sunflowerInner(sunflower20[1]), .sunflowerFace(sunflower20[2]), .sunflowerStem(sunflower20[3]), .blink(blink20)
     );
 
     sunflower sf21(
-    .clk(clk), .sfVPos(VPOS21), .sfHPos(HPOS21), .hCount(hCount), .vCount(vCount), .enable(sfen21),
+    .clk(clk), .sfVPosGiven(VPOS21), .sfHPosGiven(HPOS21), .hCount(hCount), .vCount(vCount), .enable(sfen21),
     .sunflowerOuter(sunflower21[0]), .sunflowerInner(sunflower21[1]), .sunflowerFace(sunflower21[2]), .sunflowerStem(sunflower21[3]), .blink(blink21)
     );
 
     sunflower sf22(
-    .clk(clk), .sfVPos(VPOS22), .sfHPos(HPOS22), .hCount(hCount), .vCount(vCount), .enable(sfen22),
+    .clk(clk), .sfVPosGiven(VPOS22), .sfHPosGiven(HPOS22), .hCount(hCount), .vCount(vCount), .enable(sfen22),
     .sunflowerOuter(sunflower22[0]), .sunflowerInner(sunflower22[1]), .sunflowerFace(sunflower22[2]), .sunflowerStem(sunflower22[3]), .blink(blink22)
     );
 
     sunflower sf23(
-    .clk(clk), .sfVPos(VPOS23), .sfHPos(HPOS23), .hCount(hCount), .vCount(vCount), .enable(sfen23),
+    .clk(clk), .sfVPosGiven(VPOS23), .sfHPosGiven(HPOS23), .hCount(hCount), .vCount(vCount), .enable(sfen23),
     .sunflowerOuter(sunflower23[0]), .sunflowerInner(sunflower23[1]), .sunflowerFace(sunflower23[2]), .sunflowerStem(sunflower23[3]), .blink(blink23)
     );
 
     sunflower sf24(
-    .clk(clk), .sfVPos(VPOS24), .sfHPos(HPOS24), .hCount(hCount), .vCount(vCount), .enable(sfen24),
+    .clk(clk), .sfVPosGiven(VPOS24), .sfHPosGiven(HPOS24), .hCount(hCount), .vCount(vCount), .enable(sfen24),
     .sunflowerOuter(sunflower24[0]), .sunflowerInner(sunflower24[1]), .sunflowerFace(sunflower24[2]), .sunflowerStem(sunflower24[3]), .blink(blink24)
     );
 
@@ -1200,127 +1200,127 @@ module vga_bitchange(
     wire walnutWhite;
     
     walnut w0(
-	.wVPos(VPOS0), .wHPos(HPOS0), .hCount(hCount), .vCount(vCount), .blink(blink0),
+	.wVPosGiven(VPOS0), .wHPosGiven(HPOS0), .hCount(hCount), .vCount(vCount), .blink(blink0),
     .enable(wen0), .walnut(walnut0[0]), .walnutBlack(walnut0[1]), .walnutWhite(walnut0[2])
     );
     
     walnut w1(
-	.wVPos(VPOS1), .wHPos(HPOS1), .hCount(hCount), .vCount(vCount), .blink(blink1),
+	.wVPosGiven(VPOS1), .wHPosGiven(HPOS1), .hCount(hCount), .vCount(vCount), .blink(blink1),
     .enable(wen1), .walnut(walnut1[0]), .walnutBlack(walnut1[1]), .walnutWhite(walnut1[2])
     );
     
     walnut w2(
-	.wVPos(VPOS2), .wHPos(HPOS2), .hCount(hCount), .vCount(vCount), .blink(blink2),
+	.wVPosGiven(VPOS2), .wHPosGiven(HPOS2), .hCount(hCount), .vCount(vCount), .blink(blink2),
     .enable(wen2), .walnut(walnut2[0]), .walnutBlack(walnut2[1]), .walnutWhite(walnut2[2])
     );
     
     walnut w3(
-	.wVPos(VPOS3), .wHPos(HPOS3), .hCount(hCount), .vCount(vCount), .blink(blink3),
+	.wVPosGiven(VPOS3), .wHPosGiven(HPOS3), .hCount(hCount), .vCount(vCount), .blink(blink3),
     .enable(wen3), .walnut(walnut3[0]), .walnutBlack(walnut3[1]), .walnutWhite(walnut3[2])
     );
     
     walnut w4(
-	.wVPos(VPOS4), .wHPos(HPOS4), .hCount(hCount), .vCount(vCount), .blink(blink4),
+	.wVPosGiven(VPOS4), .wHPosGiven(HPOS4), .hCount(hCount), .vCount(vCount), .blink(blink4),
     .enable(wen4), .walnut(walnut4[0]), .walnutBlack(walnut4[1]), .walnutWhite(walnut4[2])
     );
     
     walnut w5(
-	.wVPos(VPOS5), .wHPos(HPOS5), .hCount(hCount), .vCount(vCount), .blink(blink5),
+	.wVPosGiven(VPOS5), .wHPosGiven(HPOS5), .hCount(hCount), .vCount(vCount), .blink(blink5),
     .enable(wen5), .walnut(walnut5[0]), .walnutBlack(walnut5[1]), .walnutWhite(walnut5[2])
     );
     
     walnut w6(
-	.wVPos(VPOS6), .wHPos(HPOS6), .hCount(hCount), .vCount(vCount), .blink(blink6),
+	.wVPosGiven(VPOS6), .wHPosGiven(HPOS6), .hCount(hCount), .vCount(vCount), .blink(blink6),
     .enable(wen6), .walnut(walnut6[0]), .walnutBlack(walnut6[1]), .walnutWhite(walnut6[2])
     );
     
     walnut w7(
-	.wVPos(VPOS7), .wHPos(HPOS7), .hCount(hCount), .vCount(vCount), .blink(blink7),
+	.wVPosGiven(VPOS7), .wHPosGiven(HPOS7), .hCount(hCount), .vCount(vCount), .blink(blink7),
     .enable(wen7), .walnut(walnut7[0]), .walnutBlack(walnut7[1]), .walnutWhite(walnut7[2])
     );
     
     walnut w8(
-	.wVPos(VPOS8), .wHPos(HPOS8), .hCount(hCount), .vCount(vCount), .blink(blink8),
+	.wVPosGiven(VPOS8), .wHPosGiven(HPOS8), .hCount(hCount), .vCount(vCount), .blink(blink8),
     .enable(wen8), .walnut(walnut8[0]), .walnutBlack(walnut8[1]), .walnutWhite(walnut8[2])
     );
     
     walnut w9(
-	.wVPos(VPOS9), .wHPos(HPOS9), .hCount(hCount), .vCount(vCount), .blink(blink9),
+	.wVPosGiven(VPOS9), .wHPosGiven(HPOS9), .hCount(hCount), .vCount(vCount), .blink(blink9),
     .enable(wen9), .walnut(walnut9[0]), .walnutBlack(walnut9[1]), .walnutWhite(walnut9[2])
     );
     
     walnut w10(
-	.wVPos(VPOS10), .wHPos(HPOS10), .hCount(hCount), .vCount(vCount), .blink(blink10),
+	.wVPosGiven(VPOS10), .wHPosGiven(HPOS10), .hCount(hCount), .vCount(vCount), .blink(blink10),
     .enable(wen10), .walnut(walnut10[0]), .walnutBlack(walnut10[1]), .walnutWhite(walnut10[2])
     );
     
     walnut w11(
-	.wVPos(VPOS11), .wHPos(HPOS11), .hCount(hCount), .vCount(vCount), .blink(blink11),
+	.wVPosGiven(VPOS11), .wHPosGiven(HPOS11), .hCount(hCount), .vCount(vCount), .blink(blink11),
     .enable(wen11), .walnut(walnut11[0]), .walnutBlack(walnut11[1]), .walnutWhite(walnut11[2])
     );
     
     walnut w12(
-	.wVPos(VPOS12), .wHPos(HPOS12), .hCount(hCount), .vCount(vCount), .blink(blink12),
+	.wVPosGiven(VPOS12), .wHPosGiven(HPOS12), .hCount(hCount), .vCount(vCount), .blink(blink12),
     .enable(wen12), .walnut(walnut12[0]), .walnutBlack(walnut12[1]), .walnutWhite(walnut12[2])
     );
     
     walnut w13(
-	.wVPos(VPOS13), .wHPos(HPOS13), .hCount(hCount), .vCount(vCount), .blink(blink13),
+	.wVPosGiven(VPOS13), .wHPosGiven(HPOS13), .hCount(hCount), .vCount(vCount), .blink(blink13),
     .enable(wen13), .walnut(walnut13[0]), .walnutBlack(walnut13[1]), .walnutWhite(walnut13[2])
     );
     
     walnut w14(
-	.wVPos(VPOS14), .wHPos(HPOS14), .hCount(hCount), .vCount(vCount), .blink(blink14),
+	.wVPosGiven(VPOS14), .wHPosGiven(HPOS14), .hCount(hCount), .vCount(vCount), .blink(blink14),
     .enable(wen14), .walnut(walnut14[0]), .walnutBlack(walnut14[1]), .walnutWhite(walnut14[2])
     );
     
     walnut w15(
-	.wVPos(VPOS15), .wHPos(HPOS15), .hCount(hCount), .vCount(vCount), .blink(blink15),
+	.wVPosGiven(VPOS15), .wHPosGiven(HPOS15), .hCount(hCount), .vCount(vCount), .blink(blink15),
     .enable(wen15), .walnut(walnut15[0]), .walnutBlack(walnut15[1]), .walnutWhite(walnut15[2])
     );
     
     walnut w16(
-	.wVPos(VPOS16), .wHPos(HPOS16), .hCount(hCount), .vCount(vCount), .blink(blink16),
+	.wVPosGiven(VPOS16), .wHPosGiven(HPOS16), .hCount(hCount), .vCount(vCount), .blink(blink16),
     .enable(wen16), .walnut(walnut16[0]), .walnutBlack(walnut16[1]), .walnutWhite(walnut16[2])
     );
     
     walnut w17(
-	.wVPos(VPOS17), .wHPos(HPOS17), .hCount(hCount), .vCount(vCount), .blink(blink17),
+	.wVPosGiven(VPOS17), .wHPosGiven(HPOS17), .hCount(hCount), .vCount(vCount), .blink(blink17),
     .enable(wen17), .walnut(walnut17[0]), .walnutBlack(walnut17[1]), .walnutWhite(walnut17[2])
     );
     
     walnut w18(
-	.wVPos(VPOS18), .wHPos(HPOS18), .hCount(hCount), .vCount(vCount), .blink(blink18),
+	.wVPosGiven(VPOS18), .wHPosGiven(HPOS18), .hCount(hCount), .vCount(vCount), .blink(blink18),
     .enable(wen18), .walnut(walnut18[0]), .walnutBlack(walnut18[1]), .walnutWhite(walnut18[2])
     );
     
     walnut w19(
-	.wVPos(VPOS19), .wHPos(HPOS19), .hCount(hCount), .vCount(vCount), .blink(blink19),
+	.wVPosGiven(VPOS19), .wHPosGiven(HPOS19), .hCount(hCount), .vCount(vCount), .blink(blink19),
     .enable(wen19), .walnut(walnut19[0]), .walnutBlack(walnut19[1]), .walnutWhite(walnut19[2])
     );
     
     walnut w20(
-	.wVPos(VPOS20), .wHPos(HPOS20), .hCount(hCount), .vCount(vCount), .blink(blink20),
+	.wVPosGiven(VPOS20), .wHPosGiven(HPOS20), .hCount(hCount), .vCount(vCount), .blink(blink20),
     .enable(wen20), .walnut(walnut20[0]), .walnutBlack(walnut20[1]), .walnutWhite(walnut20[2])
     );
     
     walnut w21(
-	.wVPos(VPOS21), .wHPos(HPOS21), .hCount(hCount), .vCount(vCount), .blink(blink21),
+	.wVPosGiven(VPOS21), .wHPosGiven(HPOS21), .hCount(hCount), .vCount(vCount), .blink(blink21),
     .enable(wen21), .walnut(walnut21[0]), .walnutBlack(walnut21[1]), .walnutWhite(walnut21[2])
     );
     
     walnut w22(
-	.wVPos(VPOS22), .wHPos(HPOS22), .hCount(hCount), .vCount(vCount), .blink(blink22),
+	.wVPosGiven(VPOS22), .wHPosGiven(HPOS22), .hCount(hCount), .vCount(vCount), .blink(blink22),
     .enable(wen22), .walnut(walnut22[0]), .walnutBlack(walnut22[1]), .walnutWhite(walnut22[2])
     );
     
     walnut w23(
-	.wVPos(VPOS23), .wHPos(HPOS23), .hCount(hCount), .vCount(vCount), .blink(blink23),
+	.wVPosGiven(VPOS23), .wHPosGiven(HPOS23), .hCount(hCount), .vCount(vCount), .blink(blink23),
     .enable(wen23), .walnut(walnut23[0]), .walnutBlack(walnut23[1]), .walnutWhite(walnut23[2])
     );
     
     walnut w24(
-	.wVPos(VPOS24), .wHPos(HPOS24), .hCount(hCount), .vCount(vCount), .blink(blink24),
+	.wVPosGiven(VPOS24), .wHPosGiven(HPOS24), .hCount(hCount), .vCount(vCount), .blink(blink24),
     .enable(wen24), .walnut(walnut24[0]), .walnutBlack(walnut24[1]), .walnutWhite(walnut24[2])
     );
 
