@@ -40,7 +40,7 @@ module sunflower(
     reg [9:0] sfVPos;
     reg [9:0] sfHPos;
     
-    reg[49:0] sfBounceSpeed;
+    reg[24:0] sfBounceSpeed;
     reg sfHeadFlag;
     reg [1:0] cnt = 2'd00;
     

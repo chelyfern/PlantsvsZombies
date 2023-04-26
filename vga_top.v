@@ -28,6 +28,7 @@ module vga_top(
 	input BtnD,
 	input BtnL,
 	input BtnR,
+    input Sw4, Sw3, Sw2, Sw1, Sw0,
 
 	
 	//VGA signal
@@ -46,14 +47,24 @@ module vga_top(
 	wire[15:0] zombiesKilled;
 	wire[15:0] numSuns;
 	
+	wire Select_Button_Pulse;
+    
+	wire [4:0] switches;
+    assign switches = {Sw4, Sw3, Sw2, Sw1, Sw0};
 	
 	wire [6:0] ssdOut;
 	wire [3:0] anode;
 	wire [11:0] rgb;
-	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
-	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), .selectButton(BtnC), 
-	                   .hCount(hc), .vCount(vc), .rgb(rgb), .zombies_killed(zombiesKilled), .numSuns(numSuns));
 	
+	ee354_debouncer #(.N_dc(28)) ee354_debouncer_2 
+        (.CLK(ClkPort), .RESET(), .PB(BtnC), .DPB( ), 
+		.SCEN(Select_Button_Pulse), .MCEN( ), .CCEN( ));
+	
+	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
+	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), .selectButton(Select_Button_Pulse), 
+	                   .hCount(hc), .vCount(vc), .rgb(rgb), .zombies_killed(zombiesKilled), .numSuns(numSuns), .switches(switches));
+		
+
     counter cnt(.clk(ClkPort), .displayNumber(numSuns), .anode(anode), .ssdOut(ssdOut));
 //	counter cnt(.clk(ClkPort), .displayNumber1(zombiesKilled), .displayNumber2(numSuns), .anode(anode), .ssdOut(ssdOut));
 	

@@ -36,7 +36,7 @@ module peashooter(
     
     parameter PSSCALE = 10'd3;
     reg [9:0] psVPosTemp; 
-    reg[49:0] pSpeed;
+    reg[25:0] pSpeed;
     reg[9:0] pVPos;
     reg[9:0] pHPos;
     reg[9:0] psVPos;
