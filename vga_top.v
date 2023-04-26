@@ -92,7 +92,7 @@ module vga_top(
     
 	// if(~bright)
 	// begin
-	assign rgb = (state != DoneL) ? temp_vga_rgb: temp_donel_rgb;
+	
 	// end
 	
 	counter cnt(.clk(ClkPort), .displayNumber(zombiesKilled), .anode(anode), .ssdOut(ssdOut));
@@ -109,6 +109,25 @@ module vga_top(
 	
 	// disable mamory ports
 	assign {MemOE, MemWR, RamCS, QuadSpiFlashCS} = 4'b1111;
+
+	
+
+	
+	reg doneL_reg;
+
+	initial begin
+		doneL_reg = 1'b0;
+	end
+	
+	always@ (posedge ClkPort)
+	begin
+	if(state == DoneL)
+	begin
+	doneL_reg = 1'b1;
+	end
+	end
+	
+	assign rgb = (doneL_reg != 1'b1) ? temp_vga_rgb: temp_donel_rgb;
 
     
 

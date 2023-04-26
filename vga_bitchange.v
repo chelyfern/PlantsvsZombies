@@ -1414,8 +1414,6 @@ module vga_bitchange(
 	.zombieHeadY(zombie4HeadY), .hCount(hCount), .vCount(vCount), .zombieHead(zombieHead4),
 	.zombieEye(zombieEye4));
 
-	
-  
     parameter displayWHpos = 10'd520;
     parameter displayWVpos = 10'd40; 
     assign displayWalnut = 
@@ -1474,7 +1472,7 @@ module vga_bitchange(
                            ( 
 	                       ((vCount >= (displayWVpos + (10'd44 / WSCALE))) && (vCount <= (displayWVpos + (10'd70 / WSCALE))) && (hCount >= (displayWHpos + (10'd30 / WSCALE))) && (hCount <= (displayWHpos + (10'd47 / WSCALE))))
 	                       ||((vCount >= (displayWVpos + (10'd47 / WSCALE))) && (vCount <= (displayWVpos + (10'd65 / WSCALE))) && (hCount >= (displayWHpos + (10'd55 / WSCALE))) && (hCount <= (displayWHpos + (10'd69 / WSCALE))))
-                           ) 
+                           )  
                            ) ? 1 : 0;
   
     assign displayWalnutBlack = 
@@ -1483,7 +1481,7 @@ module vga_bitchange(
                            ( 
 	                       (((vCount >= (displayWVpos + (10'd49 / WSCALE))) && (vCount <= (displayWVpos + (10'd65 / WSCALE))) && (hCount >= (displayWHpos + (10'd35 / WSCALE))) && (hCount <= (displayWHpos + (10'd45 / WSCALE))))
 	                       ||((vCount >= (displayWVpos + (10'd51 / WSCALE))) && (vCount <= (displayWVpos + (10'd63 / WSCALE))) && (hCount >= (displayWHpos + (10'd59 / WSCALE))) && (hCount <= (displayWHpos + (10'd67 / WSCALE)))))
-	                      
+	                       && (blink == 1'd0)
 	                       )
 	                       || ((vCount >= (displayWVpos + (10'd74 / WSCALE))) && (vCount <= (displayWVpos + (10'd79 / WSCALE))) && (hCount >= (displayWHpos + (10'd39 / WSCALE))) && (hCount <= (displayWHpos + (10'd44 / WSCALE))))
 	                       || ((vCount >= (displayWVpos + (10'd76 / WSCALE))) && (vCount <= (displayWVpos + (10'd81 / WSCALE))) && (hCount >= (displayWHpos + (10'd42 / WSCALE))) && (hCount <= (displayWHpos + (10'd59 / WSCALE))))
@@ -1493,10 +1491,10 @@ module vga_bitchange(
 
 
     parameter displaypsHpos = 10'd300;
-    parameter displaypsVPos = 10'd40;
+    parameter displaypsVPos = 10'd0;
     parameter displaypsVPosTemp = 10'd40 + 10'd90;
 
-    assign displayPeashooterHead = ( 
+    assign displayPeashooterHead = (  
 	                       (
 	                       ((vCount >= (displaypsVPos + 10'd60)) && (vCount <= (displaypsVPos + 10'd60 + (10'd5 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd27 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd48 / PSSCALE))))
                            ||((vCount >= (displaypsVPos + 10'd60 + (10'd3 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd8 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd23 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd52 / PSSCALE))))
@@ -1547,7 +1545,7 @@ module vga_bitchange(
 	                       
     assign displayPeashooterBlack = (  ((vCount >= (displaypsVPos + 10'd60 + (10'd35 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd50 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd45 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd60 / PSSCALE))))) ? 1 : 0;
 	
-	assign displayPeashooterStem = (
+	assign displayPeashooterStem = ( 
 	                           (
                              ((vCount <= (displaypsVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd55 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd71 / PSSCALE))))
                              ||((vCount <= (displaypsVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd54 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd70 / PSSCALE))))
@@ -1642,7 +1640,7 @@ module vga_bitchange(
     
 
     parameter displaysfHpos = 10'd400;
-    parameter displaysfVPos = 10'd40;
+    parameter displaysfVPos = 10'd90;
     parameter displaysfHeadHPos = displaysfHpos;
     parameter displaysfHeadVPos = displaysfVPos;
     parameter displaysfVPosTemp = displaysfVPos + 10'd154;
@@ -1664,7 +1662,7 @@ module vga_bitchange(
                         )
                        ) ? 1 : 0;
 	                       	                   
-	assign displaySunflowerInner = ( ((vCount < (displaysfHeadVPos - (10'd24 / SFSCALE))) && (vCount > (displaysfHeadVPos - (10'd124 / SFSCALE))) && (hCount > (displaysfHeadHPos + (10'd25 / SFSCALE))) && (hCount < (displaysfHeadHPos + (10'd100 / SFSCALE))))) ? 1 : 0;
+	assign displaySunflowerInner = (  ((vCount < (displaysfHeadVPos - (10'd24 / SFSCALE))) && (vCount > (displaysfHeadVPos - (10'd124 / SFSCALE))) && (hCount > (displaysfHeadHPos + (10'd25 / SFSCALE))) && (hCount < (displaysfHeadHPos + (10'd100 / SFSCALE))))) ? 1 : 0;
 
     assign displaySunflowerFace = ( 
                             (
