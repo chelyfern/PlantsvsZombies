@@ -376,7 +376,6 @@ module vga_bitchange(
 		//Initiliaze the X and Y coordinates of the selected grid box
 		selectedGridBoxX = 10'd350;
 		selectedGridBoxY = 10'd130;
-		//TODO: initiliaze the state?
 		zombies_killed = 15'd0;
 		reset = 1'b0;
 		userPlantSelection = 10'd0;
@@ -416,9 +415,9 @@ module vga_bitchange(
 	//TODO: define the zombie colors here
 	//Define the color scheme
 	always@ (*)
-    if (~bright)
-        rgb = BLACK;
-	else if (selectedPlantBoxOutline == 1 && isSelectingPlantBox == 1)
+    // if (~bright)
+    //     rgb = BLACK;
+	if (selectedPlantBoxOutline == 1 && isSelectingPlantBox == 1)
 		rgb = RED;
 	else if (selectedLawnPositionOutline == 1 && isSelectingLawnPosition == 1)
 		rgb = RED;
@@ -1369,19 +1368,19 @@ module vga_bitchange(
 		) ? 1 : 0;
 
 	assign zombieBody1 = ((vCount >= ZOMBIE_1_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_1_ROW_BOTTOM)
-		&& (hCount >= zombie0X) && (hCount <= zombie0X + ZOMBIE_BODY_WIDTH)
+		&& (hCount >= zombie1X) && (hCount <= zombie1X + ZOMBIE_BODY_WIDTH)
 		) ? 1 : 0;
 
 	assign zombieBody2 = ((vCount >= ZOMBIE_2_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_2_ROW_BOTTOM)
-		&& (hCount >= zombie0X) && (hCount <= zombie0X + ZOMBIE_BODY_WIDTH)
+		&& (hCount >= zombie2X) && (hCount <= zombie2X + ZOMBIE_BODY_WIDTH)
 		) ? 1 : 0;
 
 	assign zombieBody3 = ((vCount >= ZOMBIE_3_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_3_ROW_BOTTOM)
-		&& (hCount >= zombie0X) && (hCount <= zombie0X + ZOMBIE_BODY_WIDTH)
+		&& (hCount >= zombie3X) && (hCount <= zombie3X + ZOMBIE_BODY_WIDTH)
 		) ? 1 : 0;
 
 	assign zombieBody4 = ((vCount >= ZOMBIE_4_ROW_BOTTOM - ZOMBIE_BODY_HEIGHT) && (vCount <= ZOMBIE_4_ROW_BOTTOM)
-		&& (hCount >= zombie0X) && (hCount <= zombie0X + ZOMBIE_BODY_WIDTH)
+		&& (hCount >= zombie4X) && (hCount <= zombie4X + ZOMBIE_BODY_WIDTH)
 		) ? 1 : 0;
 
 	//Create zombie heads using zombie_face module
