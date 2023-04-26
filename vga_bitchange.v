@@ -76,7 +76,11 @@ module vga_bitchange(
 	parameter WALNUT = 3'b100;
 
 	//End of screen
-	parameter END_OF_LAWN = 10'd300;
+	parameter END_OF_LAWN_X = 10'd300;
+	parameter END_OF_LAWN_Y = 10'd521;
+	parameter BEGINNING_OF_LAWN_X = 10'd799;
+	parameter BEGINNING_OF_LAWN_Y = 10'd87;
+
 
 	
 	
@@ -306,14 +310,13 @@ module vga_bitchange(
 		zombie2Y = 10'd304;
 		zombie3Y = 10'd391;
 		zombie4Y = 10'd478;
+		//Initialize the X and Y position of the zombie heads
 		//Initialize the zombies to be alive
 		zombie0Killed = 1'b0;
 		zombie1Killed = 1'b0;
 		zombie2Killed = 1'b0;
 		zombie3Killed = 1'b0;
 		zombie4Killed = 1'b0;
-		//Initiliaze the X coordinate of the selected plant box
-		selectedPlantBoxX = 10'd0;
 		//TODO: initiliaze the state?
 		//Initialize the X position on the zombies to be the right side of the lawn
 		zombie0X = 10'd799;
@@ -321,14 +324,11 @@ module vga_bitchange(
 		zombie2X = 10'd799;
 		zombie3X = 10'd799;
 		zombie4X = 10'd799;
-		//Initialize the zombies to be alive
-		zombie0Killed = 1'b0;
-		zombie1Killed = 1'b0;
-		zombie2Killed = 1'b0;
-		zombie3Killed = 1'b0;
-		zombie4Killed = 1'b0;
 		//Initiliaze the X coordinate of the selected plant box
-		selectedPlantBoxX = 10'd0;
+		selectedPlantBoxX = 10'd50;
+		//Initiliaze the X and Y coordinates of the selected grid box
+		selectedGridBoxX = 10'd350;
+		selectedGridBoxY = 10'd130;
 		//TODO: initiliaze the state?
 		zombies_killed = 15'd0;
 		reset = 1'b0;
@@ -341,12 +341,6 @@ module vga_bitchange(
 		zombie2Stopped = 1'b0;
 		zombie3Stopped = 1'b0;
 		zombie4Stopped = 1'b0;
-		//Initially all the zombies are alive
-		zombie0Killed = 1'b0;
-		zombie1Killed = 1'b0;
-		zombie2Killed = 1'b0;
-		zombie3Killed = 1'b0;
-		zombie4Killed = 1'b0;
 		
 		sfVPos = 10'd220;
 		
@@ -371,11 +365,9 @@ module vga_bitchange(
 	always@ (*)
     if (~bright)
         rgb = BLACK;
-	// else if (selectedPlantBoxOutline == 1 && isSelectingPlantBox == 0)
-	else if(isSelectingPlantBox == 1)
+	else if (selectedPlantBoxOutline == 1 && isSelectingPlantBox == 1)
 		rgb = RED;
-	// else if (selectedLawnPositionOutline == 1 && isSelectingLawnPosition == 0)
-	else if(isSelectingLawnPosition == 1)
+	else if (selectedLawnPositionOutline == 1 && isSelectingLawnPosition == 1)
 		rgb = RED;
 	else if ((zombieEye0 == 1 && ~zombie0Killed) || (zombieEye1 == 1 && ~zombie1Killed) || (zombieEye2 == 1 && ~zombie2Killed) || (zombieEye3 == 1 && ~zombie3Killed) || (zombieEye4 == 1 && ~zombie4Killed))
 		rgb = ZOMBIE_EYE;
@@ -384,10 +376,8 @@ module vga_bitchange(
 	else if ((zombieOutline0 == 1 && ~zombie0Killed) || (zombieOutline1 == 1 && ~zombie1Killed) || (zombieOutline2 == 1 && ~zombie2Killed) || (zombieOutline3 == 1 && ~zombie3Killed) || (zombieOutline4 == 1 && ~zombie4Killed))
 		rgb = BLACK;
 	// else if((zombieBody0 == 1 && ~zombie0Killed) || (zombieBody1 == 1 && ~zombie1Killed) || (zombieBody2 == 1 && ~zombie2Killed) || (zombieBody3 == 1 && ~zombie3Killed) || (zombieBody4 == 1 && ~zombie4Killed))
-	else if(zombieBody0 == 1 || zombieBody1 == 1 || zombieBody2 == 1 || zombieBody3 == 1 || zombieBody4 == 1)
+	else if((zombieBody0 == 1 && ~zombie0ReachedEnd) || (zombieBody1 == 1 && ~zombie1ReachedEnd) || (zombieBody2 == 1 && ~zombie2ReachedEnd) || (zombieBody3 == 1 && ~zombie3ReachedEnd) || (zombieBody4 == 1 && ~zombie4ReachedEnd))
 		rgb = ZOMBIE_SKIN;
-	// else if (zombie0 == 1 || zombie1 == 1 || zombie2 == 1 || zombie3 == 1 || zombie4 == 1)
-	// 	rgb = ZOMBIE_SKIN;
     else if (pea == 1)
         rgb = PEA_GREEN;
     else if (walnutBlack == 1)
@@ -408,12 +398,8 @@ module vga_bitchange(
         rgb = ORANGE;
     else if (sunflowerOuter == 1)
         rgb = YELLOW;
-	else if (zombie0 == 1 || zombie1 == 1 || zombie2 == 1 || zombie3 == 1 || zombie4 == 1)
-		rgb = ZOMBIE_SKIN;
     else if (greyZone == 1)
         rgb = GREY;
-	else if (GRID1 == 1 || GRID2 == 1)
-		rgb = DARK_GREEN;
 	else if (GRID1 == 1 || GRID2 == 1)
 		rgb = DARK_GREEN;
     else
@@ -455,28 +441,28 @@ module vga_bitchange(
         zombieSpeed = 50'd0;
 			//If a zombie reaches the end of the lawn, the user loses!
 			//Check if any of the zombies have reached the end of the lawn
-			if((zombie0X == END_OF_LAWN) || (zombie1X == END_OF_LAWN) || (zombie2X == END_OF_LAWN) || (zombie3X == END_OF_LAWN) || (zombie4X == END_OF_LAWN))
+			if((zombie0X == END_OF_LAWN_X) || (zombie1X == END_OF_LAWN_X) || (zombie2X == END_OF_LAWN_X) || (zombie3X == END_OF_LAWN_X) || (zombie4X == END_OF_LAWN_X))
 				begin
 					state = DoneL;
 					reset = 1'b1; //TODO I dont think you need to keep track of num zombies killed
 					//Stop the zombie after it reaches the end of the lawn
-					if(zombie0X == END_OF_LAWN)
+					if(zombie0X == END_OF_LAWN_X)
 						begin
 							zombie0ReachedEnd = 1'b1;
 						end
-					if(zombie1X == END_OF_LAWN)
+					if(zombie1X == END_OF_LAWN_X)
 						begin
 							zombie1ReachedEnd = 1'b1;
 						end
-					if(zombie2X == END_OF_LAWN)
+					if(zombie2X == END_OF_LAWN_X)
 						begin
 							zombie2ReachedEnd = 1'b1;
 						end
-					if(zombie3X == END_OF_LAWN)
+					if(zombie3X == END_OF_LAWN_X)
 						begin
 							zombie3ReachedEnd = 1'b1;
 						end
-					if(zombie4X == END_OF_LAWN)
+					if(zombie4X == END_OF_LAWN_X)
 						begin
 							zombie4ReachedEnd = 1'b1;
 						end
@@ -542,72 +528,6 @@ module vga_bitchange(
 				begin
 					state = NL2;
 					reset = 1'b1;
-				end
-			//If zombies are hit by a pea shot, increment their number of shots
-			//Zombie0 can be hit by pea shots 0 through 4
-			if (peaShot0X == zombie0X || peaShot1X == zombie0X || peaShot2X == zombie0X || peaShot3X == zombie0X || peaShot4X == zombie0X)
-				begin
-					//Increment zombie hits
-					zombie0Hits = zombie0Hits + 15'd1;
-					if(zombie0Hits == 15'd5)
-						begin
-							zombie0Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
-						end
-				end
-			//Zombie1 can be hit by pea shots 5 through 9
-			if (peaShot5X == zombie1X || peaShot6X == zombie1X || peaShot7X == zombie1X || peaShot8X == zombie1X || peaShot9X == zombie1X)
-				begin
-					//Increment zombie hits
-					zombie1Hits = zombie1Hits + 15'd1;
-					if(zombie1Hits == 15'd5)
-						begin
-							zombie1Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
-						end
-				end
-			//Zombie2 can be hit by pea shots 10 through 14
-			if (peaShot10X == zombie2X || peaShot11X == zombie2X || peaShot12X == zombie2X || peaShot13X == zombie2X || peaShot14X == zombie2X)
-				begin
-					//Increment zombie hits
-					zombie2Hits = zombie2Hits + 15'd1;
-					if(zombie2Hits == 15'd5)
-						begin
-							zombie2Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
-						end
-				end
-			//Zombie3 can be hit by pea shots 15 through 19
-			if (peaShot15X == zombie3X || peaShot16X == zombie3X || peaShot17X == zombie3X || peaShot18X == zombie3X || peaShot19X == zombie3X)
-				begin
-					//Increment zombie hits
-					zombie3Hits = zombie3Hits + 15'd1;
-					if(zombie3Hits == 15'd5)
-						begin
-							zombie3Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
-						end
-				end
-			//Zombie4 can be hit by pea shots 20 through 24
-			if (peaShot20X == zombie4X || peaShot21X == zombie4X || peaShot22X == zombie4X || peaShot23X == zombie4X || peaShot24X == zombie4X)
-				begin
-					//Increment zombie hits
-					zombie4Hits = zombie4Hits + 15'd1;
-					if(zombie4Hits == 15'd5)
-						begin
-							zombie4Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
-						end
-				end
-			//If all zombies are killed, go to the next state
-			if(zombies_killed == 15'd5 && state == L1)
-				begin
-					state = NL2;
-					reset = 1'b1;
-				end
-			else
-				begin
-					reset = 1'b0;
 				end
 			end
 		end
@@ -874,24 +794,24 @@ module vga_bitchange(
 		else if(selectButton == 1 && isSelectingPlantBox == 1) //User has selected a plant
 			begin
 				//If user selects leftmost plant box, assign the selection to pea shooter
-				if(selectedPlantBoxX == 10'd0)
+				if(selectedPlantBoxX == 10'd50)
 					begin
 						userPlantSelection = PEASHOOTER;
 					end
 				//If user selects middle plant box, assign the selection to sunflower
-				else if(selectedPlantBoxX == 10'd80)
+				else if(selectedPlantBoxX == 10'd150)
 					begin
 						userPlantSelection = SUNFLOWER;
 					end
 				//If user selects rightmost plant box, assign the selection to wallnut
-				else if(selectedPlantBoxX == 10'd160)
+				else if(selectedPlantBoxX == 10'd250)
 					begin
 						userPlantSelection = WALNUT;
 					end
 				isSelectingPlantBox = 0;
 				isSelectingLawnPosition = 1;
 				selectedPlantBoxX = 10'd50;
-                selectedGridBoxX = 10'd50;
+                selectedGridBoxX = 10'd350;
                 selectedGridBoxY = 10'd130; //May need to change 87 to 86
 			end
 		//If user has selected a plant box, then they are selecting a lawn position
@@ -906,9 +826,18 @@ module vga_bitchange(
                 
                 else if(upButton == 1)
                     selectedGridBoxY = selectedGridBoxY + ROW_HEIGHT;
+					if(selectedGridBoxY < BEGINNING_OF_LAWN_Y)
+						begin
+						selectedGridBoxY = 10'd478;
+						end
                 
+				//If down button is pressed, check if the Y position is larger than the bottom of the lawn
                 else if(downButton == 1)
                     selectedGridBoxY = selectedGridBoxY - ROW_HEIGHT;
+					if(selectedGridBoxY > END_OF_LAWN_Y)
+						begin
+						selectedGridBoxY = 10'd130;
+						end
                 
 			end
         else if(isSelectingLawnPosition == 1 && selectButton == 1)
@@ -1021,7 +950,14 @@ module vga_bitchange(
 				else if(selectedGridBoxX == 10'd750 && selectedGridBoxY == 10'd478)
 				begin
 					plant24Placed = 2'd01;
-					end
+				end
+
+				//Reset the selected grid box
+				selectedGridBoxX = 10'd350;
+				selectedGridBoxY = 10'd130;
+				
+				//Reset the selection flag
+				isSelectingLawnPosition = 1'd0;
             end
 		end
     
