@@ -60,8 +60,11 @@ module vga_top(
         (.CLK(ClkPort), .RESET(), .PB(BtnC), .DPB( ), 
 		.SCEN(Select_Button_Pulse), .MCEN( ), .CCEN( ));
 	
+
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
-	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), .selectButton(Select_Button_Pulse), 
+	vg
+	
+	bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), .selectButton(Select_Button_Pulse), 
 	                   .hCount(hc), .vCount(vc), .rgb(rgb), .zombies_killed(zombiesKilled), .numSuns(numSuns), .switches(switches));
 		
 

@@ -71,7 +71,7 @@ module sunflower(
 	           cnt = cnt + 1'd1;
 	       end
 //	   sfBounceSpeed = sfBounceSpeed + 50'd1;
-	   if (sfBounceSpeed >= 26'd5999995)
+	   if (sfBounceSpeed >= 26'd5999998)
 	   begin
 //	       sfBounceSpeed = 50'd0;	       
 	       if (sfHeadHPos <= (sfHPos - (10'd30 / SFSCALE)))

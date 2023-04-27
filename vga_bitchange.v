@@ -302,29 +302,29 @@ module vga_bitchange(
 	wire selectedPlantBoxOutline;
 	wire GRID;
 
-	assign pen0 = (peaShot0X == zombie0X) ? 1 : 0;
-    assign pen1 = (peaShot1X == zombie0X) ? 1 : 0;
-    assign pen2 = (peaShot2X == zombie0X) ? 1 : 0;
-    // assign pen3 = (peaShot3X == zombie0X) ? 1 : 0;
-    // assign pen4 = (peaShot4X == zombie0X) ? 1 : 0;
-    assign pen5 = (peaShot5X == zombie1X) ? 1 : 0;
-    assign pen6 = (peaShot6X == zombie1X) ? 1 : 0;
-    assign pen7 = (peaShot7X == zombie1X) ? 1 : 0;
-    // assign pen8 = (peaShot8X == zombie0X) ? 1 : 0;
-    // assign pen9 = (peaShot9X == zombie0X) ? 1 : 0;
-    assign pen10 = (peaShot10X == zombie2X) ? 1 : 0;
-    assign pen11 = (peaShot11X == zombie2X) ? 1 : 0;
-    assign pen12 = (peaShot12X == zombie2X) ? 1 : 0;
-    // assign pen13 = (peaShot13X == zombie0X) ? 1 : 0;
-    // assign pen14 = (peaShot14X == zombie0X) ? 1 : 0;
-    assign pen15 = (peaShot15X == zombie3X) ? 1 : 0;
-    assign pen16 = (peaShot16X == zombie3X) ? 1 : 0;
-    assign pen17 = (peaShot17X == zombie3X) ? 1 : 0;
-    // assign pen18 = (peaShot18X == zombie0X) ? 1 : 0;
-    // assign pen19 = (peaShot19X == zombie0X) ? 1 : 0;
-    assign pen20 = (peaShot20X == zombie4X) ? 1 : 0;
-    assign pen21 = (peaShot21X == zombie4X) ? 1 : 0;
-    assign pen22 = (peaShot22X == zombie4X) ? 1 : 0;
+	assign pen0 = (peaShot0X >= zombie0X) ? 1 : 0;
+    assign pen1 = (peaShot1X >= zombie0X) ? 1 : 0;
+    assign pen2 = (peaShot2X >= zombie0X) ? 1 : 0;
+    // assign pen3 = (peaShot3X >= zombie0X) ? 1 : 0;
+    // assign pen4 = (peaShot4X >= zombie0X) ? 1 : 0;
+    assign pen5 = (peaShot5X >= zombie1X) ? 1 : 0;
+    assign pen6 = (peaShot6X >= zombie1X) ? 1 : 0;
+    assign pen7 = (peaShot7X >= zombie1X) ? 1 : 0;
+    // assign pen8 = (peaShot8X >= zombie0X) ? 1 : 0;
+    // assign pen9 = (peaShot9X >= zombie0X) ? 1 : 0;
+    assign pen10 = (peaShot10X >= zombie2X) ? 1 : 0;
+    assign pen11 = (peaShot11X >= zombie2X) ? 1 : 0;
+    assign pen12 = (peaShot12X >= zombie2X) ? 1 : 0;
+    // assign pen13 = (peaShot13X >= zombie0X) ? 1 : 0;
+    // assign pen14 = (peaShot14X >= zombie0X) ? 1 : 0;
+    assign pen15 = (peaShot15X >= zombie3X) ? 1 : 0;
+    assign pen16 = (peaShot16X >= zombie3X) ? 1 : 0;
+    assign pen17 = (peaShot17X >= zombie3X) ? 1 : 0;
+    // assign pen18 = (peaShot18X >= zombie0X) ? 1 : 0;
+    // assign pen19 = (peaShot19X >= zombie0X) ? 1 : 0;
+    assign pen20 = (peaShot20X >= zombie4X) ? 1 : 0;
+    assign pen21 = (peaShot21X >= zombie4X) ? 1 : 0;
+    assign pen22 = (peaShot22X >= zombie4X) ? 1 : 0;
     // assign pen23 = (peaShot23X == zombie0X) ? 1 : 0;
     // assign pen24 = (peaShot24X == zombie0X) ? 1 : 0;
 
@@ -352,7 +352,7 @@ module vga_bitchange(
     //sun logic
 //    reg[15:0] numSuns;
     parameter SECS_BETWEEN_SUNS = 10'd10;
-    reg [49:0] sunTimer;
+//    reg [49:0] sunTimer;
 
 	initial begin
 	   youLose = 1'b0;
@@ -415,7 +415,13 @@ module vga_bitchange(
 		zombie4ReachedEnd = 1'b0;
 		
 		numSuns = 16'd50;
-		sunTimer = 50'd0;
+//		sunTimer = 50'd0;
+
+        zombie0Hits = 4'd0;
+        zombie1Hits = 4'd0;
+        zombie2Hits = 4'd0;
+        zombie3Hits = 4'd0;
+        zombie4Hits = 4'd0;
 		
 //		plant0Placed = 1'd1;
 //		plant0Type = WALNUT;
@@ -1512,22 +1518,22 @@ module vga_bitchange(
     // .enable(wen24), .walnut(walnut24[0]), .walnutBlack(walnut24[1]), .walnutWhite(walnut24[2])
     // );
 
-    always@ (posedge clk)
-        begin
-            sunTimer = sunTimer + 1'd1;
-            if (sunTimer >= (SECS_BETWEEN_SUNS * 50'd100000000))
-            begin
-                sunTimer = 50'd0;
+//    always@ (posedge clk)
+//        begin
+//            sunTimer = sunTimer + 1'd1;
+//            if (sunTimer >= (SECS_BETWEEN_SUNS * 50'd100000000))
+//            begin
+//                sunTimer = 50'd0;
                 
-                if (numSuns < 16'd2000)
-                    numSuns = numSuns + 16'd25;
-            end
-        end
+//                if (numSuns < 16'd2000)
+//                    numSuns = numSuns + 16'd25;
+//            end
+//        end
  
 	//At every clock, move the zombies to the right by increasnig the zombie "speed"
 	always @(posedge clk) begin
     zombieSpeed = zombieSpeed + 50'd1;
-    if (zombieSpeed >= 50'd50000000) begin
+    if (zombieSpeed >= 50'd15000000) begin
         if (zombie1X <= 50'd600 && ~zombie0Stopped) // Move zombie0 after zombie1 has moved 200 pixels across the screen
             begin
                 zombie0X = zombie0X - 10'd1;
@@ -1590,70 +1596,71 @@ module vga_bitchange(
 							zombie4ReachedEnd = 1'b1;
 						end
 				end
-			//If zombies are hit by a pea shot, increment their number of shots
+        
+            //If zombies are hit by a pea shot, increment their number of shots
 			//Zombie0 can be hit by pea shots 0 through 4
-			if (peaShot0X == zombie0X || peaShot1X == zombie0X || peaShot2X == zombie0X /*|| peaShot3X == zombie0X || peaShot4X == zombie0X*/)
+			if ((peaShot0X >= zombie0X) || (peaShot1X >= zombie0X) || (peaShot2X >= zombie0X) /*|| peaShot3X >= zombie0X || peaShot4X >= zombie0X*/)
 				begin
 					//Increment zombie hits
-					zombie0Hits = zombie0Hits + 15'd1;
-					if(zombie0Hits == 15'd5)
+					zombie0Hits = zombie0Hits + 4'd1;
+					if(zombie0Hits == 4'd5)
 						begin
 							zombie0Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
+							zombies_killed = zombies_killed + 4'd1;
 						end
 				end
 			//Zombie1 can be hit by pea shots 5 through 9
-			if (peaShot5X == zombie1X || peaShot6X == zombie1X || peaShot7X == zombie1X /*|| peaShot8X == zombie1X || peaShot9X == zombie1X*/)
+			if ((peaShot5X >= zombie1X) || (peaShot6X >= zombie1X) || (peaShot7X >= zombie1X) /*|| peaShot8X == zombie1X || peaShot9X == zombie1X*/)
 				begin
 					//Increment zombie hits
-					zombie1Hits = zombie1Hits + 15'd1;
-					if(zombie1Hits == 15'd5)
+					zombie1Hits = zombie1Hits + 4'd1;
+					if(zombie1Hits == 4'd5)
 						begin
 							zombie1Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
+							zombies_killed = zombies_killed + 4'd1;
 						end
 				end
 			//Zombie2 can be hit by pea shots 10 through 14
-			if (peaShot10X == zombie2X || peaShot11X == zombie2X || peaShot12X == zombie2X /*|| peaShot13X == zombie2X || peaShot14X == zombie2X*/)
+			if ((peaShot10X >= zombie2X) || (peaShot11X >= zombie2X) || (peaShot12X >= zombie2X) /*|| peaShot13X == zombie2X || peaShot14X == zombie2X*/)
 				begin
 					//Increment zombie hits
-					zombie2Hits = zombie2Hits + 15'd1;
-					if(zombie2Hits == 15'd5)
+					zombie2Hits = zombie2Hits + 4'd1;
+					if(zombie2Hits == 4'd5)
 						begin
 							zombie2Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
+							zombies_killed = zombies_killed + 4'd1;
 						end
 				end
 			//Zombie3 can be hit by pea shots 15 through 19
-			if (peaShot15X == zombie3X || peaShot16X == zombie3X || peaShot17X == zombie3X /*|| peaShot18X == zombie3X || peaShot19X == zombie3X*/)
+			if ((peaShot15X >= zombie3X) || (peaShot16X >= zombie3X) || (peaShot17X >= zombie3X) /*|| peaShot18X == zombie3X || peaShot19X == zombie3X*/)
 				begin
 					//Increment zombie hits
-					zombie3Hits = zombie3Hits + 15'd1;
-					if(zombie3Hits == 15'd5)
+					zombie3Hits = zombie3Hits + 4'd1;
+					if(zombie3Hits == 4'd5)
 						begin
 							zombie3Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
+							zombies_killed = zombies_killed + 4'd1;
 						end
 				end
 			//Zombie4 can be hit by pea shots 20 through 24
-			if (peaShot20X == zombie4X || peaShot21X == zombie4X || peaShot22X == zombie4X /*|| peaShot23X == zombie4X || peaShot24X == zombie4X*/)
+			if ((peaShot20X >= zombie4X) || (peaShot21X >= zombie4X) || (peaShot22X >= zombie4X) /*|| peaShot23X == zombie4X || peaShot24X == zombie4X*/)
 				begin
 					//Increment zombie hits
-					zombie4Hits = zombie4Hits + 15'd1;
-					if(zombie4Hits == 15'd5)
+					zombie4Hits = zombie4Hits + 4'd1;
+					if(zombie4Hits == 4'd5)
 						begin
 							zombie4Killed = 1'b1;
-							zombies_killed = zombies_killed + 15'd1;
+							zombies_killed = zombies_killed + 4'd1;
 						end
 				end
 			//If all zombies are killed, go to the next state
-			if(zombies_killed == 4'd5 && state == L1)
+			if((zombies_killed == 4'd5) && (state == L1))
 				begin
 				    youWin = 1'b1;
 //					state = NL2;
 //					reset = 1'b1;
 				end
-			end
+            end
 		end
 
     assign youLose_RED = (youLose == 1'b1) ? 1 : 0;
@@ -1723,10 +1730,10 @@ module vga_bitchange(
 					// end
 				end
 		else
-		begin
-			zombie0Stopped = 1'b0;
-			zombie0Counter = 1'd0;
-		end
+            begin
+                zombie0Stopped = 1'b0;
+                zombie0Counter = 1'd0;
+            end
 
 		if(zombie1X == plant1X)
 			zombie1Stopped = 1'b1;
@@ -3018,100 +3025,7 @@ assign zombieEye4 = (((vCount >= (zombie4HeadY + 10'd60)) && (vCount <= (zombie4
 	                        )) ? 1 : 0;
 	                       
     assign displayPeashooterBlack = (  ((vCount >= (displaypsVPos + 10'd60 + (10'd35 / PSSCALE))) && (vCount <= (displaypsVPos + 10'd60 + (10'd50 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd45 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd60 / PSSCALE))))) ? 1 : 0;
-	/*
-	assign displayPeashooterStem = ( 
-	                           (
-                             ((vCount <= (displaypsVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd55 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd71 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd54 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd70 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd76 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd53 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd69 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd71 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd52 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd68 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd76 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd66 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd51 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd67 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd71 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd61 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd50 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd66 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd66 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd56 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd49 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd65 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd61 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd51 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd48 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd64 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd56 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd46 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd47 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd63 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd51 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd41 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd46 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd62 / PSSCALE))))
-                             
-                             ||((vCount <= (displaypsVPosTemp + (10'd6 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd0 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd37 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd53 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd11 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd1 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd38 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd54 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd16 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd6 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd39 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd55 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd21 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd11 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd40 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd56 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd26 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd16 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd41 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd57 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd31 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd21 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd42 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd58 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd36 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd26 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd43 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd59 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd41 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd31 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd44 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd60 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd46 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd36 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd45 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd61 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd51 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd41 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd46 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd62 / PSSCALE))))
-                             
-                             ||((vCount <= (displaypsVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd94 / PSSCALE))) && (hCount >= (displaypsHpos - (10'd4 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd60 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd95 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd93 / PSSCALE))) && (hCount >= (displaypsHpos - (10'd3 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd59 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd94 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd92 / PSSCALE))) && (hCount >= (displaypsHpos - (10'd2 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd58 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd93 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd91 / PSSCALE))) && (hCount >= (displaypsHpos - (10'd1 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd57 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd92 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd90 / PSSCALE))) && (hCount >= (displaypsHpos - (10'd0 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd56 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd89 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd1 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd55 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd90 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd88 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd2 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd54 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd89 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd87 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd3 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd53 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd88 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd4 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd52 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd87 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd85 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd5 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd51 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd84 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd6 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd50 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd85 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd83 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd7 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd49 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd84 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd82 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd8 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd48 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd83 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd9 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd47 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd82 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd80 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd10 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd46 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd79 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd11 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd45 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd80 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd78 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd12 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd44 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd79 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd77 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd13 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd43 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd78 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd76 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd14 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd42 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd77 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd75 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd15 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd41 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd76 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd74 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd16 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd40 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd75 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd73 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd17 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd39 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd74 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd72 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd18 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd38 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd73 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd71 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd19 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd37 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd72 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd70 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd20 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd36 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd71 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd69 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd21 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd35 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd70 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd68 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd22 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd34 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd69 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd67 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd23 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd33 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd68 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd66 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd24 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd32 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd67 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd65 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd25 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd31 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd66 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd64 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd26 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd30 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd65 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd63 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd27 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd29 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd64 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd62 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd28 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd28 / PSSCALE))))
-
-
-                             ||((vCount <= (displaypsVPosTemp + (10'd96 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd94 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd124 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd60 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd95 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd93 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd123 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd61 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd94 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd92 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd122 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd62 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd93 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd91 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd120 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd63 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd92 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd90 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd119 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd64 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd91 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd89 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd118 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd65 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd90 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd88 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd117 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd66 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd89 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd87 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd116 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd67 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd88 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd115 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd68 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd87 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd85 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd114 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd69 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd86 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd84 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd113 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd70 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd85 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd83 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd112 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd71 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd84 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd82 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd111 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd72 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd83 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd110 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd73 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd82 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd80 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd109 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd74 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd81 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd79 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd108 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd75 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd80 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd78 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd107 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd76 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd79 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd77 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd106 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd77 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd78 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd76 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd105 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd78 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd77 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd75 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd104 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd79 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd76 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd74 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd103 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd80 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd75 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd73 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd102 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd81 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd74 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd72 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd101 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd82 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd73 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd71 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd100 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd83 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd72 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd70 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd99 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd84 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd71 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd69 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd98 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd85 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd70 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd68 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd97 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd86 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd69 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd67 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd96 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd87 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd68 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd66 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd95 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd88 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd67 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd65 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd94 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd89 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd66 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd64 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd93 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd90 / PSSCALE))))
-                             ||((vCount <= (displaypsVPosTemp + (10'd65 / PSSCALE))) && (vCount >= (displaypsVPosTemp + (10'd63 / PSSCALE))) && (hCount <= (displaypsHpos + (10'd92 / PSSCALE))) && (hCount >= (displaypsHpos + (10'd91 / PSSCALE))))
-                             )) ? 1 : 0;*/
-    
+	    
     reg [25:0] pSpeed;
     always@ (posedge clk)
 	begin
@@ -3174,7 +3088,7 @@ assign zombieEye4 = (((vCount >= (zombie4HeadY + 10'd60)) && (vCount <= (zombie4
                            ||((vCount < (displaysfHeadVPos - (10'd52 / SFSCALE))) && (vCount > (displaysfHeadVPos - (10'd64 / SFSCALE))) && (hCount > (displaysfHeadHPos + (10'd75 / SFSCALE))) && (hCount < (displaysfHeadHPos + (10'd85 / SFSCALE))))
                             )
                            ) ? 1 : 0;
-                     
+               /*      
      assign displaySunflowerStem = (
                                 (
                                ((vCount <= (displaysfVPosTemp + (10'd6 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd0 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd55 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd71  / SFSCALE))))
@@ -3267,5 +3181,5 @@ assign zombieEye4 = (((vCount >= (zombie4HeadY + 10'd60)) && (vCount <= (zombie4
                              ||((vCount <= (displaysfVPosTemp + (10'd66 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd64 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd93 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd90  / SFSCALE))))
                              ||((vCount <= (displaysfVPosTemp + (10'd65 / SFSCALE))) && (vCount >= (displaysfVPosTemp + (10'd63 / SFSCALE))) && (hCount <= (displaysfHpos + (10'd92 / SFSCALE))) && (hCount >= (displaysfHpos + (10'd91  / SFSCALE))))
                                 )
-                           ) ? 1 : 0;
+                           ) ? 1 : 0;*/
  endmodule
