@@ -10,7 +10,6 @@ module doneL_bitchange(
 	parameter WHITE = 12'b1111_1111_1111;
 	parameter RED   = 12'b1111_0000_0000;
 	parameter GREEN = 12'b0000_1111_0000;
-	//parameter BLUE = 12'b0000_0000_1111;
 
 	reg reset;
 
@@ -18,9 +17,7 @@ module doneL_bitchange(
 		reset = 1'b0;
 	end
 	
-	
 	always@ (*)
-    // if (~bright)
 	rgb = RED; // force black if not bright
 
 endmodule
