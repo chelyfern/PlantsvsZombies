@@ -65,42 +65,35 @@ module vga_top(
 	wire bright;
 	wire[9:0] hc, vc;
 	wire[15:0] zombiesKilled;
+	wire[15:0] numSuns;
+	
+	wire Select_Button_Pulse;
+    
+	wire [4:0] switches;
+    assign switches = {Sw4, Sw3, Sw2, Sw1, Sw0};
 	
 	wire [6:0] ssdOut;
 	wire [3:0] anode;
-	wire [3:0] upperAnodes;
 	wire [11:0] rgb;
-
-	wire [11:0] temp_donel_rgb;
-	wire [11:0] temp_vga_rgb;
-
+	
 	ee354_debouncer #(.N_dc(28)) ee354_debouncer_2 
         (.CLK(ClkPort), .RESET(), .PB(BtnC), .DPB( ), 
 		.SCEN(Select_Button_Pulse), .MCEN( ), .CCEN( ));
+	
+
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
+	vg
 	
-	doneL_bitchange vbc(.clk(ClkPort), .bright(bright),  
-		.hCount(hc), .vCount(vc), .rgb(temp_donel_rgb));
+	bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), .selectButton(Select_Button_Pulse), 
+	                   .hCount(hc), .vCount(vc), .rgb(rgb), .zombies_killed(zombiesKilled), .numSuns(numSuns), .switches(switches));
+		
 
-	// vga_bitchange vb(.clk(ClkPort), .bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR), 
-	// .selectButton(Select_Button_Pulse), .hCount(hc), .vCount(vc), .rgb(temp_vga_rgb), .zombies_killed(zombiesKilled), .switches(switches),
-	// .q_I(q_I), .q_L1(q_L1), .q_NL2(q_NL2), .q_L2(q_L2), .q_NL3(q_NL3), .q_L3(q_L3), .q_DoneL(q_DoneL), .q_DoneW(q_DoneW));
-
-	vga_bitchange vb(.clk(ClkPort), .bright(bright), .upButton(BtnU), .downButton(BtnD), .leftButton(BtnL), .rightButton(BtnR),
-	.selectButton(Select_Button_Pulse), .hCount(hc), .vCount(vc), .rgb(temp_vga_rgb), .zombies_killed(zombiesKilled), .switches(switches),
-	.state(state));
-    
-	// if(~bright)
-	// begin
-	
-	// end
-	
-	counter cnt(.clk(ClkPort), .displayNumber(zombiesKilled), .anode(anode), .ssdOut(ssdOut));
-//	counter cnt(.clk(ClkPort), .displayNumber(zombiesKilled), .anode(upperAnodes), .ssdOut(ssdOut));
+    counter cnt(.clk(ClkPort), .displayNumber(numSuns), .anode(anode), .ssdOut(ssdOut));
+//	counter cnt(.clk(ClkPort), .displayNumber1(zombiesKilled), .displayNumber2(numSuns), .anode(anode), .ssdOut(ssdOut));
 	
 	assign Dp = 1;
 	assign {Ca, Cb, Cc, Cd, Ce, Cf, Cg} = ssdOut[6 : 0];
-    assign {An7, An6, An5, An4, An3, An2, An1, An0} = {upperAnodes, anode};
+    assign {An7, An6, An5, An4, An3, An2, An1, An0} = {4'b1111, anode};
 
 	
 	assign vgaR = rgb[11 : 8];
