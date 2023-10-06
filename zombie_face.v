@@ -92,8 +92,4 @@ assign zombieEye = (((vCount >= (zombieHeadY + 10'd60)) && (vCount <= (zombieHea
                            ||((vCount >= (zombieHeadY + 10'd60 + (10'd93 / ZOMBIE_EYE_SCALE))) && (vCount <= (zombieHeadY + 10'd60 + (10'd98 / ZOMBIE_EYE_SCALE))) && (hCount >= (zombieHeadX + (10'd23 / ZOMBIE_EYE_SCALE))) && (hCount <= (zombieHeadX + (10'd52 / ZOMBIE_EYE_SCALE))))
                            ||((vCount >= (zombieHeadY + 10'd60 + (10'd96 / ZOMBIE_EYE_SCALE))) && (vCount <= (zombieHeadY + 10'd60 + (10'd101 / ZOMBIE_EYE_SCALE))) && (hCount >= (zombieHeadX + (10'd27 / ZOMBIE_EYE_SCALE))) && (hCount <= (zombieHeadX + (10'd48 / ZOMBIE_EYE_SCALE))))
 );
-
-
-
-
 endmodule

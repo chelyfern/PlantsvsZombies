@@ -1,23 +1,4 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 04/25/2023 02:49:07 PM
-// Design Name: 
-// Module Name: peashooter
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
 module peashooter(
     input clk,
@@ -37,7 +18,6 @@ module peashooter(
     
     parameter PSSCALE = 10'd3;
     reg [9:0] psVPosTemp; 
-//    reg[25:0] pSpeed;
     reg[9:0] pVPos;
     reg[9:0] pHPos;
     reg[9:0] psVPos;
@@ -53,18 +33,6 @@ module peashooter(
         psHPos = psHPosGiven + 10'd30;
     end
     
-//    initial
-//    begin
-//		pVPos = psVPos + 10'd65;
-//		pHPos = psHPos + 10'd115;
-//    end
-
-//    always@ (*)
-//    begin
-//        psVPosTemp = psVPos + 10'd90; 
-//    end
-    
-    
     always@ (posedge clk)
 	begin
 	   if (cnt <= 2'd10)
@@ -73,10 +41,8 @@ module peashooter(
                 pHPos = psHPos + 10'd115;
 	           cnt = cnt + 1'd1;
 	       end
-//       pSpeed = pSpeed + 50'd1;
 	   if (pSpeed >= 26'd999998)
 	   begin
-//	       pSpeed = 50'd0;
 	       pHPos = pHPos + 10'd1;
 	       if (pHPos >= 10'd800) 
 		      pHPos = psHPos + 10'd20;
