@@ -1,2 +1,2 @@
 # PlantsvsZombies
-A recreated "Plants vs. Zombies" single player game implemented using an FPGA and verilog code.
+This work is a recreated "Plants vs. Zombies" single-player game implemented using an FPGA and Verilog code. A 5x5 “grid” lawn and a plant selection navigation bar are available in the game; upon start-up, the player will be presented with an empty lawn. By clicking the center button of the FPGA board, the user can indicate that they wish to select either a Pea Shooter, a Sunflower, or a Walnut to place on the grid, selecting this position using the board's switches. The game's objective is to smartly place Peas, Walnuts, and Sunflowers to kill all zombies entering the lawn. However, if any of the zombies reach the end of the lawn, the user loses.
